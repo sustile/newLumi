@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Rubik:wght@300;400;500;600;700;800&display=swap");
+:root {
+  --primary-bg: #161b22;
+  --primary-green: #04e762;
+  --primary-red: #dc0073;
+}
+
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10rem;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10rem;
+  background: var(--primary-red);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Rubik", sans-serif;
+  background: url("./../img/Cloudy.svg");
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+body::after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.register-cont {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 8rem;
+  padding: 10rem 5rem;
+  border-radius: 1rem;
+}
+.register-cont .heading {
+  font-family: "Rubik", sans-serif;
+  font-weight: 900;
+  font-size: 7rem;
+  text-align: center;
+  color: #ddd;
+  text-shadow: 0.5rem 0.5rem var(--primary-red);
+  transition: all 0.3s;
+}
+.register-cont .heading:hover {
+  text-shadow: 0.8rem 1rem var(--primary-red);
+}
+.register-cont form {
+  display: flex;
+  flex-direction: column;
+  width: 55%;
+  margin: 0 auto;
+  gap: 1.7rem;
+}
+.register-cont form input {
+  border: 0;
+  outline: 0;
+  font-family: "Rubik", sans-serif;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #333;
+  box-shadow: 0 0 0 0.8rem transparent;
+  transition: all 0.3s;
+}
+.register-cont form input:placeholder-shown + label {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5rem);
+}
+.register-cont form input:focus:invalid {
+  box-shadow: 0 0 0 0.8rem var(--primary-red);
+}
+.register-cont form input:focus:valid {
+  box-shadow: 0 0 0 0.8rem var(--primary-green);
+}
+.register-cont form label {
+  font-family: "Rubik", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  text-align: center;
+  color: #ddd;
+  transition: all 0.3s;
+}
+.register-cont form a {
+  margin-top: 5rem;
+  text-decoration: none;
+  color: #ddd;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.login-cont {
+  padding: 10rem;
+}
+.login-cont form {
+  width: 80%;
+}
+
+/*# sourceMappingURL=main.css.map */

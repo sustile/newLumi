@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./../css/main.css" />
+    <script defer src="./../js/login.js"></script>
+  </head>
+  <body>
+    <div class="register-cont login-cont">
+      <h2 class="heading">Log into Lumi</h2>
+      <form class="login-form">
+        <input type="email" required id="email" placeholder="Email" />
+        <label for="email">Email</label>
+        <input
+          type="password"
+          required
+          id="password"
+          placeholder="Password"
+          minlength="6"
+          maxlength="16"
+        />
+        <label for="password">Password</label>
+        <button type="submit" style="display: none" class="submitBtn">
+          Submit
+        </button>
+        <a href="/signup">Don't Have an Account? Register Here</a>
+      </form>
+    </div>
+  </body>
+</html>

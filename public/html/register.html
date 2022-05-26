@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./../css/main.css" />
+    <script defer src="./../js/register.js"></script>
+  </head>
+  <body>
+    <div class="register-cont">
+      <h2 class="heading">Join the Bandwagon</h2>
+      <form class="register-form">
+        <input type="email" required id="email" placeholder="Email" />
+        <label for="email">Email</label>
+        <input
+          type="text"
+          required
+          id="name"
+          placeholder="Your Lumi Name"
+          maxlength="16"
+        />
+        <label for="name">Your Lumi Name</label>
+        <input
+          type="password"
+          required
+          id="password"
+          placeholder="Password"
+          minlength="6"
+          maxlength="16"
+        />
+        <label for="password">Password</label>
+        <input
+          type="password"
+          required
+          id="confirmPassword"
+          placeholder="Confirm Password"
+          minlength="6"
+          maxlength="16"
+        />
+        <label for="confirmPassword">Confirm Password</label>
+        <button type="submit" style="display: none" class="submitBtn"></button>
+        <a href="/login">Already Have an Account? Login Here</a>
+      </form>
+    </div>
+  </body>
+</html>

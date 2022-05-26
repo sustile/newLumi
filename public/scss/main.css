@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Rubik:wght@300;400;500;600;700;800&display=swap");
+:root {
+  --primary-bg: #161b22;
+  --primary-green: #04e762;
+  --primary-red: #dc0073;
+}
+
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10rem;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10rem;
+  background: var(--primary-red);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Rubik", sans-serif;
+  background: url("./../img/Cloudy.svg");
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+body::after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.register-cont {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 40%;
+  background-color: #333;
+}
+
+.register-cont .heading {
+  font-family: "Rubik", sans-serif;
+  font-weight: bolder;
+}
+
+.register-cont form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  padding: 10rem;
+  margin: 0 auto;
+}
+
+.register-cont form input {
+  border: 0;
+  outline: 0;
+  font-family: "Rubik", sans-serif;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.register-cont form label {
+  font-family: "Rubik", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  text-align: center;
+  color: #ddd;
+}
+/*# sourceMappingURL=main.css.map */
