@@ -39,7 +39,6 @@ body {
 }
 
 .nav {
-  background-color: var(--primary-green);
   border-radius: 10rem;
   padding: 0.8rem 5rem;
   display: flex;
@@ -47,12 +46,32 @@ body {
   align-items: center;
   height: 7rem;
 }
-.nav .main-heading {
+.nav .nav_headers {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+}
+.nav .nav_headers .main-heading {
   font-family: "Rubik", sans-serif;
   font-size: 4rem;
   font-weight: 400;
+  color: var(--primary-green);
 }
-.nav div {
+.nav .nav_headers i {
+  color: var(--primary-red);
+  font-size: 8rem;
+}
+.nav .nav_links {
+  background-color: var(--primary-green);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+  padding: 0.8rem 8rem;
+  border-radius: 10rem;
+}
+.nav .nav_links div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,6 +83,11 @@ body {
 .nav_controls a i {
   color: #333;
   font-size: 3.5rem;
+  border: 0;
+  position: relative;
+  padding: 1rem;
+  border-radius: 50%;
+  transition: all 0.2s;
 }
 .nav_acc a {
   text-decoration: none;
@@ -211,6 +235,7 @@ body {
   border-radius: 50%;
 }
 .header_main-cont .content {
+  position: relative;
   width: 100%;
   background-color: #333;
   height: 100%;
@@ -234,11 +259,69 @@ body {
   font-size: 2.5rem;
 }
 .header_main-cont .content_main .call-user {
-  visibility: hidden;
   padding: 1rem 3rem;
   color: var(--primary-green);
   font-size: 3rem;
   cursor: pointer;
+}
+.header_main-cont .content_main .call-decline {
+  padding: 1rem 3rem;
+  color: var(--primary-red);
+  font-size: 3rem;
+  cursor: pointer;
+}
+.header_main-cont .content .call_btns .call-user {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  visibility: hidden;
+  color: var(--primary-green);
+  font-size: 3rem;
+  cursor: pointer;
+  right: 3rem;
+  top: 6rem;
+  background-color: #161b22;
+  padding: 1.5rem;
+  border-radius: 50%;
+}
+.header_main-cont .content .call_btns .call-decline {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  visibility: hidden;
+  color: var(--primary-red);
+  font-size: 3rem;
+  cursor: pointer;
+  right: 3rem;
+  top: 6rem;
+  background-color: #161b22;
+  padding: 1.5rem;
+  border-radius: 50%;
+}
+@keyframes popup_btn {
+  0% {
+    transform: scale(0);
+    visibility: hidden;
+  }
+  80% {
+    transform: scale(1.1);
+    visibility: visible;
+  }
+  100% {
+    transform: scale(1);
+    visibility: visible;
+  }
+}
+@keyframes popdown_btn {
+  0% {
+    transform: scale(1);
+    visibility: visible;
+  }
+  20% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(0);
+    visibility: hidden;
+  }
 }
 .header_main-cont .content .messages_model-cont {
   width: 100%;

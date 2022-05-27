@@ -13,9 +13,19 @@ const messageMain = document.querySelector(".message_main-cont");
 const mainHeader = document.querySelector(".content_main-header");
 
 const call_btn = document.querySelector(".call-user");
+const decline_btn = document.querySelector(".call-decline");
+const videoCont = document.querySelector(".video_cont");
+
+const muteBtn = document.querySelector(".muteBtn");
+const deafenBtn = document.querySelector(".deafenBtn");
 
 let user = {};
 let activeDm = "";
+let peerId = "";
+let myPeer;
+
+let call;
+let activeCall = false;
 
 const wait = async (s) => {
   return new Promise((res) => {
@@ -42,19 +52,13 @@ dmsCont.addEventListener("click", (e) => {
   // target.style.backgroundColor = "red";
   activeDm = target.getAttribute("data-dm");
   mainHeader.textContent = user.textContent;
-  call_btn.style.visibility = "visible";
+  call_btn.style.animation = "popup_btn 0.3s forwards ease";
   messageMain.innerHTML = "";
   messageInput.style.visibility = "visible";
   const el = target.querySelector(".text_main_notis");
   el.style.visibility = "hidden";
   el.style.opacity = "0";
 });
-
-// const resetDMbg = () => {
-//   dmsCont.querySelectorAll("a").forEach((dm) => {
-//     dm.style.backgroundColor = "";
-//   });
-// };
 
 houseCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
@@ -125,7 +129,7 @@ const loadDms = async () => {
 
     dmsCont.insertAdjacentHTML("afterbegin", html);
 
-    socket.emit("join-room", dm.dmId);
+    socket.emit("join-room", dm.dmId, peerId);
   });
 };
 
@@ -216,30 +220,200 @@ const popup = async (message, name, room) => {
   });
 };
 
-{
+(async () => {
+  await getBasicData();
+  // console.log(user.id);
+  myPeer = new Peer(user.id, {
+    host: "/",
+    port: "3001",
+  });
   loadServers();
   loadDms();
   loadPrevent();
-  getBasicData();
-}
+  remoteConnection();
+  // mediaControl();
+})();
 
-// SOCKETS
-
-socket.on("connect", () => {
-  socket.on("receive-message", (user, message, room) => {
-    if (room === activeDm) {
-      displayMessage(message, user);
-    } else {
-      popup(message, user, room);
+async function mediaControl() {
+  let mediaStream = await navigator.mediaDevices.getUserMedia({
+    video: false,
+    audio: true,
+  });
+  muteBtn.addEventListener("click", async () => {
+    const audio = mediaStream.getAudioTracks()[0];
+    console.log(audio);
+    if (audio) {
+      console.log("In");
+      if (audio.enabled) {
+        audio.enabled = false;
+        console.log(audio);
+      } else {
+        audio.enabled = true;
+        console.log(audio);
+      }
     }
   });
-});
+}
 
-// SOCKETS
+function openDm(id) {
+  const user = target.querySelector("span");
+  activeDm = target.getAttribute("data-dm");
+  mainHeader.textContent = user.textContent;
+  call_btn.style.display = "inherit";
+  messageMain.innerHTML = "";
+  messageInput.style.visibility = "visible";
+  const el = target.querySelector(".text_main_notis");
+  el.style.visibility = "hidden";
+  el.style.opacity = "0";
+}
 
-// PEER
-const myPeer = new Peer(undefined, {
-  host: "/",
-  port: "3001",
-});
-// PEER
+async function remoteConnection() {
+  // SOCKETS
+
+  socket.on("connect", () => {
+    socket.on("receive-message", (user, message, room) => {
+      if (room === activeDm) {
+        displayMessage(message, user);
+      } else {
+        popup(message, user, room);
+      }
+    });
+  });
+
+  // SOCKETS
+
+  // PEER
+
+  const myVideo = document.createElement("video");
+  myVideo.muted = true;
+
+  navigator.mediaDevices
+    .getUserMedia({
+      video: false,
+      audio: true,
+    })
+    .then((stream) => {
+      addVideoStream(myVideo, stream);
+
+      myPeer.on("call", (incoming) => {
+        const ask = confirm("Incoming Call");
+        if (ask) {
+          incoming.answer(stream);
+          call = incoming;
+          call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+          decline_btn.style.animation = "popup_btn 0.3s forwards ease";
+        } else {
+          // console.log("Call declined");
+        }
+      });
+
+      const audio = stream.getAudioTracks()[0];
+
+      if (audio) {
+        muteBtn.addEventListener("click", () => {
+          if (audio.enabled) {
+            audio.enabled = false;
+            muteBtn.style.color = "var(--primary-red)";
+            muteBtn.style.backgroundColor = "var(--primary-bg)";
+          } else {
+            audio.enabled = true;
+            muteBtn.style.color = "#333";
+            muteBtn.style.backgroundColor = "";
+          }
+        });
+      }
+
+      deafenBtn.addEventListener("click", (e) => {
+        if (e.target.getAttribute("data-active") === "false") {
+          document.querySelectorAll("video").forEach((el) => {
+            deafenBtn.style.color = "var(--primary-red)";
+            deafenBtn.style.backgroundColor = "var(--primary-bg)";
+            el.pause();
+          });
+          e.target.setAttribute("data-active", true);
+        } else if (e.target.getAttribute("data-active") === "true") {
+          document.querySelectorAll("video").forEach((el) => {
+            deafenBtn.style.color = "#333";
+            deafenBtn.style.backgroundColor = "";
+            el.play();
+          });
+          e.target.setAttribute("data-active", false);
+        }
+      });
+
+      call_btn.addEventListener("click", (e) => {
+        // console.log(activeDm);
+        connectToNewUser(activeDm, stream);
+        e.target.style.animation = "popdown_btn 0.3s forwards ease";
+        decline_btn.style.animation = "popup_btn 0.3s forwards ease";
+      });
+
+      decline_btn.addEventListener("click", (e) => {
+        call.close();
+        if (mainHeader.textContent === "Welcome") {
+          e.target.style.animation = "popdown_btn 0.3s forwards ease";
+        } else {
+          e.target.style.animation = "popdown_btn 0.3s forwards ease";
+          call_btn.style.animation = "popup_btn 0.3s forwards ease";
+        }
+      });
+
+      socket.on("user-connected", (userId) => {
+        // console.log(`${userId} : Connected`);
+      });
+    });
+
+  const addVideoStream = (video, stream) => {
+    video.srcObject = stream;
+    video.addEventListener("loadedmetadata", () => {
+      video.play();
+    });
+    videoCont.append(video);
+  };
+
+  const connectToNewUser = async (id, stream) => {
+    const dm = await (
+      await fetch("/api/getDm", {
+        method: "POST",
+        body: JSON.stringify({
+          id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (activeCall) {
+      call.close();
+      console.log("Call dropped");
+      call = myPeer.call(dm.toId, stream);
+      const video = document.createElement("video");
+      call.on("stream", (userVideoStream) => {
+        addVideoStream(video, userVideoStream);
+      });
+
+      call.on("close", () => {
+        video.remove();
+      });
+    } else {
+      call = myPeer.call(dm.toId, stream);
+      const video = document.createElement("video");
+      call.on("stream", (userVideoStream) => {
+        addVideoStream(video, userVideoStream);
+      });
+
+      activeCall = true;
+
+      call.on("close", () => {
+        video.remove();
+      });
+    }
+  };
+
+  myPeer.on("open", (id) => {
+    peerId = id;
+  });
+
+  // PEER
+}

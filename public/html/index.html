@@ -24,16 +24,26 @@
   </head>
   <body>
     <div class="nav">
-      <h2 class="main-heading">Lumi</h2>
-      <div class="nav_controls">
-        <a href=""><i class="ph-headphones-bold prevent"></i></a>
-        <!-- <a href=""><i class="ph-monitor-play-bold prevent"></i></a> -->
-        <a href=""><i class="ph-microphone-bold prevent"></i></a>
+      <div class="nav_headers">
+        <i class="ph-moon-fill"></i>
+        <h2 class="main-heading">Lumi</h2>
       </div>
-      <div class="nav_acc">
-        <a href=""><i class="ph-identification-card-bold prevent"></i></a>
-        <a href=""><i class="ph-gear-six-bold prevent"></i></a>
-        <a href="/logout" class="logout">Logout</a>
+      <div class="nav_links">
+        <div class="nav_controls">
+          <a href=""
+            ><i
+              class="ph-headphones-bold prevent deafenBtn"
+              data-active="false"
+            ></i
+          ></a>
+          <!-- <a href=""><i class="ph-monitor-play-bold prevent"></i></a> -->
+          <a href=""><i class="ph-microphone-bold prevent muteBtn"></i></a>
+        </div>
+        <div class="nav_acc">
+          <a href=""><i class="ph-identification-card-bold prevent"></i></a>
+          <a href=""><i class="ph-gear-six-bold prevent"></i></a>
+          <a href="/logout" class="logout">Logout</a>
+        </div>
       </div>
     </div>
     <div class="header_main-cont">
@@ -58,7 +68,11 @@
       <div class="content">
         <div class="content_main">
           <h2 class="content_main-header">Welcome</h2>
+        </div>
+
+        <div class="call_btns">
           <i class="ph-phone call-user"></i>
+          <i class="ph-phone-slash call-decline"></i>
         </div>
 
         <div class="messages_model-cont">
@@ -85,6 +99,7 @@
         </div>
       </div>
     </div>
+    <div class="video_cont" style="position: fixed; top: 0; left: 0"></div>
   </body>
   <script type="module" src="../js/base.js"></script>
 </html>

@@ -1,16 +1,16 @@
 {
-  "name": "acorn",
+  "name": "project-lumi",
   "version": "1.0.0",
   "description": "",
   "main": "script.js",
   "scripts": {
     "server": "nodemon server.js",
     "sass": "sass --watch public/scss:public/css",
-    "peer" : "peerjs --port 3001",
+    "peer": "peerjs --port 3001",
     "convert": "browserify public/js/base.js > public/js/baseBundle.js",
     "start": "\"npm run-script server\" \"npm run-script sass\""
   },
-  "author": "",
+  "author": "Systile",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

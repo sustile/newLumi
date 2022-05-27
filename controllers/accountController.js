@@ -133,8 +133,13 @@ exports.getDm = async (req, res) => {
     } else {
       const { id } = req.body;
 
+      // console.log(id);
+
       let dm = await dms.find({ _id: id });
+      // console.log(dm);
       dm = dm[0];
+
+      // console.log(dm);
 
       let to = "";
 
@@ -175,6 +180,7 @@ exports.getBasicData = async (req, res) => {
         user: {
           name: user.name,
           email: user.email,
+          id: user._id,
         },
       });
     }

@@ -13,8 +13,9 @@ const io = require("socket.io")(4000, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (room) => {
+  socket.on("join-room", (room, peerId) => {
     socket.join(room);
+    socket.to(room).emit("user-connected", peerId);
   });
 
   socket.on("send-message", (message, user, room) => {
