@@ -157,7 +157,13 @@ body {
   width: 2.2vw;
   border-radius: 50%;
 }
-.header_main-cont .dms_main-cont a span {
+.header_main-cont .dms_main-cont a .text_main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.header_main-cont .dms_main-cont a .text_main_user {
   color: #ddd;
   font-size: 1.8rem;
   font-family: "Rubik", sans-serif;
@@ -165,6 +171,16 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: pre;
+}
+.header_main-cont .dms_main-cont a .text_main_notis {
+  background-color: var(--primary-green);
+  padding: 0.5rem;
+  border-radius: 10rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s ease;
+  text-align: center;
 }
 .header_main-cont .dms_main-cont a::before {
   content: "";
@@ -180,6 +196,9 @@ body {
   width: 100%;
   z-index: -1;
   transition: all 0.4s ease;
+}
+.header_main-cont .dms_main-cont a:hover::before {
+  background-size: 210%;
 }
 .header_main-cont .dms .createDm {
   text-decoration: none;
@@ -200,14 +219,26 @@ body {
   display: flex;
   flex-direction: column;
 }
-.header_main-cont .content .content_main-header {
+.header_main-cont .content_main {
+  border-top-right-radius: 1rem;
   background-color: rgb(41, 41, 41);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header_main-cont .content_main-header {
+  padding: 1rem 3rem;
   color: #ddd;
   font-family: "Rubik", sans-serif;
   font-weight: 400;
   font-size: 2.5rem;
+}
+.header_main-cont .content_main .call-user {
+  visibility: hidden;
   padding: 1rem 3rem;
-  border-top-right-radius: 1rem;
+  color: var(--primary-green);
+  font-size: 3rem;
+  cursor: pointer;
 }
 .header_main-cont .content .messages_model-cont {
   width: 100%;

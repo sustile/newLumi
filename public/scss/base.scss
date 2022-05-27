@@ -173,14 +173,33 @@ body {
           border-radius: 50%;
         }
 
-        span {
-          color: #ddd;
-          font-size: 1.8rem;
-          font-family: "Rubik", sans-serif;
-          font-weight: 500;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: pre;
+        .text_main {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+
+          &_user {
+            color: #ddd;
+            font-size: 1.8rem;
+            font-family: "Rubik", sans-serif;
+            font-weight: 500;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: pre;
+          }
+
+          &_notis {
+            background-color: var(--primary-green);
+            padding: 0.5rem;
+            border-radius: 10rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.2s ease;
+
+            text-align: center;
+          }
         }
 
         &::before {
@@ -205,9 +224,9 @@ body {
           transition: all 0.4s ease;
         }
 
-        // &:hover::before {
-        //   background-size: 210%;
-        // }
+        &:hover::before {
+          background-size: 210%;
+        }
       }
     }
 
@@ -231,14 +250,27 @@ body {
     display: flex;
     flex-direction: column;
 
-    .content_main-header {
-      background-color: rgb(41, 41, 41);
-      color: #ddd;
-      font-family: "Rubik", sans-serif;
-      font-weight: 400;
-      font-size: 2.5rem;
-      padding: 1rem 3rem;
+    &_main {
       border-top-right-radius: 1rem;
+      background-color: rgb(41, 41, 41);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &-header {
+        padding: 1rem 3rem;
+        color: #ddd;
+        font-family: "Rubik", sans-serif;
+        font-weight: 400;
+        font-size: 2.5rem;
+      }
+
+      .call-user {
+        visibility: hidden;
+        padding: 1rem 3rem;
+        color: var(--primary-green);
+        font-size: 3rem;
+        cursor: pointer;
+      }
     }
 
     .messages_model-cont {

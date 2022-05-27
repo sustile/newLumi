@@ -11,7 +11,8 @@ const messageFrom = document.querySelector(".message_form");
 const messageInput = document.querySelector(".message-input");
 const messageMain = document.querySelector(".message_main-cont");
 const mainHeader = document.querySelector(".content_main-header");
-const messagePopup = document.querySelector(".message-popup");
+
+const call_btn = document.querySelector(".call-user");
 
 let user = {};
 let activeDm = "";
@@ -37,19 +38,23 @@ dmsCont.addEventListener("click", (e) => {
   if (!target) return;
   e.preventDefault();
   const user = target.querySelector("span");
-  resetDMbg();
-  target.style.backgroundColor = "red";
+  // resetDMbg();
+  // target.style.backgroundColor = "red";
   activeDm = target.getAttribute("data-dm");
   mainHeader.textContent = user.textContent;
+  call_btn.style.visibility = "visible";
   messageMain.innerHTML = "";
   messageInput.style.visibility = "visible";
+  const el = target.querySelector(".text_main_notis");
+  el.style.visibility = "hidden";
+  el.style.opacity = "0";
 });
 
-const resetDMbg = () => {
-  dmsCont.querySelectorAll("a").forEach((dm) => {
-    dm.style.backgroundColor = "";
-  });
-};
+// const resetDMbg = () => {
+//   dmsCont.querySelectorAll("a").forEach((dm) => {
+//     dm.style.backgroundColor = "";
+//   });
+// };
 
 houseCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
@@ -112,7 +117,10 @@ const loadDms = async () => {
     if (dm.status === "fail") return;
 
     const html = `<a href="" data-dm = "${dm.dmId}"
-    ><img src="./../img/testImg.png" alt="" /><span>${dm.to}</span></a
+    ><img src="./../img/testImg.png" alt="" /><span class="text_main"
+    ><span class="text_main_user">${dm.to}</span
+    ><span class="text_main_notis" style="visibility: hidden; opacity: 0" ></span></span
+  ></a
   >`;
 
     dmsCont.insertAdjacentHTML("afterbegin", html);
@@ -198,17 +206,14 @@ const displayMessage = (message, name) => {
   messageMain.insertAdjacentHTML("beforeend", html);
 };
 
-const popup = async (message, name) => {
-  const html = `<div class="content">
-    <img src="./../img/testImg.png" alt="" />
-    <span>${message}</span>
-  </div>`;
-  messagePopup.insertAdjacentElement("beforeend", html);
-  messagePopup.style.transform = "translateY(-50%)";
-  await wait(3);
-  messagePopup.style.transform = "translateY(110%)";
-  await wait(0.5);
-  messagePopup.innerHTML = "";
+const popup = async (message, name, room) => {
+  dmsCont.querySelectorAll("a").forEach((dm) => {
+    if (dm.getAttribute("data-dm") === room) {
+      const el = dm.querySelector(".text_main_notis");
+      el.style.visibility = "visible";
+      el.style.opacity = "1";
+    }
+  });
 };
 
 {
@@ -225,9 +230,16 @@ socket.on("connect", () => {
     if (room === activeDm) {
       displayMessage(message, user);
     } else {
-      popup(message, user);
+      popup(message, user, room);
     }
   });
 });
 
 // SOCKETS
+
+// PEER
+const myPeer = new Peer(undefined, {
+  host: "/",
+  port: "3001",
+});
+// PEER
