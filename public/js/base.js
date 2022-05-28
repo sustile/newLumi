@@ -120,12 +120,21 @@ const loadDms = async () => {
 
     if (dm.status === "fail") return;
 
+    //   const html = `<a href="" data-dm = "${dm.dmId}"
+    //   ><img src="./../img/${dm.image}" alt="" /><span class="text_main"
+    //   ><span class="text_main_user">${dm.to}</span
+    //   ><span class="text_main_notis" style="visibility: hidden; opacity: 0" ></span></span
+    // ></a
+    // >`;
+
     const html = `<a href="" data-dm = "${dm.dmId}"
-    ><img src="./../img/testImg.png" alt="" /><span class="text_main"
+  ><div class="img_cont">
+    <img src="./../img/${dm.image}" alt="" />
+  </div>
+  <span class="text_main"
     ><span class="text_main_user">${dm.to}</span
-    ><span class="text_main_notis" style="visibility: hidden; opacity: 0" ></span></span
-  ></a
-  >`;
+    ><span class="text_main_notis" style="visibility: hidden; opacity: 0"></span></span
+></a>`;
 
     dmsCont.insertAdjacentHTML("afterbegin", html);
 

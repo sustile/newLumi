@@ -11,8 +11,18 @@ exports.account = account;
 
 exports.createAccount = async (req, res) => {
   try {
+    const reqBody = req.file;
+
+    if (!reqBody) {
+      res.status(400).json({
+        status: "fail",
+        message: "No data Provided",
+      });
+    }
+
     const body = Object.assign(req.body, {
       creation: Date.now(),
+      image: reqBody.filename,
     });
 
     if (body.password === body.confirmPassword) {
@@ -158,6 +168,7 @@ exports.getDm = async (req, res) => {
         dmId: dm.id,
         to: user2.name,
         toId: user2.id,
+        image: user2.image,
       });
     }
   } catch (err) {
@@ -181,6 +192,7 @@ exports.getBasicData = async (req, res) => {
           name: user.name,
           email: user.email,
           id: user._id,
+          image: user.image,
         },
       });
     }

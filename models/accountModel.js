@@ -39,6 +39,10 @@ const schema = new mongoose.Schema({
   passwordChangedAt: {
     type: Date,
   },
+  image: {
+    type: String,
+    required: [true, "An Account Must Have a Image"],
+  },
   house: [String],
   dms: [String],
 });

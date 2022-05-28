@@ -1,12 +1,30 @@
 const express = require("express");
 const router = express.Router();
 const { verify } = require("./../middlewares/middleware");
+const path = require("path");
 
 const accountController = require("../controllers/accountController");
 const houseController = require("../controllers/houseController");
 const dmController = require("../controllers/dmController");
 
-router.route("/api/signup").post(accountController.createAccount);
+// MULTER
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "./../public/img"));
+  },
+
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const uploadImage = multer({ storage: storage });
+// MULTER
+router
+  .route("/api/signup")
+  .post(uploadImage.single("image"), accountController.createAccount);
 
 router.route("/api/login").post(accountController.loginAccount);
 

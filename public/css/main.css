@@ -121,6 +121,22 @@ body::after {
   font-size: 2rem;
   font-weight: 500;
 }
+.register-cont form #image {
+  display: none;
+}
+.register-cont form #imageLabel {
+  cursor: pointer;
+  color: #ddd;
+  background-color: var(--primary-red);
+  width: 50%;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 10rem;
+  transition: all 0.3s;
+}
+.register-cont form #imageLabel:hover {
+  transform: scale(1.05);
+}
 
 .login-cont {
   padding: 10rem;
