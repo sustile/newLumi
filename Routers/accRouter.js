@@ -6,6 +6,7 @@ const path = require("path");
 const accountController = require("../controllers/accountController");
 const houseController = require("../controllers/houseController");
 const dmController = require("../controllers/dmController");
+const messageController = require("../controllers/messageController");
 
 // MULTER
 const multer = require("multer");
@@ -46,10 +47,20 @@ router.route("/api/getDm").post(verify, accountController.getDm);
 // ADD A NEW DM
 router.route("/api/addNewDm").post(verify, dmController.addNewDm);
 
-// ADD A NEW MESSAGE TO THE RESPECTIVE DM DATABASE
-router.route("/api/addDms").post(verify, dmController.addDms);
-
 // GET BASIC DATA ABOUT THE USER
 router.route("/api/getBasicData").get(verify, accountController.getBasicData);
+
+// GET BASIC DATA ABOUT THE SOME OTHER USER
+router
+  .route("/api/getUserBasicData")
+  .post(verify, accountController.getUserBasicData);
+
+// ADD A NEW MESSAGE FOR THAT DM
+router.route("/api/saveMessage").post(verify, messageController.saveMessage);
+
+// LAZY LOAD MESSAGES
+router
+  .route("/api/lazyLoadMessages")
+  .post(verify, messageController.lazyLoadMessages);
 
 module.exports = router;

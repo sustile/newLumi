@@ -27,11 +27,7 @@ form.addEventListener("submit", async (e) => {
 
   // CHECK FILE TYPE
 
-  if (
-    !["image/jpeg", "image/gif", "image/png", "image/svg+xml"].includes(
-      image.type
-    )
-  ) {
+  if (!["image/jpeg", "image/gif", "image/png"].includes(image.type)) {
     console.log("Only images are allowed.");
     return;
   }

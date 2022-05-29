@@ -18,18 +18,6 @@ const schema = new mongoose.Schema({
     type: Date,
     required: [true, "An Account Must Have a Creation Date"],
   },
-  messages: [
-    {
-      from: {
-        type: String,
-        required: [true, "A Message must have a From"],
-      },
-      message: {
-        type: String,
-        required: [true, "A DM must have a Message"],
-      },
-    },
-  ],
 });
 
 module.exports = schema;

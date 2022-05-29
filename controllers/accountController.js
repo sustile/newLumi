@@ -203,3 +203,29 @@ exports.getBasicData = async (req, res) => {
     });
   }
 };
+
+exports.getUserBasicData = async (req, res) => {
+  try {
+    const user = await account.findOne({ _id: req.body.id });
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+    } else {
+      res.status(200).json({
+        status: "ok",
+        user: {
+          name: user.name,
+          image: user.image,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};

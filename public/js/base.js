@@ -4,8 +4,11 @@ const socket = io("http://localhost:4000");
 
 const dmsCont = document.querySelector(".dms_main-cont");
 const houseCont = document.querySelector(".houses_main-cont");
+
 const createDM = document.querySelector(".createDm");
 const createHouse = document.querySelector(".createHouse");
+const createDM_input = document.querySelector(".createDm_input_field");
+const createHouse_input = document.querySelector(".createHouse_input_field");
 
 const messageFrom = document.querySelector(".message_form");
 const messageInput = document.querySelector(".message-input");
@@ -14,18 +17,30 @@ const mainHeader = document.querySelector(".content_main-header");
 
 const call_btn = document.querySelector(".call-user");
 const decline_btn = document.querySelector(".call-decline");
+const call_status = document.querySelector(".call_status");
+const call_status_text = call_status.querySelector("p");
+
 const videoCont = document.querySelector(".video_cont");
 
 const muteBtn = document.querySelector(".muteBtn");
 const deafenBtn = document.querySelector(".deafenBtn");
 
+const call_prompt = document.querySelector(".call_prompt_call");
+const call_prompt_attend = call_prompt.querySelector(".call_prompt_accept");
+const call_prompt_decline = call_prompt.querySelector(".call_prompt_decline");
+
+const message_load_trigger = document.querySelector(".message_load_trigger");
+
 let user = {};
 let activeDm = "";
 let peerId = "";
 let myPeer;
+let currentDmPage = 1;
 
 let call;
-let activeCall = false;
+const activeCall = {
+  status: false,
+};
 
 const wait = async (s) => {
   return new Promise((res) => {
@@ -43,6 +58,8 @@ const loadPrevent = () => {
     });
   });
 };
+
+// DM CLICK EVENT
 dmsCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
@@ -58,6 +75,11 @@ dmsCont.addEventListener("click", (e) => {
   const el = target.querySelector(".text_main_notis");
   el.style.visibility = "hidden";
   el.style.opacity = "0";
+
+  // LAZY LOAD MESSAGES
+
+  currentDmPage = 1;
+  lazyLoadMessages(activeDm, currentDmPage, true);
 });
 
 houseCont.addEventListener("click", (e) => {
@@ -143,55 +165,88 @@ const loadDms = async () => {
 };
 
 createDM.addEventListener("click", async (e) => {
-  const person2 = prompt("Id");
+  // const person2 = prompt("Id");
+  createDM_input.style.animation = "popupPrompt 0.3s forwards ease";
+  const form = createDM_input.querySelector("form");
 
-  const dm = await (
-    await fetch("/api/addNewDm", {
-      method: "POST",
-      body: JSON.stringify({
-        person2,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  ).json();
+  const cancel = form.querySelector("a");
 
-  if (dm.status === "fail") {
-    if (dm.message === "Duplicate Dms") {
-      console.log("Duplicate Dms");
+  cancel.addEventListener("click", async (e) => {
+    createDM_input.style.animation = "popdownPrompt 0.3s forwards ease";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const person2 = form.querySelector("input").value;
+
+    const dm = await (
+      await fetch("/api/addNewDm", {
+        method: "POST",
+        body: JSON.stringify({
+          person2,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (dm.status === "fail") {
+      if (dm.message === "Duplicate Dms") {
+        console.log("Duplicate Dms");
+        form.querySelector("input").value = "";
+      } else {
+        console.log("Invalid ID");
+        form.querySelector("input").value = "";
+      }
     } else {
-      console.log("Invalid ID");
+      loadDms();
     }
-  }
 
-  loadDms();
+    createDM_input.style.animation = "popdownPrompt 0.3s forwards ease";
+  });
 });
 
 createHouse.addEventListener("click", async (e) => {
-  const name = prompt("name");
+  // const name = prompt("name");
+  createHouse_input.style.animation = "popupPrompt 0.3s forwards ease";
+  const form = createHouse_input.querySelector("form");
 
-  const dm = await (
-    await fetch("/api/createHouse", {
-      method: "POST",
-      body: JSON.stringify({
-        name,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  ).json();
+  const cancel = form.querySelector("a");
 
-  if (dm.status === "fail") {
-    if (dm.message === "Duplicate Dms") {
-      console.log("Duplicate Dms");
+  cancel.addEventListener("click", async (e) => {
+    createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = form.querySelector("input").value;
+
+    const dm = await (
+      await fetch("/api/createHouse", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (dm.status === "fail") {
+      if (dm.message === "Duplicate Dms") {
+        console.log("Duplicate Dms");
+      } else {
+        console.log("Invalid ID");
+      }
     } else {
-      console.log("Invalid ID");
+      loadServers();
     }
-  }
-
-  loadServers();
+    createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+  });
 });
 
 const getBasicData = async () => {
@@ -203,20 +258,104 @@ messageFrom.addEventListener("submit", async (e) => {
   e.preventDefault();
   const message = messageInput.value;
   messageInput.value = "";
-  displayMessage(message, user.name);
-  socket.emit("send-message", message, user.name, activeDm);
+  displayMessage(message, user.name, user.image);
+
+  messageMain.scroll({
+    top: messageMain.scrollHeight,
+    behavior: "smooth",
+  });
+
+  socket.emit("send-message", message, user.name, activeDm, user.image);
+
+  saveMessage(activeDm, message);
 });
 
-const displayMessage = (message, name) => {
+const displayMessage = (message, name, image, type = "beforeend") => {
   const html = `<div class="message">
   <div class="message_user">
-    <img src="./../img/testImg.png" alt="" />
+    <div class="img_cont">
+      <img src="./../img/${image}" alt="" />
+    </div>
     <span>${name}</span>
   </div>
   <span class="message_cont">${message}</span>
 </div>`;
 
-  messageMain.insertAdjacentHTML("beforeend", html);
+  messageMain.insertAdjacentHTML(type, html);
+};
+
+// CHECK IF USER HAS REACH THE TOP
+messageMain.addEventListener("scroll", () => {
+  if (messageMain.scrollTop === 0) {
+    currentDmPage = currentDmPage + 1;
+    lazyLoadMessages(activeDm, currentDmPage);
+  }
+});
+// CHECK IF USER HAS REACH THE TOP
+
+const saveMessage = async (dmId, message) => {
+  const dm = await (
+    await fetch("/api/saveMessage", {
+      method: "POST",
+      body: JSON.stringify({
+        dmId,
+        message,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+};
+
+const lazyLoadMessages = async (
+  dmId,
+  page,
+  checkScrollAfterLoading = false
+) => {
+  const dm = await (
+    await fetch("/api/lazyLoadMessages", {
+      method: "POST",
+      body: JSON.stringify({
+        dmId,
+        page,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+
+  dm.result.forEach((el, i) => {
+    displayMessage(el.message, el.name, el.image, "afterbegin");
+  });
+
+  if (checkScrollAfterLoading) {
+    messageMain.scroll({
+      top: messageMain.scrollHeight,
+      behavior: "smooth",
+    });
+  }
+};
+
+const getSomeOtherUserData = async (id) => {
+  const user = await (
+    await fetch("/api/getUserBasicData", {
+      method: "POST",
+      body: JSON.stringify({
+        id,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+
+  if (user) {
+    return user.user;
+  } else {
+    return undefined;
+  }
 };
 
 const popup = async (message, name, room) => {
@@ -250,9 +389,7 @@ async function mediaControl() {
   });
   muteBtn.addEventListener("click", async () => {
     const audio = mediaStream.getAudioTracks()[0];
-    console.log(audio);
     if (audio) {
-      console.log("In");
       if (audio.enabled) {
         audio.enabled = false;
         console.log(audio);
@@ -280,13 +417,42 @@ async function remoteConnection() {
   // SOCKETS
 
   socket.on("connect", () => {
-    socket.on("receive-message", (user, message, room) => {
+    socket.on("receive-message", (user, message, room, image) => {
       if (room === activeDm) {
-        displayMessage(message, user);
+        displayMessage(message, user, image);
+        messageMain.scroll({
+          top: messageMain.scrollHeight,
+          behavior: "smooth",
+        });
       } else {
         popup(message, user, room);
       }
     });
+  });
+
+  let incomingCallData;
+  socket.on("incoming-call", async (from, to, room) => {
+    incomingCallData = await getSomeOtherUserData(from);
+    incomingCallData.room = room;
+    console.log(`Socket Incoming from ${from}`);
+  });
+
+  socket.on("userLeft-call", () => {
+    try {
+      call.close();
+      if (mainHeader.textContent === "Welcome") {
+        decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+        call_status.style.animation = "popdown_btn 0.3s forwards ease";
+      } else {
+        decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+        call_btn.style.animation = "popup_btn 0.3s forwards ease";
+        call_status.style.animation = "popdown_btn 0.3s forwards ease";
+      }
+
+      activeCall.with = undefined;
+      activeCall.status = false;
+      activeCall.room = undefined;
+    } catch (err) {}
   });
 
   // SOCKETS
@@ -304,16 +470,37 @@ async function remoteConnection() {
     .then((stream) => {
       addVideoStream(myVideo, stream);
 
-      myPeer.on("call", (incoming) => {
-        const ask = confirm("Incoming Call");
-        if (ask) {
+      // ON CALL
+
+      myPeer.on("call", async (incoming) => {
+        call_prompt.querySelector("p").textContent = incomingCallData.name;
+
+        const imgCont = (call_prompt
+          .querySelector(".img_cont")
+          .querySelector("img").src = `./../img/${incomingCallData.image}`);
+
+        call_prompt.style.animation = "popupPrompt 0.3s forwards ease";
+
+        call_prompt_attend.addEventListener("click", () => {
           incoming.answer(stream);
           call = incoming;
+          activeCall.status = true;
+
+          activeCall.with = incomingCallData.name;
+
           call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+          call_status_text.textContent = `${incomingCallData.name} Connected`;
+          call_status.style.animation = "popup_btn 0.3s forwards ease";
           decline_btn.style.animation = "popup_btn 0.3s forwards ease";
-        } else {
-          // console.log("Call declined");
-        }
+
+          call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+        });
+
+        call_prompt_decline.addEventListener("click", () => {
+          socket.emit("leave-call", incomingCallData.room);
+          incomingCallData = undefined;
+          call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+        });
       });
 
       const audio = stream.getAudioTracks()[0];
@@ -354,17 +541,25 @@ async function remoteConnection() {
         // console.log(activeDm);
         connectToNewUser(activeDm, stream);
         e.target.style.animation = "popdown_btn 0.3s forwards ease";
+        call_status_text.textContent = `${mainHeader.textContent} Connected`;
+        call_status.style.animation = "popup_btn 0.3s forwards ease";
         decline_btn.style.animation = "popup_btn 0.3s forwards ease";
       });
 
-      decline_btn.addEventListener("click", (e) => {
+      decline_btn.addEventListener("click", async (e) => {
         call.close();
+        socket.emit("leave-call", activeDm);
         if (mainHeader.textContent === "Welcome") {
           e.target.style.animation = "popdown_btn 0.3s forwards ease";
+          call_status.style.animation = "popdown_btn 0.3s forwards ease";
         } else {
           e.target.style.animation = "popdown_btn 0.3s forwards ease";
           call_btn.style.animation = "popup_btn 0.3s forwards ease";
+          call_status.style.animation = "popdown_btn 0.3s forwards ease";
         }
+
+        activeCall.with = undefined;
+        activeCall.status = false;
       });
 
       socket.on("user-connected", (userId) => {
@@ -381,6 +576,8 @@ async function remoteConnection() {
   };
 
   const connectToNewUser = async (id, stream) => {
+    socket.emit("send-call", user.id, id, activeDm);
+
     const dm = await (
       await fetch("/api/getDm", {
         method: "POST",
@@ -393,10 +590,15 @@ async function remoteConnection() {
       })
     ).json();
 
-    if (activeCall) {
+    if (activeCall.status) {
+      socket.emit("leave-call", activeDm);
       call.close();
-      console.log("Call dropped");
+      // console.log("Call dropped");
       call = myPeer.call(dm.toId, stream);
+
+      const data = await getSomeOtherUserData(dm.toId);
+      activeCall.with = data.name;
+
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
@@ -407,12 +609,16 @@ async function remoteConnection() {
       });
     } else {
       call = myPeer.call(dm.toId, stream);
+
+      const data = await getSomeOtherUserData(dm.toId);
+      activeCall.with = data.name;
+
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
       });
 
-      activeCall = true;
+      activeCall.status = true;
 
       call.on("close", () => {
         video.remove();

@@ -18,8 +18,16 @@ io.on("connection", (socket) => {
     socket.to(room).emit("user-connected", peerId);
   });
 
-  socket.on("send-message", (message, user, room) => {
-    socket.to(room).emit("receive-message", user, message, room);
+  socket.on("send-message", (message, user, room, image) => {
+    socket.to(room).emit("receive-message", user, message, room, image);
+  });
+
+  socket.on("send-call", (from, to, room) => {
+    socket.to(room).emit("incoming-call", from, to, room);
+  });
+
+  socket.on("leave-call", (room) => {
+    socket.to(room).emit("userLeft-call");
   });
 });
 
