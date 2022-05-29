@@ -18,6 +18,7 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "getusermedia": "^2.0.1",
+    "howler": "^2.2.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.4",
     "morgan": "^1.10.0",

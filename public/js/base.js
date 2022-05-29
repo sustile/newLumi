@@ -42,6 +42,19 @@ const activeCall = {
   status: false,
 };
 
+// SOUND VARIABLES
+const sound_notification = new Howl({
+  src: ["./../sounds/notification.mp3"],
+  volume: 0.3,
+});
+
+const sound_call = new Howl({
+  src: ["./../sounds/call.mp3"],
+  volume: 0.3,
+});
+
+// SOUND VARIABLES
+
 const wait = async (s) => {
   return new Promise((res) => {
     setTimeout(() => {
@@ -364,6 +377,7 @@ const popup = async (message, name, room) => {
       const el = dm.querySelector(".text_main_notis");
       el.style.visibility = "visible";
       el.style.opacity = "1";
+      sound_notification.play();
     }
   });
 };
@@ -435,6 +449,7 @@ async function remoteConnection() {
     incomingCallData = await getSomeOtherUserData(from);
     incomingCallData.room = room;
     console.log(`Socket Incoming from ${from}`);
+    sound_call.play();
   });
 
   socket.on("userLeft-call", () => {
@@ -486,6 +501,7 @@ async function remoteConnection() {
           call = incoming;
           activeCall.status = true;
 
+          sound_call.stop();
           activeCall.with = incomingCallData.name;
 
           call_btn.style.animation = "popdown_btn 0.3s forwards ease";
@@ -498,6 +514,14 @@ async function remoteConnection() {
 
         call_prompt_decline.addEventListener("click", () => {
           socket.emit("leave-call", incomingCallData.room);
+          sound_call.stop();
+          incomingCallData = undefined;
+          call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+        });
+
+        sound_call.on("end", () => {
+          socket.emit("leave-call", incomingCallData.room);
+          sound_call.stop();
           incomingCallData = undefined;
           call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
         });
