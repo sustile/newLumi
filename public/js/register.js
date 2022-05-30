@@ -46,7 +46,7 @@ form.addEventListener("submit", async (e) => {
   fd.append("image", image);
   // console.log(fd);
   const result = await (
-    await fetch("http://localhost:3000/api/signup", {
+    await fetch("/api/signup", {
       method: "POST",
       body: fd,
     })
