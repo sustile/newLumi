@@ -6,6 +6,11 @@ const jwt = require("./utils/jwtToken");
 const { verify } = require("./middlewares/middleware");
 const cookieParser = require("cookie-parser");
 
+const myPeer = new Peer(undefined, {
+  host: "/",
+  port: "3001",
+});
+
 const io = require("socket.io")(4000, {
   cors: {
     origin: ["http://localhost:3000"],
