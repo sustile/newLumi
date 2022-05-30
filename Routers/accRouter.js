@@ -7,6 +7,7 @@ const accountController = require("../controllers/accountController");
 const houseController = require("../controllers/houseController");
 const dmController = require("../controllers/dmController");
 const messageController = require("../controllers/messageController");
+const houseMessageController = require("../controllers/houseMessageController");
 
 // MULTER
 const multer = require("multer");
@@ -62,5 +63,18 @@ router.route("/api/saveMessage").post(verify, messageController.saveMessage);
 router
   .route("/api/lazyLoadMessages")
   .post(verify, messageController.lazyLoadMessages);
+
+//JOIN A HOUSE
+router.route("/api/joinhouse").post(verify, houseController.joinHouse);
+
+//SAVE A MESSAGE FROM A HOUSE
+router
+  .route("/api/saveHouseMessage")
+  .post(verify, houseMessageController.saveHouseMessage);
+
+// LAZY LOAD HOUSE MESSAGES
+router
+  .route("/api/lazyLoadHouseMessages")
+  .post(verify, houseMessageController.lazyLoadHouseMessages);
 
 module.exports = router;

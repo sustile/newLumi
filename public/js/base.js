@@ -7,11 +7,16 @@ const houseCont = document.querySelector(".houses_main-cont");
 
 const createDM = document.querySelector(".createDm");
 const createHouse = document.querySelector(".createHouse");
+
+const askHouseOptions = document.querySelector(".chooseHouse_option");
+
 const createDM_input = document.querySelector(".createDm_input_field");
 const createHouse_input = document.querySelector(".createHouse_input_field");
 
+const joinHouse_input = document.querySelector(".joinHouse_input_field");
+
 const messageFrom = document.querySelector(".message_form");
-const messageInput = document.querySelector(".message-input");
+const messageInput = messageFrom.querySelector(".message-input");
 const messageMain = document.querySelector(".message_main-cont");
 const mainHeader = document.querySelector(".content_main-header");
 
@@ -31,8 +36,14 @@ const call_prompt_decline = call_prompt.querySelector(".call_prompt_decline");
 
 const message_load_trigger = document.querySelector(".message_load_trigger");
 
+const house_main_cont = document.querySelector(".house_model-cont");
+const dm_main_cont = document.querySelector(".messages_model-cont");
+const houseMessageCont = document.querySelector(".house-message_main-cont");
+const houseMessageForm = document.querySelector(".house-message_form");
+const houseMessageInput = houseMessageForm.querySelector(".message-input");
+
 let user = {};
-let activeDm = "";
+let activeCont = "";
 let peerId = "";
 let myPeer;
 let currentDmPage = 1;
@@ -78,9 +89,11 @@ dmsCont.addEventListener("click", (e) => {
   if (!target) return;
   e.preventDefault();
   const user = target.querySelector("span");
+  house_main_cont.style.display = "none";
+  dm_main_cont.style.display = "flex";
   // resetDMbg();
   // target.style.backgroundColor = "red";
-  activeDm = target.getAttribute("data-dm");
+  activeCont = target.getAttribute("data-dm");
   mainHeader.textContent = user.textContent;
   call_btn.style.animation = "popup_btn 0.3s forwards ease";
   messageMain.innerHTML = "";
@@ -92,7 +105,7 @@ dmsCont.addEventListener("click", (e) => {
   // LAZY LOAD MESSAGES
 
   currentDmPage = 1;
-  lazyLoadMessages(activeDm, currentDmPage, true);
+  lazyLoadMessages(activeCont, currentDmPage, true);
 });
 
 houseCont.addEventListener("click", (e) => {
@@ -125,9 +138,11 @@ const loadServers = async () => {
 
     if (house.status === "fail") return;
 
-    const html = `<a href=""><img src="./../img/testImg.png" alt="" /></a>`;
+    const html = `<a href="" data-id="${house.result._id}" data-name="${house.result.name}"><img src="./../img/testImg.png" alt=""  /></a>`;
 
     houseCont.insertAdjacentHTML("afterbegin", html);
+
+    socket.emit("join-room", house.result._id, peerId);
   });
 };
 
@@ -222,43 +237,81 @@ createDM.addEventListener("click", async (e) => {
 });
 
 createHouse.addEventListener("click", async (e) => {
-  // const name = prompt("name");
-  createHouse_input.style.animation = "popupPrompt 0.3s forwards ease";
-  const form = createHouse_input.querySelector("form");
+  askHouseOptions.style.animation = "popupPrompt 0.3s forwards ease";
 
-  const cancel = form.querySelector("a");
+  const joinHouse = askHouseOptions.querySelector(".join-house");
+  const createHouse = askHouseOptions.querySelector(".create-house");
 
-  cancel.addEventListener("click", async (e) => {
-    createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+  createHouse.addEventListener("click", () => {
+    askHouseOptions.style.animation = "popdownPrompt 0.3s forwards ease";
+
+    createHouse_input.style.animation = "popupPrompt 0.3s forwards ease";
+    const form = createHouse_input.querySelector("form");
+    const cancel = form.querySelector("a");
+    cancel.addEventListener("click", async (e) => {
+      createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = form.querySelector("input").value;
+      const dm = await (
+        await fetch("/api/createHouse", {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+      if (dm.status === "fail") {
+        if (dm.message === "Duplicate Dms") {
+          console.log("Duplicate Dms");
+        } else {
+          console.log("Invalid ID");
+        }
+      } else {
+        loadServers();
+      }
+      createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+    });
   });
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  joinHouse.addEventListener("click", () => {
+    askHouseOptions.style.animation = "popdownPrompt 0.3s forwards ease";
 
-    const name = form.querySelector("input").value;
-
-    const dm = await (
-      await fetch("/api/createHouse", {
-        method: "POST",
-        body: JSON.stringify({
-          name,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-
-    if (dm.status === "fail") {
-      if (dm.message === "Duplicate Dms") {
-        console.log("Duplicate Dms");
+    joinHouse_input.style.animation = "popupPrompt 0.3s forwards ease";
+    const form = joinHouse_input.querySelector("form");
+    const cancel = form.querySelector("a");
+    cancel.addEventListener("click", async (e) => {
+      joinHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = form.querySelector("input").value;
+      const dm = await (
+        await fetch("/api/joinhouse", {
+          method: "POST",
+          body: JSON.stringify({
+            id,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+      if (dm.status === "fail") {
+        if (dm.message === "Duplicate Dms") {
+          console.log("Duplicate Dms");
+        } else {
+          console.log("Invalid ID");
+        }
       } else {
-        console.log("Invalid ID");
+        loadServers();
       }
-    } else {
-      loadServers();
-    }
-    createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+      joinHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+    });
   });
 });
 
@@ -278,9 +331,21 @@ messageFrom.addEventListener("submit", async (e) => {
     behavior: "smooth",
   });
 
-  socket.emit("send-message", message, user.name, activeDm, user.image);
+  socket.emit("send-message", message, user.name, activeCont, user.image);
 
-  saveMessage(activeDm, message);
+  saveMessage(activeCont, message);
+});
+
+socket.on("receive-message", (user, message, room, image) => {
+  if (room === activeCont) {
+    displayMessage(message, user, image);
+    messageMain.scroll({
+      top: messageMain.scrollHeight,
+      behavior: "smooth",
+    });
+  } else {
+    popup(message, user, room);
+  }
 });
 
 const displayMessage = (message, name, image, type = "beforeend") => {
@@ -301,7 +366,7 @@ const displayMessage = (message, name, image, type = "beforeend") => {
 messageMain.addEventListener("scroll", () => {
   if (messageMain.scrollTop === 0) {
     currentDmPage = currentDmPage + 1;
-    lazyLoadMessages(activeDm, currentDmPage);
+    lazyLoadMessages(activeCont, currentDmPage);
   }
 });
 // CHECK IF USER HAS REACH THE TOP
@@ -396,59 +461,132 @@ const popup = async (message, name, room) => {
   // mediaControl();
 })();
 
-async function mediaControl() {
-  let mediaStream = await navigator.mediaDevices.getUserMedia({
-    video: false,
-    audio: true,
-  });
-  muteBtn.addEventListener("click", async () => {
-    const audio = mediaStream.getAudioTracks()[0];
-    if (audio) {
-      if (audio.enabled) {
-        audio.enabled = false;
-        console.log(audio);
-      } else {
-        audio.enabled = true;
-        console.log(audio);
-      }
-    }
-  });
-}
+// ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
-function openDm(id) {
-  const user = target.querySelector("span");
-  activeDm = target.getAttribute("data-dm");
-  mainHeader.textContent = user.textContent;
-  call_btn.style.display = "inherit";
-  messageMain.innerHTML = "";
-  messageInput.style.visibility = "visible";
-  const el = target.querySelector(".text_main_notis");
-  el.style.visibility = "hidden";
-  el.style.opacity = "0";
-}
+houseCont.addEventListener("click", (e) => {
+  const target = e.target.closest("a");
+  if (!target) return;
+  e.preventDefault();
+  house_main_cont.style.display = "flex";
+  dm_main_cont.style.display = "none";
+  activeCont = target.getAttribute("data-id");
+  mainHeader.textContent = target.getAttribute("data-name");
+  houseMessageInput.style.visibility = "visible";
+  call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+  houseMessageCont.innerHTML = "";
+
+  currentDmPage = 1;
+  lazyLoadHouseMessages(activeCont, currentDmPage, true);
+});
+
+const displayHouseMessage = (message, name, image, type = "beforeend") => {
+  const html = `<div class="message">
+  <div class="message_user">
+    <div class="img_cont">
+      <img src="./../img/${image}" alt="" />
+    </div>
+    <span>${name}</span>
+  </div>
+  <span class="message_cont">${message}</span>
+</div>`;
+
+  houseMessageCont.insertAdjacentHTML(type, html);
+};
+
+houseMessageForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const message = houseMessageInput.value;
+  houseMessageInput.value = "";
+  displayHouseMessage(message, user.name, user.image);
+
+  houseMessageCont.scroll({
+    top: houseMessageCont.scrollHeight,
+    behavior: "smooth",
+  });
+
+  socket.emit("send-house-message", message, user.name, activeCont, user.image);
+
+  saveHouseMessage(activeCont, message);
+});
+
+const saveHouseMessage = async (houseId, message) => {
+  const dm = await (
+    await fetch("/api/saveHouseMessage", {
+      method: "POST",
+      body: JSON.stringify({
+        houseId,
+        message,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+};
+
+// CHECK IF USER HAS REACH THE TOP
+houseMessageCont.addEventListener("scroll", () => {
+  if (houseMessageCont.scrollTop === 0) {
+    currentDmPage = currentDmPage + 1;
+    lazyLoadHouseMessages(activeCont, currentDmPage);
+  }
+});
+// CHECK IF USER HAS REACH THE TOP
+
+const lazyLoadHouseMessages = async (
+  houseId,
+  page,
+  checkScrollAfterLoading = false
+) => {
+  const dm = await (
+    await fetch("/api/lazyLoadHouseMessages", {
+      method: "POST",
+      body: JSON.stringify({
+        houseId,
+        page,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+
+  dm.result.forEach((el, i) => {
+    displayHouseMessage(el.message, el.name, el.image, "afterbegin");
+  });
+
+  if (checkScrollAfterLoading) {
+    houseMessageCont.scroll({
+      top: houseMessageCont.scrollHeight,
+      behavior: "smooth",
+    });
+  }
+};
+
+socket.on("receive-house-message", (user, message, room, image) => {
+  if (room === activeCont) {
+    displayHouseMessage(message, user, image);
+    houseMessageCont.scroll({
+      top: houseMessageCont.scrollHeight,
+      behavior: "smooth",
+    });
+  } else {
+    // popup(message, user, room);
+    console.log(`${user} : ${message}`);
+  }
+});
+
+// ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
 async function remoteConnection() {
   // SOCKETS
 
-  socket.on("connect", () => {
-    socket.on("receive-message", (user, message, room, image) => {
-      if (room === activeDm) {
-        displayMessage(message, user, image);
-        messageMain.scroll({
-          top: messageMain.scrollHeight,
-          behavior: "smooth",
-        });
-      } else {
-        popup(message, user, room);
-      }
-    });
-  });
+  socket.on("connect", () => {});
 
   let incomingCallData;
   socket.on("incoming-call", async (from, to, room) => {
     incomingCallData = await getSomeOtherUserData(from);
     incomingCallData.room = room;
-    console.log(`Socket Incoming from ${from}`);
     sound_call.play();
   });
 
@@ -562,8 +700,8 @@ async function remoteConnection() {
       });
 
       call_btn.addEventListener("click", (e) => {
-        // console.log(activeDm);
-        connectToNewUser(activeDm, stream);
+        // console.log(activeCont);
+        connectToNewUser(activeCont, stream);
         e.target.style.animation = "popdown_btn 0.3s forwards ease";
         call_status_text.textContent = `${mainHeader.textContent} Connected`;
         call_status.style.animation = "popup_btn 0.3s forwards ease";
@@ -572,7 +710,7 @@ async function remoteConnection() {
 
       decline_btn.addEventListener("click", async (e) => {
         call.close();
-        socket.emit("leave-call", activeDm);
+        socket.emit("leave-call", activeCont);
         if (mainHeader.textContent === "Welcome") {
           e.target.style.animation = "popdown_btn 0.3s forwards ease";
           call_status.style.animation = "popdown_btn 0.3s forwards ease";
@@ -585,10 +723,6 @@ async function remoteConnection() {
         activeCall.with = undefined;
         activeCall.status = false;
       });
-
-      socket.on("user-connected", (userId) => {
-        // console.log(`${userId} : Connected`);
-      });
     });
 
   const addVideoStream = (video, stream) => {
@@ -600,7 +734,7 @@ async function remoteConnection() {
   };
 
   const connectToNewUser = async (id, stream) => {
-    socket.emit("send-call", user.id, id, activeDm);
+    socket.emit("send-call", user.id, id, activeCont);
 
     const dm = await (
       await fetch("/api/getDm", {
@@ -615,7 +749,7 @@ async function remoteConnection() {
     ).json();
 
     if (activeCall.status) {
-      socket.emit("leave-call", activeDm);
+      socket.emit("leave-call", activeCont);
       call.close();
       // console.log("Call dropped");
       call = myPeer.call(dm.toId, stream);

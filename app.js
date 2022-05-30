@@ -13,13 +13,16 @@ const io = require("socket.io")(4000, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (room, peerId) => {
+  socket.on("join-room", (room) => {
     socket.join(room);
-    socket.to(room).emit("user-connected", peerId);
   });
 
   socket.on("send-message", (message, user, room, image) => {
     socket.to(room).emit("receive-message", user, message, room, image);
+  });
+
+  socket.on("send-house-message", (message, user, room, image) => {
+    socket.to(room).emit("receive-house-message", user, message, room, image);
   });
 
   socket.on("send-call", (from, to, room) => {
