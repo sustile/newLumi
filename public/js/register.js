@@ -7,8 +7,14 @@ const imageMain = document.querySelector("#image");
 const form = document.querySelector(".register-form");
 const submitbtn = document.querySelector(".submitBtn");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+const reset = () => {
+  emailMain.value = "";
+  passMain.value = "";
+  nameMain.value = "";
+  confPassMain.value = "";
+};
+
+const formSubmit = async () => {
   let email = emailMain.value;
   let name = nameMain.value;
   let pass = passMain.value;
@@ -59,11 +65,15 @@ form.addEventListener("submit", async (e) => {
   if (result.status === "fail") {
     console.log("Email Already in Use");
   }
+};
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    formSubmit();
+  }
 });
 
-const reset = () => {
-  emailMain.value = "";
-  passMain.value = "";
-  nameMain.value = "";
-  confPassMain.value = "";
-};
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  formSubmit();
+});

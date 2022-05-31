@@ -3,9 +3,7 @@ const passMain = document.querySelector("#password");
 
 const form = document.querySelector(".login-form");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
+const formSubmit = async () => {
   let email = emailMain.value;
   let password = passMain.value;
 
@@ -29,4 +27,9 @@ form.addEventListener("submit", async (e) => {
   if (result.status === "fail") {
     console.log("Invalid Email or Password");
   }
+};
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  formSubmit();
 });
