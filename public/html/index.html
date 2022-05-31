@@ -207,6 +207,37 @@
         <a href="" class="prevent">Cancel</a>
       </form>
     </div>
+    <div class="account_details">
+      <h2>Account Settings</h2>
+      <a href="" class="close_account_details prevent">
+        <i class="ph-x-bold"></i>
+      </a>
+
+      <form class="form">
+        <div class="nameChange_cont">
+          <label for="nameChange">Change Your Name</label>
+          <input type="text" id="nameChange" placeholder="Systile" />
+        </div>
+
+        <div class="imageChange_cont">
+          <label for="image" id="imageLabel">Choose an Image</label>
+          <img src="./../img/testImg.png" alt="" class="image_main" />
+          <input
+            type="file"
+            id="image"
+            accept="image/jpeg, image/png, image/gif"
+            style="display: none"
+          />
+        </div>
+
+        <div class="submit-cont">
+          <button type="submit" class="submit_acc_changes">Save</button>
+        </div>
+      </form>
+      <div class="logout-cont">
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
     <div
       class="video_cont"
       style="position: fixed; top: 0; left: 0; display: none"

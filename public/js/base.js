@@ -45,6 +45,7 @@ const houseMessageInput = houseMessageForm.querySelector(".message-input");
 const userData_image = document.querySelector(".user-data_image");
 const userData_name = document.querySelector(".user-data_name");
 const userData_id = document.querySelector(".user-data_id");
+const account_details = document.querySelector(".account_details");
 
 let user = {};
 let activeCont = "";
@@ -316,6 +317,35 @@ createHouse.addEventListener("click", async (e) => {
       }
       joinHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
     });
+  });
+});
+
+userData_image.addEventListener("click", () => {
+  account_details.style.animation = "popupPrompt 0.3s forwards ease";
+
+  const closeBtn = document.querySelector(".close_account_details");
+  closeBtn.addEventListener("click", () => {
+    account_details.style.animation = "popdownPrompt 0.3s forwards ease";
+  });
+
+  const form = account_details.querySelector(".form");
+
+  const nameInput = form.querySelector("#nameChange");
+  const imageChange = form.querySelector("#image");
+  const imageCont = form.querySelector(".image_main");
+
+  imageChange.addEventListener("change", () => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(imageChange.files[0]);
+    fileReader.onload = () => {
+      imageCont.src = fileReader.result;
+    };
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (!nameInput.value && !imageChange.files[0]) return;
   });
 });
 
@@ -707,6 +737,8 @@ async function remoteConnection() {
             el.pause();
           });
           e.target.setAttribute("data-active", true);
+          audio.enabled = false;
+          muteBtn.style.color = "var(--primary-red)";
         } else if (e.target.getAttribute("data-active") === "true") {
           document.querySelectorAll("video").forEach((el) => {
             deafenBtn.style.color = "var(--primary-green)";

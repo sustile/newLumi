@@ -357,6 +357,7 @@ body {
             object-fit: cover;
             border-radius: 50%;
             clip-path: circle(50% at 50% 50%);
+            cursor: pointer;
           }
         }
 
@@ -752,7 +753,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background-color: #26547c;
+  background-color: rgb(41, 41, 41);
   border-radius: 1rem;
   padding: 4rem;
   display: flex;
@@ -845,7 +846,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background-color: #d8315b;
+  background-color: rgb(41, 41, 41);
   border-radius: 1rem;
   padding: 4rem;
   display: flex;
@@ -855,7 +856,7 @@ body {
 
   p {
     font-family: "Rubik", sans-serif;
-    color: #333;
+    color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
   }
@@ -876,7 +877,8 @@ body {
       border-radius: 1rem;
       font-size: 1.8rem;
       font-weight: 500;
-      color: #333;
+      color: #ddd;
+      background-color: #333;
     }
 
     a {
@@ -929,7 +931,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background-color: #d8315b;
+  background-color: rgb(41, 41, 41);
   border-radius: 1rem;
   padding: 4rem;
   display: flex;
@@ -941,7 +943,7 @@ body {
 
   p {
     font-family: "Rubik", sans-serif;
-    color: #333;
+    color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
   }
@@ -963,7 +965,8 @@ body {
       border-radius: 1rem;
       font-size: 1.8rem;
       font-weight: 500;
-      color: #333;
+      color: #ddd;
+      background-color: #333;
     }
 
     a {
@@ -1016,7 +1019,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
   // transform: translate(-50%, -50%);
-  background-color: #d8315b;
+  background-color: rgb(41, 41, 41);
   border-radius: 1rem;
   padding: 4rem;
   display: flex;
@@ -1025,6 +1028,7 @@ body {
   gap: 2rem;
   // width: 20%;
   gap: 3rem;
+  visibility: hidden;
 
   div {
     display: flex;
@@ -1034,16 +1038,17 @@ body {
     gap: 2rem;
     i {
       font-size: 4rem;
-      background-color: #ddd;
+      background-color: #333;
       padding: 1rem;
       border-radius: 50%;
       cursor: pointer;
+      color: var(--primary-green);
     }
     p {
       font-family: "Rubik", sans-serif;
       font-size: 2rem;
       font-weight: 500;
-      color: #ddd;
+      color: var(--primary-red);
     }
   }
 
@@ -1088,7 +1093,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background-color: #d8315b;
+  background-color: rgb(41, 41, 41);
   border-radius: 1rem;
   padding: 4rem;
   display: flex;
@@ -1100,7 +1105,7 @@ body {
 
   p {
     font-family: "Rubik", sans-serif;
-    color: #333;
+    color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
   }
@@ -1122,7 +1127,8 @@ body {
       border-radius: 1rem;
       font-size: 1.8rem;
       font-weight: 500;
-      color: #333;
+      color: #ddd;
+      background-color: #333;
     }
 
     a {
@@ -1133,6 +1139,170 @@ body {
       font-size: 1.6rem;
     }
   }
+  @keyframes popupPrompt {
+    0% {
+      visibility: hidden;
+      transform: translate(-50%, -50%) scale(0);
+    }
+
+    80% {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    100% {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @keyframes popdownPrompt {
+    0% {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    80% {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    100% {
+      visibility: hidden;
+      transform: translate(-50%, -50%) scale(0);
+    }
+  }
+}
+
+.account_details {
+  z-index: 120;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background-color: rgb(41, 41, 41);
+  border-radius: 1rem;
+  padding: 4rem;
+
+  visibility: hidden;
+
+  h2 {
+    font-family: "Rubik", sans-serif;
+    font-size: 3.5rem;
+    font-weight: 400;
+    color: var(--primary-red);
+    text-align: left;
+  }
+
+  .close_account_details {
+    text-decoration: none;
+    position: absolute;
+    top: 3rem;
+    right: 3rem;
+
+    i {
+      font-size: 3rem;
+      background-color: #333;
+      padding: 1rem;
+      color: #ddd;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  }
+
+  .form {
+    margin-top: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      gap: 3rem;
+    }
+
+    label {
+      font-size: "Rubik", sans-serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #ddd;
+    }
+
+    input {
+      text-align: center;
+      padding: 0.8rem 2rem;
+      border: 0;
+      outline: 0;
+      border-radius: 5px;
+      font-size: 1.8rem;
+      font-family: "Rubik", sans-serif;
+      font-weight: 500;
+      color: #ddd;
+      background-color: #333;
+      width: 50%;
+    }
+
+    .imageChange_cont {
+      display: flex;
+      justify-content: center;
+      gap: 5rem;
+      label {
+        background-color: var(--primary-red);
+        padding: 1rem 3rem;
+        border-radius: 10rem;
+        cursor: pointer;
+      }
+
+      img {
+        width: 7rem;
+        height: 7rem;
+        border-radius: 50%;
+      }
+    }
+
+    .submit-cont {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .submit_acc_changes {
+        cursor: pointer;
+        border: 0;
+        outline: 0;
+        padding: 1rem 3rem;
+        border-radius: 5px;
+        font-family: "Rubik", sans-serif;
+        font-size: 1.7rem;
+        font-weight: 600;
+        margin-top: 5rem;
+        background-color: var(--primary-green);
+        color: #333;
+      }
+    }
+  }
+
+  .logout-cont {
+    margin-top: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    a {
+      text-decoration: none;
+      color: #333;
+      font-size: 2rem;
+      background-color: var(--primary-red);
+      padding: 1rem 3rem;
+      border-radius: 10rem;
+      font-family: "Rubik", sans-serif;
+      font-weight: 500;
+      color: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+    }
+  }
+
   @keyframes popupPrompt {
     0% {
       visibility: hidden;
