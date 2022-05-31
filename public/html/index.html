@@ -26,29 +26,6 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="nav">
-      <div class="nav_headers">
-        <i class="ph-moon-fill"></i>
-        <h2 class="main-heading">Lumi</h2>
-      </div>
-      <div class="nav_links">
-        <div class="nav_controls">
-          <a href=""
-            ><i
-              class="ph-headphones-bold prevent deafenBtn"
-              data-active="false"
-            ></i
-          ></a>
-          <!-- <a href=""><i class="ph-monitor-play-bold prevent"></i></a> -->
-          <a href=""><i class="ph-microphone-bold prevent muteBtn"></i></a>
-        </div>
-        <div class="nav_acc">
-          <a href=""><i class="ph-identification-card-bold prevent"></i></a>
-          <a href=""><i class="ph-gear-six-bold prevent"></i></a>
-          <a href="/logout" class="logout">Logout</a>
-        </div>
-      </div>
-    </div>
     <div class="header_main-cont">
       <div class="houses">
         <div class="houses_main-cont">
@@ -56,6 +33,10 @@
           <a href=""><img src="./../img/testImg.png" alt="" /></a> -->
         </div>
         <a href="" class="createHouse prevent"><i class="ph-plus-bold"></i></a>
+        <div class="nav_headers">
+          <i class="ph-moon-fill"></i>
+          <h2 class="main-heading">Lumi</h2>
+        </div>
       </div>
       <div class="dms">
         <div class="dms_main-cont">
@@ -68,7 +49,35 @@
               ><span class="text_main_notis"></span></span
           ></a> -->
         </div>
-        <a href="" class="createDm"><i class="ph-chats-bold prevent"></i></a>
+        <div class="nav_details">
+          <a href="" class="createDm"><i class="ph-chats-bold prevent"></i></a>
+          <div class="nav_controls">
+            <a href=""
+              ><i
+                class="ph-headphones prevent deafenBtn"
+                data-active="false"
+              ></i
+            ></a>
+            <!-- <a href=""><i class="ph-monitor-play-bold prevent"></i></a> -->
+            <a href=""><i class="ph-microphone prevent muteBtn"></i></a>
+            <a href=""><i class="ph-gear-six prevent"></i></a>
+          </div>
+          <div class="nav_acc">
+            <!-- <a href=""><i class="ph-identification-card-bold prevent"></i></a> -->
+            <!-- <a href="/logout" class="logout">Logout</a> -->
+            <div class="img_cont">
+              <img
+                src="./../img/1653832165884.png"
+                alt=""
+                class="user-data_image"
+              />
+            </div>
+            <div>
+              <span class="user-data_name">Systile</span>
+              <a href="" class="user-data_id prevent">ASUDSDASDAHSD1349329</a>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="content">
         <div class="content_main">
@@ -135,6 +144,28 @@
         </div>
       </div>
     </div>
+    <!-- <div class="nav">
+      <div class="nav_headers">
+        <i class="ph-moon-fill"></i>
+        <h2 class="main-heading">Lumi</h2>
+      </div>
+      <div class="nav_links">
+        <div class="nav_controls">
+          <a href=""
+            ><i
+              class="ph-headphones-bold prevent deafenBtn"
+              data-active="false"
+            ></i
+          ></a>
+          <a href=""><i class="ph-microphone-bold prevent muteBtn"></i></a>
+        </div>
+        <div class="nav_acc">
+          <a href=""><i class="ph-identification-card-bold prevent"></i></a>
+          <a href=""><i class="ph-gear-six-bold prevent"></i></a>
+          <a href="/logout" class="logout">Logout</a>
+        </div>
+      </div>
+    </div> -->
     <div class="call_prompt_call">
       <div class="img_cont">
         <img src="./../img/1653719045490.jpeg" alt="" />
@@ -176,7 +207,10 @@
         <a href="" class="prevent">Cancel</a>
       </form>
     </div>
-    <div class="video_cont" style="position: fixed; top: 0; left: 0"></div>
+    <div
+      class="video_cont"
+      style="position: fixed; top: 0; left: 0; display: none"
+    ></div>
   </body>
   <script defer type="module" src="../js/base.js"></script>
 </html>

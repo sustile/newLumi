@@ -42,6 +42,10 @@ const houseMessageCont = document.querySelector(".house-message_main-cont");
 const houseMessageForm = document.querySelector(".house-message_form");
 const houseMessageInput = houseMessageForm.querySelector(".message-input");
 
+const userData_image = document.querySelector(".user-data_image");
+const userData_name = document.querySelector(".user-data_name");
+const userData_id = document.querySelector(".user-data_id");
+
 let user = {};
 let activeCont = "";
 let peerId = "";
@@ -318,6 +322,10 @@ createHouse.addEventListener("click", async (e) => {
 const getBasicData = async () => {
   const data = await (await fetch("/api/getBasicData")).json();
   user = data.user;
+
+  userData_image.src = `./../img/${user.image}`;
+  userData_name.textContent = user.name;
+  userData_id.textContent = user.id;
 };
 
 messageFrom.addEventListener("submit", async (e) => {
@@ -460,6 +468,16 @@ const popup = async (message, name, room) => {
   remoteConnection();
   // mediaControl();
 })();
+
+// COPY ID IF THEY CLICK ON IT (FOR THE CURRENT USING USER)
+userData_id.addEventListener("click", async () => {
+  const data = userData_id.textContent;
+  navigator.clipboard.writeText(data);
+  userData_id.textContent = "Copied";
+  await wait(2);
+  userData_id.textContent = data;
+});
+// COPY ID IF THEY CLICK ON IT (FOR THE CURRENT USING USER)
 
 // ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
@@ -672,11 +690,11 @@ async function remoteConnection() {
           if (audio.enabled) {
             audio.enabled = false;
             muteBtn.style.color = "var(--primary-red)";
-            muteBtn.style.backgroundColor = "var(--primary-bg)";
+            // muteBtn.style.backgroundColor = "var(--primary-bg)";
           } else {
             audio.enabled = true;
-            muteBtn.style.color = "#333";
-            muteBtn.style.backgroundColor = "";
+            muteBtn.style.color = "var(--primary-green)";
+            // muteBtn.style.backgroundColor = "";
           }
         });
       }
@@ -685,14 +703,14 @@ async function remoteConnection() {
         if (e.target.getAttribute("data-active") === "false") {
           document.querySelectorAll("video").forEach((el) => {
             deafenBtn.style.color = "var(--primary-red)";
-            deafenBtn.style.backgroundColor = "var(--primary-bg)";
+            // deafenBtn.style.backgroundColor = "var(--primary-bg)";
             el.pause();
           });
           e.target.setAttribute("data-active", true);
         } else if (e.target.getAttribute("data-active") === "true") {
           document.querySelectorAll("video").forEach((el) => {
-            deafenBtn.style.color = "#333";
-            deafenBtn.style.backgroundColor = "";
+            deafenBtn.style.color = "var(--primary-green)";
+            // deafenBtn.style.backgroundColor = "";
             el.play();
           });
           e.target.setAttribute("data-active", false);
