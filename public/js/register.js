@@ -38,7 +38,7 @@ const formSubmit = async () => {
     return;
   }
 
-  // check file size (< 2MB)
+  // check file size (< 10MB)
   if (image.size > 10 * 1024 * 1024) {
     console.log("File must be less than 2MB.");
     return;

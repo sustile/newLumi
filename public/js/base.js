@@ -175,13 +175,6 @@ const loadDms = async () => {
 
     if (dm.status === "fail") return;
 
-    //   const html = `<a href="" data-dm = "${dm.dmId}"
-    //   ><img src="./../img/${dm.image}" alt="" /><span class="text_main"
-    //   ><span class="text_main_user">${dm.to}</span
-    //   ><span class="text_main_notis" style="visibility: hidden; opacity: 0" ></span></span
-    // ></a
-    // >`;
-
     const html = `<a href="" data-dm = "${dm.dmId}"
   ><div class="img_cont">
     <img src="./../img/${dm.image}" alt="" />
@@ -345,7 +338,13 @@ userData_image.addEventListener("click", () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    if (!nameInput.value && !imageChange.files[0]) return;
+    // if (!nameInput.value && !imageChange.files[0]) return;
+
+    let newName = nameInput.value;
+    let newImage = imageChange.files[0];
+
+    console.log(newName);
+    console.log(newImage);
   });
 });
 
@@ -674,6 +673,7 @@ async function remoteConnection() {
       // ON CALL
 
       myPeer.on("call", async (incoming) => {
+        // console.log("Incoming Boi");
         call_prompt.querySelector("p").textContent = incomingCallData.name;
 
         const imgCont = (call_prompt
