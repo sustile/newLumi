@@ -150,7 +150,7 @@ body {
       align-items: center;
       gap: 1.5rem;
       overflow-y: auto;
-      height: 78vh;
+      height: 72rem;
       // background-color: red;
       a {
         img {
@@ -199,7 +199,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    // gap: 1rem;
 
     &_main-cont {
       padding: 1.5rem 1rem;
@@ -208,7 +208,7 @@ body {
       gap: 0.5rem;
       width: 25rem;
       overflow-y: auto;
-      height: 71vh;
+      height: 67rem;
       // background-color: red;
       a {
         width: 100%;
@@ -562,7 +562,7 @@ body {
       flex-direction: column;
 
       .message_main-cont {
-        height: 83vh;
+        height: 77rem;
         // background-color: red;
         display: flex;
         flex-direction: column;
@@ -640,7 +640,7 @@ body {
       flex-direction: column;
 
       .house-message_main-cont {
-        height: 83vh;
+        height: 73rem;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;

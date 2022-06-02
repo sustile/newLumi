@@ -132,7 +132,7 @@ body {
   align-items: center;
   gap: 1.5rem;
   overflow-y: auto;
-  height: 78vh;
+  height: 72rem;
 }
 .header_main-cont .houses_main-cont a img {
   cursor: pointer;
@@ -172,7 +172,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
 }
 .header_main-cont .dms_main-cont {
   padding: 1.5rem 1rem;
@@ -181,7 +180,7 @@ body {
   gap: 0.5rem;
   width: 25rem;
   overflow-y: auto;
-  height: 71vh;
+  height: 67rem;
 }
 .header_main-cont .dms_main-cont a {
   width: 100%;
@@ -476,7 +475,7 @@ body {
   flex-direction: column;
 }
 .header_main-cont .content .messages_model-cont .message_main-cont {
-  height: 83vh;
+  height: 77rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -544,7 +543,7 @@ body {
   flex-direction: column;
 }
 .header_main-cont .content .house_model-cont .house-message_main-cont {
-  height: 83vh;
+  height: 73rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
