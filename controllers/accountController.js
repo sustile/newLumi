@@ -229,3 +229,63 @@ exports.getUserBasicData = async (req, res) => {
     });
   }
 };
+
+exports.changeData = async (req, res) => {
+  try {
+    const user = req.user;
+    const body = req.body;
+
+    const file = req.file;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+      return;
+    }
+
+    if (!body) {
+      res.status(404).json({
+        status: "fail",
+        message: "No Data was provided",
+      });
+      return;
+    }
+
+    if (!file) {
+      if (body.newName !== "undefined") {
+        await account.findOneAndUpdate(
+          { _id: user.id },
+          { name: body.newName }
+        );
+        res.status(200).json({
+          status: "ok",
+        });
+      }
+    } else {
+      if (body.newName !== "undefined") {
+        await account.findOneAndUpdate(
+          { _id: user.id },
+          { name: body.newName, image: file.filename }
+        );
+        res.status(200).json({
+          status: "ok",
+        });
+      } else {
+        await account.findOneAndUpdate(
+          { _id: user.id },
+          { image: file.filename }
+        );
+        res.status(200).json({
+          status: "ok",
+        });
+      }
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};

@@ -77,4 +77,8 @@ router
   .route("/api/lazyLoadHouseMessages")
   .post(verify, houseMessageController.lazyLoadHouseMessages);
 
+// CHANGE NAME AND IMAGE OF AN USER
+router
+  .route("/api/changeData")
+  .post(verify, uploadImage.single("image"), accountController.changeData);
 module.exports = router;

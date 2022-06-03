@@ -60,7 +60,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8rem;
-  padding: 10rem 5rem;
+  padding: 10rem 10rem;
   border-radius: 1rem;
 
   .heading {
@@ -80,44 +80,93 @@ body {
   form {
     display: flex;
     flex-direction: column;
-    width: 55%;
+    align-items: center;
+    justify-content: center;
     margin: 0 auto;
     gap: 1.7rem;
+    width: 100%;
 
-    input {
-      border: 0;
-      outline: 0;
-      font-family: "Rubik", sans-serif;
-      border-radius: 1rem;
-      padding: 1rem 2rem;
-      text-align: center;
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: #333;
-      box-shadow: 0 0 0 0.8rem transparent;
-      transition: all 0.3s;
+    .main_cont {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      gap: 5rem;
+    }
 
-      &:placeholder-shown + label {
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-5rem);
+    .allInputs {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      gap: 1.7rem;
+
+      input {
+        border: 0;
+        outline: 0;
+        font-family: "Rubik", sans-serif;
+        border-radius: 1rem;
+        padding: 1rem 2rem;
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #333;
+        box-shadow: 0 0 0 0.8rem transparent;
+        transition: all 0.3s;
+        width: 100%;
+
+        &:placeholder-shown + label {
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-5rem);
+        }
+
+        &:focus:invalid {
+          box-shadow: 0 0 0 0.8rem var(--primary-red);
+        }
+        &:focus:valid {
+          box-shadow: 0 0 0 0.8rem var(--primary-green);
+        }
       }
 
-      &:focus:invalid {
-        box-shadow: 0 0 0 0.8rem var(--primary-red);
-      }
-      &:focus:valid {
-        box-shadow: 0 0 0 0.8rem var(--primary-green);
+      label {
+        font-family: "Rubik", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        text-align: center;
+        color: #ddd;
+        transition: all 0.3s;
       }
     }
 
-    label {
-      font-family: "Rubik", sans-serif;
-      font-size: 1.8rem;
-      font-weight: 500;
-      text-align: center;
-      color: #ddd;
-      transition: all 0.3s;
+    .imageChange_cont {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      width: 100%;
+      // background-color: red;
+      label {
+        cursor: pointer;
+        color: #ddd;
+        background-color: var(--primary-red);
+        margin: 0 auto;
+        padding: 1rem 3rem;
+        border-radius: 10rem;
+        transition: all 0.3s;
+        font-size: 2rem;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
+      img {
+        width: 8rem;
+        height: 8rem;
+        border-radius: 50%;
+      }
     }
 
     a {
@@ -129,22 +178,25 @@ body {
       font-weight: 500;
     }
 
-    #image {
-      display: none;
-    }
-
-    #imageLabel {
-      cursor: pointer;
-      color: #ddd;
-      background-color: var(--primary-red);
-      width: 50%;
-      margin: 0 auto;
-      padding: 1rem;
+    button {
+      font-family: "Rubik", sans-serif;
+      background-color: #04e762;
+      font-weight: 500;
+      padding: 1.2rem 5rem;
+      border: 0;
+      outline: 0;
+      font-size: 2rem;
+      color: #333;
       border-radius: 10rem;
-      transition: all 0.3s;
+      cursor: pointer;
+      transition: all 0.3s ease;
 
       &:hover {
-        transform: scale(1.05);
+        transform: translateY(-1rem);
+      }
+
+      &:active {
+        transform: translateY(-0.2rem);
       }
     }
   }
@@ -155,5 +207,52 @@ body {
 
   form {
     width: 80%;
+  }
+}
+
+.errorPopup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #d8315b;
+  position: fixed;
+  padding: 1rem 3rem;
+  border-radius: 10rem;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -100%);
+  // animation: moveDown 0.5s forwards ease;
+  // animation: moveUp 0.5s forwards ease;
+  i {
+    font-size: 5rem;
+    color: #ddd;
+  }
+
+  p {
+    font-family: "Rubik", sans-serif;
+    font-size: 2.2rem;
+    font-weight: 500;
+    color: #ddd;
+  }
+
+  @keyframes moveDown {
+    0% {
+      transform: translate(-50%, -100%);
+    }
+
+    100% {
+      transform: translate(-50%, 20%);
+    }
+  }
+
+  @keyframes moveUp {
+    0% {
+      transform: translate(-50%, 20%);
+    }
+
+    100% {
+      transform: translate(-50%, -100%);
+    }
   }
 }

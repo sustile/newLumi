@@ -59,7 +59,7 @@ body::after {
   display: flex;
   flex-direction: column;
   gap: 8rem;
-  padding: 10rem 5rem;
+  padding: 10rem 10rem;
   border-radius: 1rem;
 }
 .register-cont .heading {
@@ -77,11 +77,28 @@ body::after {
 .register-cont form {
   display: flex;
   flex-direction: column;
-  width: 55%;
+  align-items: center;
+  justify-content: center;
   margin: 0 auto;
   gap: 1.7rem;
+  width: 100%;
 }
-.register-cont form input {
+.register-cont form .main_cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 5rem;
+}
+.register-cont form .allInputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 1.7rem;
+}
+.register-cont form .allInputs input {
   border: 0;
   outline: 0;
   font-family: "Rubik", sans-serif;
@@ -93,25 +110,51 @@ body::after {
   color: #333;
   box-shadow: 0 0 0 0.8rem transparent;
   transition: all 0.3s;
+  width: 100%;
 }
-.register-cont form input:placeholder-shown + label {
+.register-cont form .allInputs input:placeholder-shown + label {
   opacity: 0;
   visibility: hidden;
   transform: translateY(-5rem);
 }
-.register-cont form input:focus:invalid {
+.register-cont form .allInputs input:focus:invalid {
   box-shadow: 0 0 0 0.8rem var(--primary-red);
 }
-.register-cont form input:focus:valid {
+.register-cont form .allInputs input:focus:valid {
   box-shadow: 0 0 0 0.8rem var(--primary-green);
 }
-.register-cont form label {
+.register-cont form .allInputs label {
   font-family: "Rubik", sans-serif;
   font-size: 1.8rem;
   font-weight: 500;
   text-align: center;
   color: #ddd;
   transition: all 0.3s;
+}
+.register-cont form .imageChange_cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+.register-cont form .imageChange_cont label {
+  cursor: pointer;
+  color: #ddd;
+  background-color: var(--primary-red);
+  margin: 0 auto;
+  padding: 1rem 3rem;
+  border-radius: 10rem;
+  transition: all 0.3s;
+  font-size: 2rem;
+}
+.register-cont form .imageChange_cont label:hover {
+  transform: scale(1.05);
+}
+.register-cont form .imageChange_cont img {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
 }
 .register-cont form a {
   margin-top: 5rem;
@@ -121,21 +164,24 @@ body::after {
   font-size: 2rem;
   font-weight: 500;
 }
-.register-cont form #image {
-  display: none;
-}
-.register-cont form #imageLabel {
-  cursor: pointer;
-  color: #ddd;
-  background-color: var(--primary-red);
-  width: 50%;
-  margin: 0 auto;
-  padding: 1rem;
+.register-cont form button {
+  font-family: "Rubik", sans-serif;
+  background-color: #04e762;
+  font-weight: 500;
+  padding: 1.2rem 5rem;
+  border: 0;
+  outline: 0;
+  font-size: 2rem;
+  color: #333;
   border-radius: 10rem;
-  transition: all 0.3s;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-.register-cont form #imageLabel:hover {
-  transform: scale(1.05);
+.register-cont form button:hover {
+  transform: translateY(-1rem);
+}
+.register-cont form button:active {
+  transform: translateY(-0.2rem);
 }
 
 .login-cont {
@@ -143,6 +189,46 @@ body::after {
 }
 .login-cont form {
   width: 80%;
+}
+
+.errorPopup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #d8315b;
+  position: fixed;
+  padding: 1rem 3rem;
+  border-radius: 10rem;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -100%);
+}
+.errorPopup i {
+  font-size: 5rem;
+  color: #ddd;
+}
+.errorPopup p {
+  font-family: "Rubik", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: #ddd;
+}
+@keyframes moveDown {
+  0% {
+    transform: translate(-50%, -100%);
+  }
+  100% {
+    transform: translate(-50%, 20%);
+  }
+}
+@keyframes moveUp {
+  0% {
+    transform: translate(-50%, 20%);
+  }
+  100% {
+    transform: translate(-50%, -100%);
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

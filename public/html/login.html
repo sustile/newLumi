@@ -7,28 +7,33 @@
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="./../css/main.css" />
     <link rel="stylesheet" type="text/css" href="./../css/baseQueries.css" />
+    <script src="https://unpkg.com/phosphor-icons"></script>
     <script defer src="./../js/login.js"></script>
   </head>
   <body>
     <div class="register-cont login-cont">
       <h2 class="heading">Log into Lumi</h2>
       <form class="login-form">
-        <input type="email" required id="email" placeholder="Email" />
-        <label for="email">Email</label>
-        <input
-          type="password"
-          required
-          id="password"
-          placeholder="Password"
-          minlength="6"
-          maxlength="16"
-        />
-        <label for="password">Password</label>
-        <button type="submit" style="display: none" class="submitBtn">
-          Submit
-        </button>
+        <div class="allInputs">
+          <input type="email" required id="email" placeholder="Email" />
+          <label for="email">Email</label>
+          <input
+            type="password"
+            required
+            id="password"
+            placeholder="Password"
+            minlength="6"
+            maxlength="16"
+          />
+          <label for="password">Password</label>
+        </div>
+        <button type="submit" class="submitBtn">Submit</button>
         <a href="/signup">Don't Have an Account? Register Here</a>
       </form>
+    </div>
+    <div class="errorPopup">
+      <i class="ph-circle-wavy-warning-bold"></i>
+      <p class="errorPopup_text">Something Went Wrong</p>
     </div>
   </body>
 </html>

@@ -314,6 +314,9 @@ createHouse.addEventListener("click", async (e) => {
 });
 
 userData_image.addEventListener("click", () => {
+  const nameInput = account_details.querySelector("#nameChange");
+  nameInput.placeholder = user.name;
+
   account_details.style.animation = "popupPrompt 0.3s forwards ease";
 
   const closeBtn = document.querySelector(".close_account_details");
@@ -323,9 +326,8 @@ userData_image.addEventListener("click", () => {
 
   const form = account_details.querySelector(".form");
 
-  const nameInput = form.querySelector("#nameChange");
-  const imageChange = form.querySelector("#image");
   const imageCont = form.querySelector(".image_main");
+  const imageChange = form.querySelector("#image");
 
   imageChange.addEventListener("change", () => {
     const fileReader = new FileReader();
@@ -335,16 +337,47 @@ userData_image.addEventListener("click", () => {
     };
   });
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // if (!nameInput.value && !imageChange.files[0]) return;
+    if (!nameInput.value && !imageChange.files[0]) return;
 
     let newName = nameInput.value;
     let newImage = imageChange.files[0];
 
-    console.log(newName);
-    console.log(newImage);
+    if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
+      console.log("Only images are allowed.");
+      return;
+    }
+
+    // check file size (< 10MB)
+    if (newImage.size > 10 * 1024 * 1024) {
+      console.log("File must be less than 2MB.");
+      return;
+    }
+
+    const fd = new FormData();
+
+    if (!newName) {
+      fd.append("newName", "undefined");
+    } else {
+      fd.append("newName", newName);
+    }
+    fd.append("image", newImage);
+
+    const result = await (
+      await fetch("/api/changeData", {
+        method: "POST",
+        body: fd,
+      })
+    ).json();
+
+    if (result.status === "ok") {
+      account_details.style.animation = "popdownPrompt 0.3s forwards ease";
+      getBasicData();
+    } else {
+      console.log("Something went wrong");
+    }
   });
 });
 

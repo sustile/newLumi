@@ -37,7 +37,6 @@ body {
   max-width: 100vw;
   height: 100vh;
   width: 100vw;
-  padding: 2rem;
 }
 
 .nav {
@@ -117,8 +116,6 @@ body {
   width: 14rem;
   background-color: #333;
   height: 100%;
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -132,7 +129,7 @@ body {
   align-items: center;
   gap: 1.5rem;
   overflow-y: auto;
-  height: 72rem;
+  height: 80vh;
 }
 .header_main-cont .houses_main-cont a img {
   cursor: pointer;
@@ -170,8 +167,9 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  box-sizing: content-box;
 }
 .header_main-cont .dms_main-cont {
   padding: 1.5rem 1rem;
@@ -180,7 +178,7 @@ body {
   gap: 0.5rem;
   width: 25rem;
   overflow-y: auto;
-  height: 67rem;
+  height: 75vh;
 }
 .header_main-cont .dms_main-cont a {
   width: 100%;
@@ -255,7 +253,7 @@ body {
   gap: 1rem;
   width: 100%;
   background-color: rgb(41, 41, 41);
-  padding: 2rem 0;
+  padding: 2rem 0rem;
 }
 .header_main-cont .dms .nav_details .createDm {
   text-decoration: none;
@@ -340,13 +338,10 @@ body {
   width: 100%;
   background-color: #333;
   height: 100%;
-  border-top-right-radius: 1rem;
-  border-bottom-right-radius: 1rem;
   display: flex;
   flex-direction: column;
 }
 .header_main-cont .content_main {
-  border-top-right-radius: 1rem;
   background-color: rgb(41, 41, 41);
   display: flex;
   justify-content: space-between;
@@ -475,7 +470,7 @@ body {
   flex-direction: column;
 }
 .header_main-cont .content .messages_model-cont .message_main-cont {
-  height: 77rem;
+  height: 87vh;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -543,7 +538,7 @@ body {
   flex-direction: column;
 }
 .header_main-cont .content .house_model-cont .house-message_main-cont {
-  height: 73rem;
+  height: 87vh;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
