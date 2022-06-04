@@ -7,6 +7,7 @@
     "server": "nodemon server.js",
     "sass": "sass --watch public/scss:public/css",
     "peer": "peerjs --port 3001",
+    "vcPeer": "peerjs --port 3002",
     "convert": "browserify public/js/base.js > public/js/baseBundle.js",
     "start": "\"npm run-script server\" \"npm run-script sass\""
   },

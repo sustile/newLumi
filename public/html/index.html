@@ -93,6 +93,15 @@
           <p>57R1X Connected</p>
         </div>
 
+        <!-- <div class="vc_btns">
+          <i class="ph-headset join-vc"> </i>
+          <i class="ph-phone-slash leave-vc"></i>
+        </div> -->
+
+        <!-- <div class="vc_status">
+          <p>57R1X Connected</p>
+        </div> -->
+
         <div class="messages_model-cont">
           <div class="message_main-cont">
             <!-- <div class="message">
@@ -119,27 +128,47 @@
         </div>
 
         <div class="house_model-cont" style="display: none">
-          <div class="house-message_main-cont">
-            <!-- <div class="message">
-              <div class="message_user">
-                <div class="img_cont">
-                  <img src="./../img/1653719291251.jpg" alt="" />
+          <div class="house_message_section">
+            <div class="house-message_main-cont">
+              <!-- <div class="message">
+                <div class="message_user">
+                  <div class="img_cont">
+                    <img src="./../img/1653719291251.jpg" alt="" />
+                  </div>
+                  <span>Test User</span>
                 </div>
-                <span>Test User</span>
-              </div>
-              <span class="message_cont">How You Doin?</span>
-            </div> -->
+                <span class="message_cont">How You Doin?</span>
+              </div> -->
+            </div>
+            <div class="house-message_enter" style="visibility: hidden">
+              <form class="house-message_form">
+                <input
+                  type="text"
+                  class="message-input"
+                  required
+                  placeholder="Send a Message To this House"
+                  maxlength="200"
+                />
+              </form>
+            </div>
           </div>
-          <div class="house-message_enter" style="visibility: hidden">
-            <form class="house-message_form">
-              <input
-                type="text"
-                class="message-input"
-                required
-                placeholder="Send a Message To this House"
-                maxlength="200"
-              />
-            </form>
+
+          <div class="house_vc_section">
+            <div class="vc_btns">
+              <a href="" class="join-house-vc prevent">Join VC</a>
+              <a href="" class="leave-house-vc prevent">Leave VC</a>
+            </div>
+            <div class="vc_display" style="display: none">
+              <p class="vc_display-header">Users Connected Live</p>
+              <div class="vc_display_user-cont">
+                <div class="user">
+                  <div class="img_cont">
+                    <img src="./../img/testImg.png" alt="" />
+                  </div>
+                  <p>Systile</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

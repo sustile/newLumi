@@ -30,7 +30,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave-call", (room) => {
-    socket.to(room).emit("userLeft-call");
+    socket.to(room).emit("userLeft-call", room);
+  });
+
+  socket.on("joined-vc", (room, id, name, image) => {
+    socket.to(room).emit("user-joined-vc", id, name, image);
   });
 });
 

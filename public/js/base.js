@@ -47,11 +47,16 @@ const userData_name = document.querySelector(".user-data_name");
 const userData_id = document.querySelector(".user-data_id");
 const account_details = document.querySelector(".account_details");
 
+const join_house_vc = document.querySelector(".join-house-vc");
+const leave_house_vc = document.querySelector(".leave-house-vc");
+
 let user = {};
 let activeCont = "";
 let peerId = "";
 let myPeer;
 let currentDmPage = 1;
+
+let vcPeer = "";
 
 let call;
 const activeCall = {
@@ -345,15 +350,16 @@ userData_image.addEventListener("click", () => {
     let newName = nameInput.value;
     let newImage = imageChange.files[0];
 
-    if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
-      console.log("Only images are allowed.");
-      return;
-    }
-
-    // check file size (< 10MB)
-    if (newImage.size > 10 * 1024 * 1024) {
-      console.log("File must be less than 2MB.");
-      return;
+    if (newImage) {
+      if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
+        console.log("Only images are allowed.");
+        return;
+      }
+      // check file size (< 10MB)
+      if (newImage.size > 10 * 1024 * 1024) {
+        console.log("File must be less than 2MB.");
+        return;
+      }
     }
 
     const fd = new FormData();
@@ -373,6 +379,7 @@ userData_image.addEventListener("click", () => {
     ).json();
 
     if (result.status === "ok") {
+      nameInput.value = "";
       account_details.style.animation = "popdownPrompt 0.3s forwards ease";
       getBasicData();
     } else {
@@ -519,10 +526,14 @@ const popup = async (message, name, room) => {
 
 (async () => {
   await getBasicData();
-  // console.log(user.id);
   myPeer = new Peer(user.id, {
     host: "/",
     port: "3001",
+  });
+
+  vcPeer = new Peer(user.id, {
+    host: "/",
+    port: "3002",
   });
   loadServers();
   loadDms();
@@ -552,7 +563,9 @@ houseCont.addEventListener("click", (e) => {
   activeCont = target.getAttribute("data-id");
   mainHeader.textContent = target.getAttribute("data-name");
   houseMessageInput.style.visibility = "visible";
+
   call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+
   houseMessageCont.innerHTML = "";
 
   currentDmPage = 1;
@@ -670,21 +683,23 @@ async function remoteConnection() {
     sound_call.play();
   });
 
-  socket.on("userLeft-call", () => {
+  socket.on("userLeft-call", (room) => {
     try {
-      call.close();
-      if (mainHeader.textContent === "Welcome") {
-        decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
-        call_status.style.animation = "popdown_btn 0.3s forwards ease";
-      } else {
-        decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
-        call_btn.style.animation = "popup_btn 0.3s forwards ease";
-        call_status.style.animation = "popdown_btn 0.3s forwards ease";
-      }
+      if (activeCall.room === room) {
+        call.close();
+        if (mainHeader.textContent === "Welcome") {
+          decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+          call_status.style.animation = "popdown_btn 0.3s forwards ease";
+        } else {
+          decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+          call_btn.style.animation = "popup_btn 0.3s forwards ease";
+          call_status.style.animation = "popdown_btn 0.3s forwards ease";
+        }
 
-      activeCall.with = undefined;
-      activeCall.status = false;
-      activeCall.room = undefined;
+        activeCall.with = undefined;
+        activeCall.status = false;
+        activeCall.room = undefined;
+      }
     } catch (err) {}
   });
 
@@ -706,7 +721,6 @@ async function remoteConnection() {
       // ON CALL
 
       myPeer.on("call", async (incoming) => {
-        // console.log("Incoming Boi");
         call_prompt.querySelector("p").textContent = incomingCallData.name;
 
         const imgCont = (call_prompt
@@ -716,19 +730,37 @@ async function remoteConnection() {
         call_prompt.style.animation = "popupPrompt 0.3s forwards ease";
 
         call_prompt_attend.addEventListener("click", () => {
-          incoming.answer(stream);
-          call = incoming;
-          activeCall.status = true;
+          if (activeCall.status) {
+            socket.emit("leave-call", activeCont);
+            call.close();
+            incoming.answer(stream);
+            call = incoming;
+            activeCall.status = true;
 
-          sound_call.stop();
-          activeCall.with = incomingCallData.name;
+            sound_call.stop();
+            activeCall.with = incomingCallData.name;
 
-          call_btn.style.animation = "popdown_btn 0.3s forwards ease";
-          call_status_text.textContent = `${incomingCallData.name} Connected`;
-          call_status.style.animation = "popup_btn 0.3s forwards ease";
-          decline_btn.style.animation = "popup_btn 0.3s forwards ease";
+            call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+            call_status_text.textContent = `${incomingCallData.name} Connected`;
+            call_status.style.animation = "popup_btn 0.3s forwards ease";
+            decline_btn.style.animation = "popup_btn 0.3s forwards ease";
 
-          call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+            call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+          } else {
+            incoming.answer(stream);
+            call = incoming;
+            activeCall.status = true;
+
+            sound_call.stop();
+            activeCall.with = incomingCallData.name;
+
+            call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+            call_status_text.textContent = `${incomingCallData.name} Connected`;
+            call_status.style.animation = "popup_btn 0.3s forwards ease";
+            decline_btn.style.animation = "popup_btn 0.3s forwards ease";
+
+            call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+          }
         });
 
         call_prompt_decline.addEventListener("click", () => {
@@ -745,6 +777,51 @@ async function remoteConnection() {
           call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
         });
       });
+
+      // HOUSE VC
+      join_house_vc.addEventListener("click", async () => {
+        if (call) {
+          call.close();
+        }
+
+        activeCall.status = true;
+        activeCall.room = activeCont;
+        socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
+
+        join_house_vc.style.animation = "popdownPrompt 0.3s forwards ease";
+        await wait(0.2);
+        leave_house_vc.style.animation = "popupPrompt 0.3s forwards ease";
+      });
+
+      leave_house_vc.addEventListener("click", async () => {
+        call.close();
+        activeCall.with = undefined;
+        activeCall.status = false;
+
+        leave_house_vc.style.animation = "popdownPrompt 0.3s forwards ease";
+        await wait(0.2);
+        join_house_vc.style.animation = "popupPrompt 0.3s forwards ease";
+      });
+
+      socket.on("user-joined-vc", (id, name, image) => {
+        if (activeCall.room === activeCont) {
+          call = vcPeer.call(id, stream);
+          console.log(name);
+        }
+      });
+
+      vcPeer.on("call", (incoming) => {
+        console.log("incoming");
+        incoming.answer(stream);
+        call = incoming;
+
+        const video = document.createElement("video");
+        call.on("stream", (userVideoStream) => {
+          addVideoStream(video, userVideoStream);
+        });
+      });
+
+      // HOUSE VC
 
       const audio = stream.getAudioTracks()[0];
 
@@ -783,7 +860,6 @@ async function remoteConnection() {
       });
 
       call_btn.addEventListener("click", (e) => {
-        // console.log(activeCont);
         connectToNewUser(activeCont, stream);
         e.target.style.animation = "popdown_btn 0.3s forwards ease";
         call_status_text.textContent = `${mainHeader.textContent} Connected`;
@@ -834,7 +910,6 @@ async function remoteConnection() {
     if (activeCall.status) {
       socket.emit("leave-call", activeCont);
       call.close();
-      // console.log("Call dropped");
       call = myPeer.call(dm.toId, stream);
 
       const data = await getSomeOtherUserData(dm.toId);
