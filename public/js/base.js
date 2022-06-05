@@ -66,8 +66,16 @@ const activeCall = {
 
 // SOUND VARIABLES
 const sound_notification = new Howl({
-  src: ["./../sounds/notification.mp3"],
-  volume: 0.3,
+  src: ["./../sounds/notification.wav"],
+  volume: 0.1,
+});
+const sound_callJoin = new Howl({
+  src: ["./../sounds/call_join.wav"],
+  volume: 0.1,
+});
+const sound_callLeave = new Howl({
+  src: ["./../sounds/call_leave.wav"],
+  volume: 0.1,
 });
 
 const sound_call = new Howl({
@@ -745,6 +753,9 @@ async function remoteConnection() {
         call_prompt_attend.addEventListener("click", () => {
           if (activeCall.status) {
             socket.emit("leave-call", activeCont);
+
+            sound_callLeave.play();
+
             call.close();
             incoming.answer(stream);
             call = incoming;
@@ -799,6 +810,7 @@ async function remoteConnection() {
 
         activeCall.status = true;
         activeCall.room = activeCont;
+        sound_callJoin.play();
         socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
 
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
@@ -818,6 +830,9 @@ async function remoteConnection() {
         activeCall.room = undefined;
         activeCall.status = false;
 
+        socket.emit("leave-vc", activeCont);
+        sound_callLeave.play();
+
         leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
         // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
@@ -827,12 +842,17 @@ async function remoteConnection() {
       socket.on("user-joined-vc", (id, name, image) => {
         if (activeCall.room === activeCont) {
           call = vcPeer.call(id, stream);
-          console.log(name);
+          sound_callJoin.play();
+        }
+      });
+
+      socket.on("user-left-vc", () => {
+        if (activeCall.room === activeCont) {
+          sound_callLeave.play();
         }
       });
 
       vcPeer.on("call", (incoming) => {
-        console.log("incoming");
         incoming.answer(stream);
         call = incoming;
 
@@ -882,6 +902,7 @@ async function remoteConnection() {
 
       call_btn.addEventListener("click", (e) => {
         connectToNewUser(activeCont, stream);
+
         e.target.style.animation = "popdown_btn 0.3s forwards ease";
         call_status_text.textContent = `${mainHeader.textContent} Connected`;
         call_status.style.animation = "popup_btn 0.3s forwards ease";
@@ -891,6 +912,9 @@ async function remoteConnection() {
       decline_btn.addEventListener("click", async (e) => {
         call.close();
         socket.emit("leave-call", activeCont);
+
+        sound_callLeave.play();
+
         if (mainHeader.textContent === "Welcome") {
           e.target.style.animation = "popdown_btn 0.3s forwards ease";
           call_status.style.animation = "popdown_btn 0.3s forwards ease";
@@ -930,6 +954,9 @@ async function remoteConnection() {
 
     if (activeCall.status) {
       socket.emit("leave-call", activeCont);
+
+      sound_callLeave.play();
+
       call.close();
       call = myPeer.call(dm.toId, stream);
 

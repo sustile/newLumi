@@ -29,12 +29,20 @@ io.on("connection", (socket) => {
     socket.to(room).emit("incoming-call", from, to, room);
   });
 
+  // socket.on("join-call", (room) => {
+  //   socket.to(room).emit("user-joined-call");
+  // });
+
   socket.on("leave-call", (room) => {
-    socket.to(room).emit("userLeft-call", room);
+    socket.to(room).emit("userLeft-call");
   });
 
   socket.on("joined-vc", (room, id, name, image) => {
     socket.to(room).emit("user-joined-vc", id, name, image);
+  });
+
+  socket.on("leave-vc", (room) => {
+    socket.to(room).emit("user-left-vc");
   });
 });
 
