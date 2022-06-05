@@ -435,7 +435,8 @@ body {
     }
 
     .call_btns {
-      .call-user {
+      .call-user,
+      .join-vc {
         position: absolute;
         transform: translate(-50%, -50%);
         // display: inherit;
@@ -452,7 +453,8 @@ body {
         // animation: popup_btn 0.3s forwards ease;
       }
 
-      .call-decline {
+      .call-decline,
+      .leave-vc {
         position: absolute;
         transform: translate(-50%, -50%);
         // display: inherit;
@@ -466,6 +468,7 @@ body {
         background-color: #161b22;
         padding: 1.5rem;
         border-radius: 50%;
+        z-index: 5;
         // animation: popup_btn 0.3s forwards ease;
       }
 

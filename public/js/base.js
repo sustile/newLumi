@@ -47,8 +47,9 @@ const userData_name = document.querySelector(".user-data_name");
 const userData_id = document.querySelector(".user-data_id");
 const account_details = document.querySelector(".account_details");
 
-const join_house_vc = document.querySelector(".join-house-vc");
-const leave_house_vc = document.querySelector(".leave-house-vc");
+// const join_house_vc = document.querySelector(".join-house-vc");
+const join_house_vc = document.querySelector(".join-vc");
+const leave_house_vc = document.querySelector(".leave-vc");
 
 let user = {};
 let activeCont = "";
@@ -105,7 +106,13 @@ dmsCont.addEventListener("click", (e) => {
   // target.style.backgroundColor = "red";
   activeCont = target.getAttribute("data-dm");
   mainHeader.textContent = user.textContent;
+
   call_btn.style.animation = "popup_btn 0.3s forwards ease";
+
+  if (join_house_vc.style.animation.includes("popup_btn")) {
+    join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+  }
+
   messageMain.innerHTML = "";
   messageInput.style.visibility = "visible";
   const el = target.querySelector(".text_main_notis");
@@ -564,7 +571,13 @@ houseCont.addEventListener("click", (e) => {
   mainHeader.textContent = target.getAttribute("data-name");
   houseMessageInput.style.visibility = "visible";
 
-  call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+  if (!leave_house_vc.style.animation.includes("popup_btn")) {
+    join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+
+    if (call_btn.style.animation.includes("popup_btn")) {
+      call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+    }
+  }
 
   houseMessageCont.innerHTML = "";
 
@@ -788,19 +801,27 @@ async function remoteConnection() {
         activeCall.room = activeCont;
         socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
 
-        join_house_vc.style.animation = "popdownPrompt 0.3s forwards ease";
-        await wait(0.2);
-        leave_house_vc.style.animation = "popupPrompt 0.3s forwards ease";
+        // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+        // await wait(0.2);
+        call_status_text.textContent = `${mainHeader.textContent} VC Connected`;
+        call_status.style.animation = "popup_btn 0.3s forwards ease";
+
+        leave_house_vc.style.animation = "popup_btn 0.3s forwards ease";
       });
 
       leave_house_vc.addEventListener("click", async () => {
-        call.close();
+        try {
+          call.close();
+        } catch (err) {}
+
         activeCall.with = undefined;
+        activeCall.room = undefined;
         activeCall.status = false;
 
-        leave_house_vc.style.animation = "popdownPrompt 0.3s forwards ease";
-        await wait(0.2);
-        join_house_vc.style.animation = "popupPrompt 0.3s forwards ease";
+        leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+        // await wait(0.2);
+        // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+        call_status.style.animation = "popdown_btn 0.3s forwards ease";
       });
 
       socket.on("user-joined-vc", (id, name, image) => {

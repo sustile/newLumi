@@ -366,7 +366,8 @@ body {
   font-size: 3rem;
   cursor: pointer;
 }
-.header_main-cont .content .call_btns .call-user {
+.header_main-cont .content .call_btns .call-user,
+.header_main-cont .content .call_btns .join-vc {
   position: absolute;
   transform: translate(-50%, -50%);
   visibility: hidden;
@@ -379,7 +380,8 @@ body {
   padding: 1.5rem;
   border-radius: 50%;
 }
-.header_main-cont .content .call_btns .call-decline {
+.header_main-cont .content .call_btns .call-decline,
+.header_main-cont .content .call_btns .leave-vc {
   position: absolute;
   transform: translate(-50%, -50%);
   visibility: hidden;
@@ -391,6 +393,7 @@ body {
   background-color: #161b22;
   padding: 1.5rem;
   border-radius: 50%;
+  z-index: 5;
 }
 @keyframes popup_btn {
   0% {
