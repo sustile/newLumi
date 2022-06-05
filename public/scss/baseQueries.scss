@@ -6,16 +6,23 @@
   --primary-red: #dc0073;
 }
 
-// 1545px
-@media (max-width: 96.6em) {
+// 900px
+@media (max-height: 56.25em) {
   html {
-    font-size: 45%;
+    font-size: 47%;
   }
 }
 
-//1330px
-@media (max-width: 83em) {
+//1400px
+@media (max-width: 87.5em) {
   html {
-    font-size: 40%;
+    font-size: 42%;
+  }
+}
+
+// 750px
+@media (max-height: 46.8em) {
+  html {
+    font-size: 38%;
   }
 }

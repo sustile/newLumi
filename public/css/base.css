@@ -133,7 +133,7 @@ body {
 }
 .header_main-cont .houses_main-cont a img {
   cursor: pointer;
-  width: 3.5vw;
+  width: 7rem;
   border-radius: 50%;
 }
 .header_main-cont .houses .createHouse {
