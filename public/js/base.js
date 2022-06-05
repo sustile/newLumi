@@ -1013,6 +1013,9 @@ dmsCont.addEventListener("contextmenu", async (e) => {
   if (!target) return;
   e.preventDefault();
 
+  houseContextMenu.style.opacity = "0";
+  houseContextMenu.style.visibility = "hidden";
+
   let x = e.pageX,
     y = e.pageY,
     winWidth = window.innerWidth,
@@ -1041,6 +1044,9 @@ houseCont.addEventListener("contextmenu", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
+
+  dmContextMenu.style.opacity = "0";
+  dmContextMenu.style.visibility = "hidden";
 
   let x = e.pageX,
     y = e.pageY,
