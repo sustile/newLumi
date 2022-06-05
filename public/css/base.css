@@ -1416,4 +1416,41 @@ body {
   }
 }
 
+.dm-contextMenu,
+.house-contextMenu {
+  background-color: rgb(41, 41, 41);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  width: 20rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.dm-contextMenu a,
+.house-contextMenu a {
+  text-decoration: none;
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 5px;
+}
+.dm-contextMenu a i,
+.house-contextMenu a i {
+  font-size: 2.5rem;
+}
+.dm-contextMenu a span,
+.house-contextMenu a span {
+  font-family: "Rubik", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
 /*# sourceMappingURL=base.css.map */

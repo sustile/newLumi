@@ -1646,3 +1646,40 @@ body {
     }
   }
 }
+
+.dm-contextMenu,
+.house-contextMenu {
+  background-color: rgb(41, 41, 41);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  width: 20rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  a {
+    text-decoration: none;
+    color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 5px;
+
+    i {
+      font-size: 2.5rem;
+    }
+
+    span {
+      font-family: "Rubik", sans-serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+    }
+  }
+}

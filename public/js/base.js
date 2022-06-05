@@ -103,6 +103,7 @@ const loadPrevent = () => {
 };
 
 // DM CLICK EVENT
+
 dmsCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
@@ -996,3 +997,79 @@ async function remoteConnection() {
 
   // PEER
 }
+
+// CONTEXT MENU EVENTS
+
+const dmContextMenu = document.querySelector(".dm-contextMenu");
+const houseContextMenu = document.querySelector(".house-contextMenu");
+
+const contextCopyUserId = dmContextMenu.querySelector(".context_copy-user-id");
+const contextCopyHouseId = houseContextMenu.querySelector(
+  ".context_copy-house-id"
+);
+
+dmsCont.addEventListener("contextmenu", async (e) => {
+  const target = e.target.closest("a");
+  if (!target) return;
+  e.preventDefault();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  dmContextMenu.style.left = `${x}px`;
+  dmContextMenu.style.top = `${y}px`;
+
+  dmContextMenu.style.visibility = "visible";
+  dmContextMenu.style.opacity = "1";
+
+  contextCopyUserId.addEventListener("click", async () => {
+    navigator.clipboard.writeText(target.getAttribute("data-dm"));
+    dmContextMenu.style.opacity = "0";
+    await wait(0.1);
+    dmContextMenu.style.visibility = "hidden";
+  });
+});
+
+houseCont.addEventListener("contextmenu", (e) => {
+  const target = e.target.closest("a");
+  if (!target) return;
+  e.preventDefault();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  houseContextMenu.style.left = `${x}px`;
+  houseContextMenu.style.top = `${y}px`;
+
+  houseContextMenu.style.visibility = "visible";
+  houseContextMenu.style.opacity = "1";
+
+  contextCopyHouseId.addEventListener("click", async () => {
+    navigator.clipboard.writeText(target.getAttribute("data-id"));
+    houseContextMenu.style.opacity = "0";
+    await wait(0.1);
+    houseContextMenu.style.visibility = "hidden";
+  });
+});
+
+document.addEventListener("click", async () => {
+  dmContextMenu.style.opacity = "0";
+  houseContextMenu.style.opacity = "0";
+  await wait(0.1);
+  dmContextMenu.style.visibility = "hidden";
+  houseContextMenu.style.visibility = "hidden";
+});
