@@ -698,11 +698,14 @@ async function remoteConnection() {
 
   socket.on("connect", () => {});
 
-  let incomingCallData;
+  let incomingCallData = {};
+  let incomingCallBasic = {};
   socket.on("incoming-call", async (from, to, room) => {
-    incomingCallData = await getSomeOtherUserData(from);
-    incomingCallData.room = room;
-    sound_call.play();
+    incomingCallBasic.from = from;
+    incomingCallBasic.room = room;
+    // incomingCallData = await getSomeOtherUserData(from);
+    // incomingCallData.room = room;
+    // sound_call.play();
   });
 
   socket.on("userLeft-call", (room) => {
@@ -743,6 +746,10 @@ async function remoteConnection() {
       // ON CALL
 
       myPeer.on("call", async (incoming) => {
+        incomingCallData = await getSomeOtherUserData(incomingCallBasic.from);
+        incomingCallData.room = incomingCallBasic.room;
+        sound_call.play();
+
         call_prompt.querySelector("p").textContent = incomingCallData.name;
 
         const imgCont = (call_prompt
