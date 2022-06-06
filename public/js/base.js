@@ -764,6 +764,7 @@ async function remoteConnection() {
 
             sound_call.stop();
             activeCall.with = incomingCallData.name;
+            activeCall.room = incomingCallData.room;
 
             call_btn.style.animation = "popdown_btn 0.3s forwards ease";
             call_status_text.textContent = `${incomingCallData.name} Connected`;
@@ -778,6 +779,7 @@ async function remoteConnection() {
 
             sound_call.stop();
             activeCall.with = incomingCallData.name;
+            activeCall.room = incomingCallData.room;
 
             call_btn.style.animation = "popdown_btn 0.3s forwards ease";
             call_status_text.textContent = `${incomingCallData.name} Connected`;
@@ -791,14 +793,20 @@ async function remoteConnection() {
         call_prompt_decline.addEventListener("click", () => {
           socket.emit("leave-call", incomingCallData.room);
           sound_call.stop();
-          incomingCallData = undefined;
+          // incomingCallData = undefined;
+          incomingCallData.name = "";
+          incomingCallData.image = "";
+          incomingCallData.room = "";
           call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
         });
 
         sound_call.on("end", () => {
           socket.emit("leave-call", incomingCallData.room);
           sound_call.stop();
-          incomingCallData = undefined;
+          // incomingCallData = undefined;
+          incomingCallData.name = "";
+          incomingCallData.image = "";
+          incomingCallData.room = "";
           call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
         });
       });
@@ -926,6 +934,8 @@ async function remoteConnection() {
         }
 
         activeCall.with = undefined;
+        activeCall.room = undefined;
+
         activeCall.status = false;
       });
     });
@@ -963,6 +973,7 @@ async function remoteConnection() {
 
       const data = await getSomeOtherUserData(dm.toId);
       activeCall.with = data.name;
+      activeCall.room = dm.toId;
 
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
@@ -977,6 +988,7 @@ async function remoteConnection() {
 
       const data = await getSomeOtherUserData(dm.toId);
       activeCall.with = data.name;
+      activeCall.room = dm.toId;
 
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
