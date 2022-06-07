@@ -41,8 +41,12 @@ io.on("connection", (socket) => {
     socket.to(room).emit("user-joined-vc", id, name, image);
   });
 
-  socket.on("leave-vc", (room) => {
-    socket.to(room).emit("user-left-vc");
+  socket.on("user-vc-calling", (user, id) => {
+    socket.to(user).emit("user-vc-calling-id", id);
+  });
+
+  socket.on("leave-vc", (room, id) => {
+    socket.to(room).emit("user-left-vc", id);
   });
 });
 

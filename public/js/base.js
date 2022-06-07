@@ -693,6 +693,15 @@ socket.on("receive-house-message", (user, message, room, image) => {
 
 // ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
+async function clearAllStreams() {
+  const allVids = videoCont.querySelectorAll("video");
+  allVids.forEach((vid) => {
+    if (vid.getAttribute("data-id") !== "mine") {
+      vid.remove();
+    }
+  });
+}
+
 async function remoteConnection() {
   // SOCKETS
 
@@ -712,6 +721,7 @@ async function remoteConnection() {
     try {
       if (activeCall.room === room) {
         call.close();
+        clearAllStreams();
         if (mainHeader.textContent === "Welcome") {
           decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
           call_status.style.animation = "popdown_btn 0.3s forwards ease";
@@ -734,6 +744,7 @@ async function remoteConnection() {
 
   const myVideo = document.createElement("video");
   myVideo.muted = true;
+  myVideo.setAttribute("data-id", "mine");
 
   navigator.mediaDevices
     .getUserMedia({
@@ -741,6 +752,7 @@ async function remoteConnection() {
       audio: true,
     })
     .then((stream) => {
+      stream.userId = user.id;
       addVideoStream(myVideo, stream);
 
       // ON CALL
@@ -769,6 +781,11 @@ async function remoteConnection() {
             call = incoming;
             activeCall.status = true;
 
+            const video = document.createElement("video");
+            call.on("stream", (userVideoStream) => {
+              addVideoStream(video, userVideoStream);
+            });
+
             sound_call.stop();
             activeCall.with = incomingCallData.name;
             activeCall.room = incomingCallData.room;
@@ -783,6 +800,11 @@ async function remoteConnection() {
             incoming.answer(stream);
             call = incoming;
             activeCall.status = true;
+
+            const video = document.createElement("video");
+            call.on("stream", (userVideoStream) => {
+              addVideoStream(video, userVideoStream);
+            });
 
             sound_call.stop();
             activeCall.with = incomingCallData.name;
@@ -838,15 +860,16 @@ async function remoteConnection() {
       });
 
       leave_house_vc.addEventListener("click", async () => {
-        try {
-          call.close();
-        } catch (err) {}
+        call.close();
+
+        socket.emit("leave-vc", activeCall.room, stream.id);
+
+        clearAllStreams();
 
         activeCall.with = undefined;
         activeCall.room = undefined;
         activeCall.status = false;
 
-        socket.emit("leave-vc", activeCont);
         sound_callLeave.play();
 
         leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
@@ -859,22 +882,55 @@ async function remoteConnection() {
         if (activeCall.room === activeCont) {
           call = vcPeer.call(id, stream);
           sound_callJoin.play();
+
+          // socket.emit("user-vc-calling", id, user.id);
+
+          const video = document.createElement("video");
+
+          call.on("stream", (userVideoStream) => {
+            video.setAttribute("data-id", userVideoStream.id);
+            addVideoStream(video, userVideoStream);
+          });
+
+          call.on("close", () => {
+            // console.log("closing");
+            video.remove();
+          });
         }
       });
 
-      socket.on("user-left-vc", () => {
+      socket.on("user-left-vc", (id) => {
         if (activeCall.room === activeCont) {
           sound_callLeave.play();
+          const allVids = videoCont.querySelectorAll("video");
+          allVids.forEach((vid) => {
+            if (vid.getAttribute("data-id") === id) {
+              vid.remove();
+            }
+          });
         }
       });
+
+      // socket.on("user-vc-calling-id", (id) => {
+      //   console.log(id);
+      // });
 
       vcPeer.on("call", (incoming) => {
         incoming.answer(stream);
+
         call = incoming;
 
         const video = document.createElement("video");
         call.on("stream", (userVideoStream) => {
+          video.setAttribute("data-id", userVideoStream.id);
           addVideoStream(video, userVideoStream);
+        });
+
+        call.on("close", () => {
+          video.remove();
+        });
+        incoming.on("close", () => {
+          video.remove();
         });
       });
 
@@ -927,6 +983,7 @@ async function remoteConnection() {
 
       decline_btn.addEventListener("click", async (e) => {
         call.close();
+        clearAllStreams();
         socket.emit("leave-call", activeCont);
 
         sound_callLeave.play();

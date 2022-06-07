@@ -135,6 +135,7 @@ body {
   cursor: pointer;
   width: 7rem;
   border-radius: 50%;
+  object-fit: cover;
 }
 .header_main-cont .houses .createHouse {
   text-decoration: none;
@@ -193,8 +194,8 @@ body {
   border-radius: 1rem;
 }
 .header_main-cont .dms_main-cont a .img_cont {
-  width: 5rem;
-  height: 4rem;
+  width: 6rem;
+  height: 4.3rem;
   transform: scale(1.1);
 }
 .header_main-cont .dms_main-cont a .img_cont img {
