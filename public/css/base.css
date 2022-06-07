@@ -467,6 +467,49 @@ body {
     visibility: hidden;
   }
 }
+.header_main-cont .content .vc_members {
+  position: absolute;
+  background-color: var(--primary-bg);
+  padding: 1rem 3rem;
+  right: 3rem;
+  top: 20rem;
+  visibility: hidden;
+  border-radius: 10px;
+  gap: 1.5rem;
+  max-width: 30rem;
+  max-height: 50rem;
+  overflow-y: auto;
+}
+.header_main-cont .content .vc_members p {
+  margin-top: 1.5rem;
+  color: var(--primary-green);
+  font-size: 1.8rem;
+  font-family: "Rubik", sans-serif;
+  font-weight: 400;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.header_main-cont .content .vc_members p:first-of-type {
+  margin-top: 0;
+}
+.header_main-cont .content .vc_members p img {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+}
+.header_main-cont .content .vc_members p span {
+  width: 80%;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .header_main-cont .content .messages_model-cont {
   width: 100%;
   height: 100%;

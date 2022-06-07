@@ -50,6 +50,7 @@ const account_details = document.querySelector(".account_details");
 // const join_house_vc = document.querySelector(".join-house-vc");
 const join_house_vc = document.querySelector(".join-vc");
 const leave_house_vc = document.querySelector(".leave-vc");
+const vc_members_cont = document.querySelector(".vc_members");
 
 let user = {};
 let activeCont = "";
@@ -840,6 +841,15 @@ async function remoteConnection() {
         });
       });
 
+      function insertVcMembers(id, name, image) {
+        const html = `<p data-id="${id}" >
+        <img src="./../img/${image}" alt="" />
+        <span>${name}</span>
+      </p>`;
+
+        vc_members_cont.insertAdjacentHTML("beforeend", html);
+      }
+
       // HOUSE VC
       join_house_vc.addEventListener("click", async () => {
         if (call) {
@@ -851,6 +861,9 @@ async function remoteConnection() {
         sound_callJoin.play();
         socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
 
+        vc_members_cont.style.animation = "popup_btn 0.3s forwards ease";
+        insertVcMembers("mine", user.name, user.image);
+
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
         call_status_text.textContent = `${mainHeader.textContent} VC Connected`;
@@ -860,11 +873,15 @@ async function remoteConnection() {
       });
 
       leave_house_vc.addEventListener("click", async () => {
-        call.close();
+        if (call) {
+          call.close();
+        }
 
         socket.emit("leave-vc", activeCall.room, stream.id);
 
         clearAllStreams();
+
+        vc_members_cont.style.animation = "popdown_btn 0.3s forwards ease";
 
         activeCall.with = undefined;
         activeCall.room = undefined;
@@ -876,6 +893,9 @@ async function remoteConnection() {
         // await wait(0.2);
         // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
         call_status.style.animation = "popdown_btn 0.3s forwards ease";
+
+        await wait(0.3);
+        vc_members_cont.innerHTML = "";
       });
 
       socket.on("user-joined-vc", (id, name, image) => {
@@ -883,13 +903,21 @@ async function remoteConnection() {
           call = vcPeer.call(id, stream);
           sound_callJoin.play();
 
-          // socket.emit("user-vc-calling", id, user.id);
+          socket.emit(
+            "user-vc-calling",
+            activeCall.room,
+            id,
+            stream.id,
+            user.name,
+            user.image
+          );
 
           const video = document.createElement("video");
 
           call.on("stream", (userVideoStream) => {
             video.setAttribute("data-id", userVideoStream.id);
             addVideoStream(video, userVideoStream);
+            insertVcMembers(userVideoStream.id, name, image);
           });
 
           call.on("close", () => {
@@ -908,12 +936,22 @@ async function remoteConnection() {
               vid.remove();
             }
           });
+
+          const allUsers = vc_members_cont.querySelectorAll("p");
+
+          allUsers.forEach((user) => {
+            if (user.getAttribute("data-id") === id) {
+              user.remove();
+            }
+          });
         }
       });
 
-      // socket.on("user-vc-calling-id", (id) => {
-      //   console.log(id);
-      // });
+      socket.on("user-vc-calling-id", (to, id, name, image) => {
+        if (to === user.id) {
+          insertVcMembers(id, name, image);
+        }
+      });
 
       vcPeer.on("call", (incoming) => {
         incoming.answer(stream);
