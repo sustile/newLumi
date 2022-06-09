@@ -31,7 +31,7 @@ exports.createAccount = async (req, res) => {
       const token = jwt.generate(newAcc.id);
 
       res.cookie("jwt", token, {
-        // maxAge: process.env.JWT_EXPIRE_COOKIE * 24 * 60 * 60 * 1000,
+        maxAge: process.env.JWT_EXPIRE_COOKIE * 24 * 60 * 60 * 1000,
         // secure: true, //only when deploying or testing in website not in postman
         httpOnly: true,
       });
@@ -78,7 +78,7 @@ exports.loginAccount = async (req, res, next) => {
     const token = jwt.generate(user._id);
 
     res.cookie("jwt", token, {
-      // maxAge: process.env.JWT_EXPIRE_COOKIE * 24 * 60 * 60 * 1000,
+      maxAge: process.env.JWT_EXPIRE_COOKIE * 24 * 60 * 60 * 1000,
       // secure: true, //only when deploying or testing in website not in postman
       httpOnly: true,
     });
