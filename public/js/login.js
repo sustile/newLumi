@@ -35,6 +35,7 @@ const formSubmit = async () => {
 
   if (result.status === "ok") {
     window.location.replace("http://localhost:3000");
+    // location.href = "https://systile.dev";
   }
 
   if (result.status === "fail") {
