@@ -638,6 +638,7 @@ body {
 
       .message_main-cont {
         height: 87vh;
+        width: 79vw;
         // background-color: red;
         display: flex;
         flex-direction: column;
@@ -649,6 +650,7 @@ body {
           display: flex;
           flex-direction: column;
           // background-color: red;
+          // width: 100%;
           padding: 0.5rem 1rem;
           &_user {
             display: flex;
@@ -681,6 +683,7 @@ body {
             color: #ddd;
             padding: 0 5.6rem;
             line-height: 1.5;
+            overflow-wrap: break-word;
           }
         }
       }
@@ -842,6 +845,7 @@ body {
         height: 100%;
         .house-message_main-cont {
           height: 87vh;
+          width: 79vw;
           display: flex;
           flex-direction: column;
           // background-color: red;
@@ -853,6 +857,8 @@ body {
             display: flex;
             flex-direction: column;
             padding: 0.5rem 1rem;
+            // background-color: red;
+            // width: 100%;
             &_user {
               display: flex;
               gap: 1.5rem;
@@ -878,12 +884,16 @@ body {
               }
             }
             &_cont {
+              // width: 50%;
               font-family: "Rubik", sans-serif;
               font-weight: 400;
               font-size: 1.6rem;
               color: #ddd;
               padding: 0 5.6rem;
+              // background-color: aqua;
               line-height: 1.5;
+              overflow-wrap: break-word;
+              // width: 142rem;
             }
           }
         }
@@ -1753,5 +1763,34 @@ body {
       font-size: 1.6rem;
       font-weight: 500;
     }
+  }
+}
+
+@keyframes overlayProf_UpPrompt {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes overlayProf_DownPrompt {
+  0% {
+    opacity: 1;
+
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(0.8);
   }
 }

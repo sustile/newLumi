@@ -214,13 +214,14 @@ const loadDms = async () => {
 
 createDM.addEventListener("click", async (e) => {
   // const person2 = prompt("Id");
-  createDM_input.style.animation = "popupPrompt 0.3s forwards ease";
+  createDM_input.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
   const form = createDM_input.querySelector("form");
 
   const cancel = form.querySelector("a");
 
   cancel.addEventListener("click", async (e) => {
-    createDM_input.style.animation = "popdownPrompt 0.3s forwards ease";
+    createDM_input.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
   });
 
   form.addEventListener("submit", async (e) => {
@@ -252,24 +253,28 @@ createDM.addEventListener("click", async (e) => {
       loadDms();
     }
 
-    createDM_input.style.animation = "popdownPrompt 0.3s forwards ease";
+    createDM_input.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
   });
 });
 
 createHouse.addEventListener("click", async (e) => {
-  askHouseOptions.style.animation = "popupPrompt 0.3s forwards ease";
+  askHouseOptions.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
 
   const joinHouse = askHouseOptions.querySelector(".join-house");
   const createHouse = askHouseOptions.querySelector(".create-house");
 
   createHouse.addEventListener("click", () => {
-    askHouseOptions.style.animation = "popdownPrompt 0.3s forwards ease";
+    askHouseOptions.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
 
-    createHouse_input.style.animation = "popupPrompt 0.3s forwards ease";
+    createHouse_input.style.animation =
+      "overlayProf_UpPrompt 0.3s forwards ease";
     const form = createHouse_input.querySelector("form");
     const cancel = form.querySelector("a");
     cancel.addEventListener("click", async (e) => {
-      createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+      createHouse_input.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
     });
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -294,18 +299,21 @@ createHouse.addEventListener("click", async (e) => {
       } else {
         loadServers();
       }
-      createHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+      createHouse_input.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
     });
   });
 
   joinHouse.addEventListener("click", () => {
-    askHouseOptions.style.animation = "popdownPrompt 0.3s forwards ease";
+    askHouseOptions.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
 
-    joinHouse_input.style.animation = "popupPrompt 0.3s forwards ease";
+    joinHouse_input.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
     const form = joinHouse_input.querySelector("form");
     const cancel = form.querySelector("a");
     cancel.addEventListener("click", async (e) => {
-      joinHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+      joinHouse_input.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
     });
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -330,7 +338,8 @@ createHouse.addEventListener("click", async (e) => {
       } else {
         loadServers();
       }
-      joinHouse_input.style.animation = "popdownPrompt 0.3s forwards ease";
+      joinHouse_input.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
     });
   });
 });
@@ -339,11 +348,12 @@ userData_image.addEventListener("click", () => {
   const nameInput = account_details.querySelector("#nameChange");
   nameInput.placeholder = user.name;
 
-  account_details.style.animation = "popupPrompt 0.3s forwards ease";
+  account_details.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
 
   const closeBtn = document.querySelector(".close_account_details");
   closeBtn.addEventListener("click", () => {
-    account_details.style.animation = "popdownPrompt 0.3s forwards ease";
+    account_details.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
   });
 
   const form = account_details.querySelector(".form");
@@ -397,7 +407,8 @@ userData_image.addEventListener("click", () => {
 
     if (result.status === "ok") {
       nameInput.value = "";
-      account_details.style.animation = "popdownPrompt 0.3s forwards ease";
+      account_details.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
       getBasicData();
     } else {
       console.log("Something went wrong");
