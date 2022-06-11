@@ -41,6 +41,21 @@ body {
   // overflow: hidden;
 }
 
+.drag {
+  width: 100vw;
+  height: 3rem;
+  background-color: red;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+  // display: none;
+  opacity: 0;
+}
+
 .nav {
   // background-color: var(--primary-green);
   border-radius: 10rem;
@@ -208,6 +223,7 @@ body {
       width: 25rem;
       overflow-y: auto;
       height: 75vh;
+      // margin-top: 1rem;
       // background-color: red;
       a {
         width: 100%;
@@ -404,6 +420,9 @@ body {
     &_main {
       // border-top-right-radius: 1rem;
       background-color: rgb(41, 41, 41);
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-app-region: drag;
       display: flex;
       justify-content: space-between;
       align-items: center;

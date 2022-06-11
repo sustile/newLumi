@@ -50,6 +50,20 @@ body::after {
   z-index: -1;
 }
 
+.drag {
+  width: 100vw;
+  height: 3rem;
+  background-color: red;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+  opacity: 0;
+}
+
 .register-cont {
   position: absolute;
   top: 50%;

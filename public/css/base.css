@@ -39,6 +39,20 @@ body {
   width: 100vw;
 }
 
+.drag {
+  width: 100vw;
+  height: 3rem;
+  background-color: red;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+  opacity: 0;
+}
+
 .nav {
   border-radius: 10rem;
   padding: 0.8rem 5rem;
@@ -344,6 +358,9 @@ body {
 }
 .header_main-cont .content_main {
   background-color: rgb(41, 41, 41);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
   display: flex;
   justify-content: space-between;
   align-items: center;
