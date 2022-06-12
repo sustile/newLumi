@@ -7,9 +7,9 @@ dotenv.config({
   path: "./config.env",
 });
 
-app.listen(3000, () => {
-  console.log("Server Started on Port 3000");
-});
+// app.listen(3000, () => {
+//   console.log("Server Started on Port 3000");
+// });
 
 mongoose.connect(process.env.DATABASE, () => {
   console.log("Connected to the Database");

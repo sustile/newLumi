@@ -554,15 +554,18 @@ const popup = async (message, name, room) => {
 
 (async () => {
   await getBasicData();
-  myPeer = new Peer(user.id, {
-    host: "/",
-    port: "3001",
-  });
-
   vcPeer = new Peer(user.id, {
-    host: "/",
+    host: "localhost",
+    path: "/vcPeer",
     port: "3002",
   });
+
+  myPeer = new Peer(user.id, {
+    host: "localhost",
+    path: "/peer",
+    port: "443",
+  });
+
   loadServers();
   loadDms();
   loadPrevent();
