@@ -6,20 +6,4 @@
   --primary-red: #dc0073;
 }
 
-@media (max-height: 56.25em) {
-  html {
-    font-size: 47%;
-  }
-}
-@media (max-width: 87.5em) {
-  html {
-    font-size: 42%;
-  }
-}
-@media (max-height: 46.8em) {
-  html {
-    font-size: 38%;
-  }
-}
-
 /*# sourceMappingURL=baseQueries.css.map */
