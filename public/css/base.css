@@ -33,10 +33,6 @@ html {
 body {
   font-family: " Rubik", sans-serif;
   background-color: var(--primary-bg);
-  max-height: 100vh;
-  max-width: 100vw;
-  height: 100vh;
-  width: 100vw;
 }
 
 .drag {
@@ -192,6 +188,8 @@ body {
   gap: 0.5rem;
   overflow-y: auto;
   height: 75vh;
+  justify-content: flex-start;
+  width: 100%;
 }
 .header_main-cont .dms_main-cont a {
   width: 100%;
@@ -538,7 +536,7 @@ body {
 }
 .header_main-cont .content .messages_model-cont .message_main-cont {
   height: 87vh;
-  width: 79vw;
+  max-width: 79vw;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -712,7 +710,7 @@ body {
 }
 .header_main-cont .content .house_model-cont .house_message_section .house-message_main-cont {
   height: 87vh;
-  width: 79vw;
+  max-width: 79vw;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -1009,6 +1007,16 @@ body {
 .call_prompt_call .call_controls .call_prompt_decline {
   background-color: #d8315b;
 }
+.call_prompt_call span {
+  font-family: "Rubik", sans-serif;
+  color: #ddd;
+  font-weight: 500;
+  font-size: 1.5rem;
+  width: 20rem;
+  text-align: center;
+  line-height: 1.5;
+  display: none;
+}
 @keyframes popupPrompt {
   0% {
     visibility: hidden;
@@ -1051,6 +1059,18 @@ body {
   flex-direction: column;
   gap: 2rem;
   visibility: hidden;
+}
+.createDm_input_field::before {
+  content: "";
+  display: inline-block;
+  width: 200vw;
+  height: 200vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+  transform: translate(-50%, -50%);
 }
 .createDm_input_field p {
   font-family: "Rubik", sans-serif;
@@ -1128,6 +1148,18 @@ body {
   gap: 2rem;
   width: 25%;
   visibility: hidden;
+}
+.createHouse_input_field::before {
+  content: "";
+  display: inline-block;
+  width: 200vw;
+  height: 200vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+  transform: translate(-50%, -50%);
 }
 .createHouse_input_field p {
   font-family: "Rubik", sans-serif;
@@ -1207,6 +1239,18 @@ body {
   gap: 3rem;
   visibility: hidden;
 }
+.chooseHouse_option::before {
+  content: "";
+  display: inline-block;
+  width: 200vw;
+  height: 200vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+  transform: translate(-50%, -50%);
+}
 .chooseHouse_option div {
   display: flex;
   flex-direction: column;
@@ -1272,6 +1316,18 @@ body {
   gap: 2rem;
   width: 25%;
   visibility: hidden;
+}
+.joinHouse_input_field::before {
+  content: "";
+  display: inline-block;
+  width: 200vw;
+  height: 200vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+  transform: translate(-50%, -50%);
 }
 .joinHouse_input_field p {
   font-family: "Rubik", sans-serif;
@@ -1345,6 +1401,18 @@ body {
   border-radius: 1rem;
   padding: 4rem;
   visibility: hidden;
+}
+.account_details::before {
+  content: "";
+  display: inline-block;
+  width: 200vw;
+  height: 200vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+  transform: translate(-50%, -50%);
 }
 .account_details h2 {
   font-family: "Rubik", sans-serif;

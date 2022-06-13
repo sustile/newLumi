@@ -30,28 +30,36 @@ io.on("connection", (socket) => {
     socket.to(room).emit("receive-house-message", user, message, room, image);
   });
 
-  socket.on("send-call", (from, to, room) => {
-    socket.to(room).emit("incoming-call", from, to, room);
+  socket.on("send-call", (from, room) => {
+    socket.to(room).emit("incoming-call", from, room);
   });
 
   // socket.on("join-call", (room) => {
   //   socket.to(room).emit("user-joined-call");
   // });
 
-  socket.on("leave-call", (room) => {
-    socket.to(room).emit("userLeft-call");
+  socket.on("joined-vc", (room, id, name, image) => {
+    socket.to(room).emit("user-joined-vc", room, id, name, image);
   });
 
-  socket.on("joined-vc", (room, id, name, image) => {
-    socket.to(room).emit("user-joined-vc", id, name, image);
+  socket.on("joined-call", (room, id, name, image) => {
+    socket.to(room).emit("user-joined-call", room, id, name, image);
   });
 
   socket.on("user-vc-calling", (room, to, id, name, image) => {
     socket.to(room).emit("user-vc-calling-id", to, id, name, image);
   });
 
+  socket.on("user-call-calling", (room, to, id, name, image) => {
+    socket.to(room).emit("user-call-calling-id", to, id, name, image);
+  });
+
+  socket.on("leave-call_dm", (room, id) => {
+    socket.to(room).emit("UserLeft-call_dm", room, id);
+  });
+
   socket.on("leave-vc", (room, id) => {
-    socket.to(room).emit("user-left-vc", id);
+    socket.to(room).emit("user-left-vc", room, id);
   });
 });
 

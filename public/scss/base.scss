@@ -33,10 +33,10 @@ html {
 body {
   font-family: " Rubik", sans-serif;
   background-color: var(--primary-bg);
-  max-height: 100vh;
-  max-width: 100vw;
-  height: 100vh;
-  width: 100vw;
+  // max-height: 100vh;
+  // max-width: 100vw;
+  // height: 100vh;
+  // width: 100vw;
   // padding: 2rem;
   // overflow: hidden;
 }
@@ -223,8 +223,10 @@ body {
       // width: 25rem;
       overflow-y: auto;
       height: 75vh;
+      justify-content: flex-start;
       // margin-top: 1rem;
       // background-color: red;
+      width: 100%;
       a {
         width: 100%;
         position: relative;
@@ -648,7 +650,7 @@ body {
 
       .message_main-cont {
         height: 87vh;
-        width: 79vw;
+        max-width: 79vw;
         // background-color: red;
         display: flex;
         flex-direction: column;
@@ -854,7 +856,7 @@ body {
         height: 100%;
         .house-message_main-cont {
           height: 87vh;
-          width: 79vw;
+          max-width: 79vw;
           display: flex;
           flex-direction: column;
           // background-color: red;
@@ -1153,6 +1155,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
+  // transform: translate(-50%, -50%);
   background-color: rgb(41, 41, 41);
   border-radius: 1rem;
   padding: 4rem;
@@ -1198,11 +1201,24 @@ body {
 
     .call_prompt_accept {
       background-color: #06d6a0;
+      // display: none;
     }
 
     .call_prompt_decline {
       background-color: #d8315b;
     }
+  }
+
+  span {
+    font-family: "Rubik", sans-serif;
+    color: #ddd;
+    font-weight: 500;
+    font-size: 1.5rem;
+    // background-color: red;
+    width: 20rem;
+    text-align: center;
+    line-height: 1.5;
+    display: none;
   }
 
   @keyframes popupPrompt {
@@ -1253,6 +1269,19 @@ body {
   flex-direction: column;
   gap: 2rem;
   visibility: hidden;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 200vw;
+    height: 200vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    transform: translate(-50%, -50%);
+  }
 
   p {
     font-family: "Rubik", sans-serif;
@@ -1340,6 +1369,19 @@ body {
   gap: 2rem;
   width: 25%;
   visibility: hidden;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 200vw;
+    height: 200vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    transform: translate(-50%, -50%);
+  }
 
   p {
     font-family: "Rubik", sans-serif;
@@ -1430,6 +1472,19 @@ body {
   gap: 3rem;
   visibility: hidden;
 
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 200vw;
+    height: 200vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    transform: translate(-50%, -50%);
+  }
+
   div {
     display: flex;
     flex-direction: column;
@@ -1502,6 +1557,19 @@ body {
   gap: 2rem;
   width: 25%;
   visibility: hidden;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 200vw;
+    height: 200vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    transform: translate(-50%, -50%);
+  }
 
   p {
     font-family: "Rubik", sans-serif;
@@ -1585,6 +1653,19 @@ body {
   padding: 4rem;
 
   visibility: hidden;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 200vw;
+    height: 200vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    transform: translate(-50%, -50%);
+  }
 
   h2 {
     font-family: "Rubik", sans-serif;

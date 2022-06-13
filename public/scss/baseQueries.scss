@@ -27,6 +27,32 @@
 //   }
 // }
 
-// 1700px
+// 1750px
+@media (max-width: 1750px) {
+  .header_main-cont {
+    grid-template-columns: 10vw 18vw 72vw;
+  }
+}
 
-// @media()
+// 1400px
+
+@media (max-width: 1400px) {
+  html {
+    font-size: 55%;
+  }
+
+  .header_main-cont {
+    grid-template-columns: 11vw 22vw 67vw;
+  }
+}
+
+// 1000px
+
+@media (max-width: 1000px) {
+  html {
+    font-size: 52%;
+  }
+  .header_main-cont {
+    grid-template-columns: 11vw 22vw 67vw;
+  }
+}
