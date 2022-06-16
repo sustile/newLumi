@@ -8,21 +8,24 @@ const { dms } = require("./dmController");
 const account = mongoose.model("User", accountModel);
 
 exports.account = account;
+const path = require("path");
+const fs = require("fs");
 
 exports.createAccount = async (req, res) => {
   try {
-    const reqBody = req.file;
+    // const reqBody = req.file;
+    // console.log(reqBody);
 
-    if (!reqBody) {
-      res.status(400).json({
-        status: "fail",
-        message: "No data Provided",
-      });
-    }
+    // if (!reqBody) {
+    //   res.status(400).json({
+    //     status: "fail",
+    //     message: "No data Provided",
+    //   });
+    // }
 
     const body = Object.assign(req.body, {
       creation: Date.now(),
-      image: reqBody.filename,
+      image: "default.png",
     });
 
     if (body.password === body.confirmPassword) {
@@ -265,6 +268,12 @@ exports.changeData = async (req, res) => {
       }
     } else {
       if (body.newName !== "undefined") {
+        let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
+        try {
+          fs.unlinkSync(imgPath);
+        } catch (err) {
+          console.log(err);
+        }
         await account.findOneAndUpdate(
           { _id: user.id },
           { name: body.newName, image: file.filename }
@@ -273,6 +282,12 @@ exports.changeData = async (req, res) => {
           status: "ok",
         });
       } else {
+        let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
+        try {
+          fs.unlinkSync(imgPath);
+        } catch (err) {
+          console.log(err);
+        }
         await account.findOneAndUpdate(
           { _id: user.id },
           { image: file.filename }

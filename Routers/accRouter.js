@@ -81,4 +81,10 @@ router
 router
   .route("/api/changeData")
   .post(verify, uploadImage.single("image"), accountController.changeData);
+
+// CHANGE NAME AND IMAGE OF AN HOUSE
+router
+  .route("/api/changeHouseData")
+  .post(verify, uploadImage.single("image"), houseController.changeHouseData);
+
 module.exports = router;

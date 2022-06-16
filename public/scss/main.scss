@@ -75,7 +75,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8rem;
-  padding: 10rem 10rem;
+  padding: 10rem 6rem;
   border-radius: 1rem;
 
   .heading {
@@ -129,7 +129,7 @@ body {
         color: #333;
         box-shadow: 0 0 0 0.8rem transparent;
         transition: all 0.3s;
-        width: 100%;
+        width: 60%;
 
         &:placeholder-shown + label {
           opacity: 0;

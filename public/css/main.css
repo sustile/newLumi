@@ -73,7 +73,7 @@ body::after {
   display: flex;
   flex-direction: column;
   gap: 8rem;
-  padding: 10rem 10rem;
+  padding: 10rem 6rem;
   border-radius: 1rem;
 }
 .register-cont .heading {
@@ -124,7 +124,7 @@ body::after {
   color: #333;
   box-shadow: 0 0 0 0.8rem transparent;
   transition: all 0.3s;
-  width: 100%;
+  width: 60%;
 }
 .register-cont form .allInputs input:placeholder-shown + label {
   opacity: 0;

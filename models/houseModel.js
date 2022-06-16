@@ -18,6 +18,10 @@ const schema = new mongoose.Schema({
     type: Date,
     required: [true, "An Account Must Have a Creation Date"],
   },
+  image: {
+    type: String,
+    required: [true, "An House Must Have a Image"],
+  },
 });
 
 module.exports = schema;

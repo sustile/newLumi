@@ -46,6 +46,7 @@ const userData_image = document.querySelector(".user-data_image");
 const userData_name = document.querySelector(".user-data_name");
 const userData_id = document.querySelector(".user-data_id");
 const account_details = document.querySelector(".account_details");
+const house_details = document.querySelector(".house_details");
 
 // const join_house_vc = document.querySelector(".join-house-vc");
 const join_house_vc = document.querySelector(".join-vc");
@@ -57,6 +58,8 @@ let activeCont = "";
 let peerId = "";
 let myPeer;
 let currentDmPage = 1;
+
+let housesOwned = [];
 
 let vcPeer = "";
 
@@ -147,6 +150,7 @@ const loadServers = async () => {
   if (!result) return;
 
   houseCont.innerHTML = "";
+  housesOwned = [];
 
   result.forEach(async (id) => {
     const house = await (
@@ -165,7 +169,23 @@ const loadServers = async () => {
 
     if (house.status === "fail") return;
 
-    const html = `<a href="" data-id="${house.result._id}" data-name="${house.result.name}"><img src="./../img/testImg.png" alt=""  /></a>`;
+    if (house.result.createdBy === user.id) {
+      housesOwned.push(house.result._id);
+    }
+
+    if (house.result.image === undefined) {
+      house.result.image = "default.png";
+    }
+
+    const html = `<a href="" data-id="${house.result._id}" data-name="${house.result.name}">
+    <div class="img_cont">
+    <img
+      src="./../img/${house.result.image}"
+      alt=""
+      class="house_image"
+    />
+  </div>
+    </a>`;
 
     houseCont.insertAdjacentHTML("afterbegin", html);
 
@@ -373,6 +393,7 @@ userData_image.addEventListener("click", () => {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    e.stopImmediatePropagation();
 
     if (!nameInput.value && !imageChange.files[0]) return;
 
@@ -861,7 +882,7 @@ async function remoteConnection() {
           sound_callJoin.play();
           socket.emit("joined-call", room, user.id, user.name, user.image);
 
-          vc_members_cont.style.animation = "popup_btn 0.3s forwards ease";
+          vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
           insertVcMembers("mine", user.name, user.image);
 
           // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
@@ -952,7 +973,7 @@ async function remoteConnection() {
         sound_callJoin.play();
         socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
 
-        vc_members_cont.style.animation = "popup_btn 0.3s forwards ease";
+        vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
         insertVcMembers("mine", user.name, user.image);
 
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
@@ -972,7 +993,7 @@ async function remoteConnection() {
 
         clearAllStreams();
 
-        vc_members_cont.style.animation = "popdown_btn 0.3s forwards ease";
+        vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
 
         activeCall.with = undefined;
         activeCall.room = undefined;
@@ -980,12 +1001,12 @@ async function remoteConnection() {
 
         sound_callLeave.play();
 
-        leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
         // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
         call_status.style.animation = "popdown_btn 0.3s forwards ease";
+        leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
 
-        await wait(0.3);
+        await wait(0.2);
         vc_members_cont.innerHTML = "";
       });
 
@@ -1150,13 +1171,6 @@ async function remoteConnection() {
       });
 
       call_btn.addEventListener("click", (e) => {
-        // connectToNewUser(activeCont, stream);
-
-        // e.target.style.animation = "popdown_btn 0.3s forwards ease";
-        // call_status_text.textContent = `${mainHeader.textContent} Connected`;
-        // call_status.style.animation = "popup_btn 0.3s forwards ease";
-        // decline_btn.style.animation = "popup_btn 0.3s forwards ease";
-
         if (call) {
           call.close();
         }
@@ -1168,7 +1182,7 @@ async function remoteConnection() {
         sound_callJoin.play();
         socket.emit("joined-call", activeCont, user.id, user.name, user.image);
 
-        vc_members_cont.style.animation = "popup_btn 0.3s forwards ease";
+        vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
         insertVcMembers("mine", user.name, user.image);
 
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
@@ -1180,25 +1194,6 @@ async function remoteConnection() {
       });
 
       decline_btn.addEventListener("click", async (e) => {
-        // call.close();
-        // clearAllStreams();
-        // socket.emit("leave-call", activeCont);
-
-        // sound_callLeave.play();
-
-        // if (mainHeader.textContent === "Welcome") {
-        //   e.target.style.animation = "popdown_btn 0.3s forwards ease";
-        //   call_status.style.animation = "popdown_btn 0.3s forwards ease";
-        // } else {
-        //   e.target.style.animation = "popdown_btn 0.3s forwards ease";
-        //   call_btn.style.animation = "popup_btn 0.3s forwards ease";
-        //   call_status.style.animation = "popdown_btn 0.3s forwards ease";
-        // }
-
-        // activeCall.with = undefined;
-        // activeCall.room = undefined;
-
-        // activeCall.status = false;
         if (call) {
           call.close();
         }
@@ -1207,7 +1202,7 @@ async function remoteConnection() {
 
         clearAllStreams();
 
-        vc_members_cont.style.animation = "popdown_btn 0.3s forwards ease";
+        vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
 
         activeCall.with = undefined;
         activeCall.room = undefined;
@@ -1221,7 +1216,7 @@ async function remoteConnection() {
         call_btn.animation = "popdown_btn 0.3s forwards ease";
         call_status.style.animation = "popdown_btn 0.3s forwards ease";
 
-        await wait(0.3);
+        await wait(0.2);
         vc_members_cont.innerHTML = "";
       });
     });
@@ -1305,6 +1300,9 @@ const contextCopyUserId = dmContextMenu.querySelector(".context_copy-user-id");
 const contextCopyHouseId = houseContextMenu.querySelector(
   ".context_copy-house-id"
 );
+const contextHouseSettings = houseContextMenu.querySelector(
+  ".context_house-setting"
+);
 
 dmsCont.addEventListener("contextmenu", async (e) => {
   const target = e.target.closest("a");
@@ -1359,6 +1357,10 @@ houseCont.addEventListener("contextmenu", (e) => {
   houseContextMenu.style.left = `${x}px`;
   houseContextMenu.style.top = `${y}px`;
 
+  if (housesOwned.includes(target.getAttribute("data-id"))) {
+    contextHouseSettings.style.display = "flex";
+  }
+
   houseContextMenu.style.visibility = "visible";
   houseContextMenu.style.opacity = "1";
 
@@ -1367,6 +1369,100 @@ houseCont.addEventListener("contextmenu", (e) => {
     houseContextMenu.style.opacity = "0";
     await wait(0.1);
     houseContextMenu.style.visibility = "hidden";
+  });
+
+  contextHouseSettings.addEventListener("click", async () => {
+    house_details.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
+
+    const closeBtn = house_details.querySelector(".close_account_details");
+
+    closeBtn.addEventListener("click", async () => {
+      house_details.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
+    });
+
+    const form = house_details.querySelector(".form");
+
+    let house = await (
+      await fetch("/api/getHouse", {
+        method: "POST",
+        body: JSON.stringify({
+          id: target.getAttribute("data-id"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    house = house.result;
+
+    const nameInput = house_details.querySelector("#nameChange");
+    nameInput.placeholder = house.name;
+
+    const imageCont = house_details.querySelector(".image_main");
+    imageCont.src = `./../img/${house.image}`;
+
+    const imageChange = form.querySelector("#houseImage");
+
+    imageChange.addEventListener("change", () => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(imageChange.files[0]);
+      fileReader.onload = () => {
+        imageCont.src = fileReader.result;
+      };
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      if (!nameInput.value && !imageChange.files[0]) return;
+
+      let newName = nameInput.value;
+      let newImage = imageChange.files[0];
+
+      if (newImage) {
+        if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
+          console.log("Only images are allowed.");
+          return;
+        }
+        // check file size (< 10MB)
+        if (newImage.size > 10 * 1024 * 1024) {
+          console.log("File must be less than 2MB.");
+          return;
+        }
+      }
+
+      const fd = new FormData();
+
+      fd.append("id", house._id);
+
+      if (!newName) {
+        fd.append("newName", "undefined");
+      } else {
+        fd.append("newName", newName);
+      }
+      fd.append("image", newImage);
+
+      const result = await (
+        await fetch("/api/changeHouseData", {
+          method: "POST",
+          body: fd,
+        })
+      ).json();
+
+      if (result.status === "ok") {
+        nameInput.value = "";
+        house_details.style.animation =
+          "overlayProf_DownPrompt 0.3s forwards ease";
+        houseCont.innerHTML = "";
+        await wait(0.2);
+        loadServers();
+      } else {
+        console.log("Something went wrong");
+      }
+    });
   });
 });
 

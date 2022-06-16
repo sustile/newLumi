@@ -140,11 +140,17 @@ body {
   overflow-y: auto;
   height: 80vh;
 }
-.header_main-cont .houses_main-cont a img {
-  cursor: pointer;
+.header_main-cont .houses_main-cont a .img_cont {
   width: 7rem;
-  border-radius: 50%;
+  height: 7rem;
+}
+.header_main-cont .houses_main-cont a .img_cont img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  cursor: pointer;
 }
 .header_main-cont .houses .createHouse {
   text-decoration: none;
@@ -495,6 +501,31 @@ body {
   max-width: 30rem;
   max-height: 50rem;
   overflow-y: auto;
+  opacity: 0;
+}
+@keyframes popupMembers {
+  0% {
+    transform: scale(0.8);
+    visibility: hidden;
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    visibility: visible;
+    opacity: 1;
+  }
+}
+@keyframes popdownMembers {
+  0% {
+    transform: scale(1);
+    visibility: visible;
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    visibility: hidden;
+    opacity: 0;
+  }
 }
 .header_main-cont .content .vc_members p {
   margin-top: 1.5rem;
@@ -1391,7 +1422,8 @@ body {
   }
 }
 
-.account_details {
+.account_details,
+.house_details {
   z-index: 120;
   position: fixed;
   top: 50%;
@@ -1402,7 +1434,8 @@ body {
   padding: 4rem;
   visibility: hidden;
 }
-.account_details::before {
+.account_details::before,
+.house_details::before {
   content: "";
   display: inline-block;
   width: 200vw;
@@ -1414,20 +1447,23 @@ body {
   z-index: -1;
   transform: translate(-50%, -50%);
 }
-.account_details h2 {
+.account_details h2,
+.house_details h2 {
   font-family: "Rubik", sans-serif;
   font-size: 3.5rem;
   font-weight: 400;
   color: var(--primary-red);
   text-align: left;
 }
-.account_details .close_account_details {
+.account_details .close_account_details,
+.house_details .close_account_details {
   text-decoration: none;
   position: absolute;
   top: 3rem;
   right: 3rem;
 }
-.account_details .close_account_details i {
+.account_details .close_account_details i,
+.house_details .close_account_details i {
   font-size: 3rem;
   background-color: #333;
   padding: 1rem;
@@ -1435,25 +1471,29 @@ body {
   border-radius: 50%;
   cursor: pointer;
 }
-.account_details .form {
+.account_details .form,
+.house_details .form {
   margin-top: 7rem;
   display: flex;
   flex-direction: column;
   gap: 5rem;
 }
-.account_details .form div {
+.account_details .form div,
+.house_details .form div {
   display: flex;
   align-items: center;
   justify-content: space-around;
   gap: 3rem;
 }
-.account_details .form label {
+.account_details .form label,
+.house_details .form label {
   font-size: "Rubik", sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
   color: #ddd;
 }
-.account_details .form input {
+.account_details .form input,
+.house_details .form input {
   text-align: center;
   padding: 0.8rem 2rem;
   border: 0;
@@ -1466,28 +1506,33 @@ body {
   background-color: #333;
   width: 50%;
 }
-.account_details .form .imageChange_cont {
+.account_details .form .imageChange_cont,
+.house_details .form .imageChange_cont {
   display: flex;
   justify-content: center;
   gap: 5rem;
 }
-.account_details .form .imageChange_cont label {
+.account_details .form .imageChange_cont label,
+.house_details .form .imageChange_cont label {
   background-color: var(--primary-red);
   padding: 1rem 3rem;
   border-radius: 10rem;
   cursor: pointer;
 }
-.account_details .form .imageChange_cont img {
+.account_details .form .imageChange_cont img,
+.house_details .form .imageChange_cont img {
   width: 7rem;
   height: 7rem;
   border-radius: 50%;
 }
-.account_details .form .submit-cont {
+.account_details .form .submit-cont,
+.house_details .form .submit-cont {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-.account_details .form .submit-cont .submit_acc_changes {
+.account_details .form .submit-cont .submit_acc_changes,
+.house_details .form .submit-cont .submit_acc_changes {
   cursor: pointer;
   border: 0;
   outline: 0;
@@ -1500,13 +1545,15 @@ body {
   background-color: var(--primary-green);
   color: #333;
 }
-.account_details .logout-cont {
+.account_details .logout-cont,
+.house_details .logout-cont {
   margin-top: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.account_details .logout-cont a {
+.account_details .logout-cont a,
+.house_details .logout-cont a {
   text-decoration: none;
   color: #333;
   font-size: 2rem;

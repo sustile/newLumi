@@ -30,8 +30,9 @@
     <div class="header_main-cont">
       <div class="houses">
         <div class="houses_main-cont">
-          <!-- <a href=""><img src="./../img/testImg.png" alt="" /></a>
-          <a href=""><img src="./../img/testImg.png" alt="" /></a> -->
+          <!-- <a href=""><img src="./../img/default.png" alt="" /></a>
+            
+          <a href=""><img src="./../img/default.png" alt="" /></a> -->
         </div>
         <a href="" class="createHouse prevent"><i class="ph-plus-bold"></i></a>
         <div class="nav_headers">
@@ -103,7 +104,7 @@
 
         <div class="vc_members">
           <!-- <p>
-            <img src="./../img/testImg.png" alt="" />
+            <img src="./../img/default.png" alt="" />
             <span> 57R1X </span>
           </p> -->
         </div>
@@ -138,6 +139,14 @@
                 placeholder="Message"
                 maxlength="200"
               />
+              <!-- <input
+                type="file"
+                class="message-input"
+                required
+                placeholder="Message"
+                maxlength="200"
+                style="visibility: none"
+              /> -->
             </form>
           </div>
         </div>
@@ -178,7 +187,7 @@
               <div class="vc_display_user-cont">
                 <div class="user">
                   <div class="img_cont">
-                    <img src="./../img/testImg.png" alt="" />
+                    <img src="./../img/default.png" alt="" />
                   </div>
                   <p>Systile</p>
                 </div>
@@ -271,7 +280,7 @@
 
         <div class="imageChange_cont">
           <label for="image" id="imageLabel">Choose an Image</label>
-          <img src="./../img/testImg.png" alt="" class="image_main" />
+          <img src="./../img/default.png" alt="" class="image_main" />
           <input
             type="file"
             id="image"
@@ -289,6 +298,40 @@
       </div>
     </div>
 
+    <div class="house_details">
+      <h2>House Settings</h2>
+      <a href="" class="close_account_details prevent">
+        <i class="ph-x-bold"></i>
+      </a>
+
+      <form class="form">
+        <div class="nameChange_cont">
+          <label for="nameChange">Change Your House Name</label>
+          <input
+            type="text"
+            id="nameChange"
+            maxlength="16"
+            placeholder="Systile"
+          />
+        </div>
+
+        <div class="imageChange_cont">
+          <label for="houseImage" id="imageLabel">Choose an Image</label>
+          <img src="./../img/default.png" alt="" class="image_main" />
+          <input
+            type="file"
+            id="houseImage"
+            accept="image/jpeg, image/png, image/gif"
+            style="display: none"
+          />
+        </div>
+
+        <div class="submit-cont">
+          <button type="submit" class="submit_acc_changes">Save</button>
+        </div>
+      </form>
+    </div>
+
     <div class="dm-contextMenu">
       <a href="" class="context_copy-user-id prevent"
         ><i class="ph-copy-bold"></i><span>Copy ID</span></a
@@ -298,6 +341,9 @@
     <div class="house-contextMenu">
       <a href="" class="context_copy-house-id prevent"
         ><i class="ph-copy-bold"></i><span>Copy ID</span></a
+      >
+      <a href="" style="display: none" class="context_house-setting prevent"
+        ><i class="ph-gear-six-bold"></i><span>House Settings</span></a
       >
     </div>
 

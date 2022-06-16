@@ -6,6 +6,9 @@ const house = mongoose.model("House", houseModel);
 
 const account = mongoose.model("User", accountModel);
 
+const fs = require("fs");
+const path = require("path");
+
 exports.createHouse = async (req, res) => {
   try {
     const user = req.user;
@@ -18,6 +21,7 @@ exports.createHouse = async (req, res) => {
       creation: Date.now(),
       createdBy: user._id,
       members: [user._id],
+      image: "default.png",
     });
     const newHouse = await house.create(body);
 
@@ -138,6 +142,90 @@ exports.joinHouse = async (req, res) => {
     }
   } catch (err) {
     res.status(400).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.changeHouseData = async (req, res) => {
+  try {
+    const user = req.user;
+    const body = req.body;
+
+    const file = req.file;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+      return;
+    }
+
+    if (!body) {
+      res.status(404).json({
+        status: "fail",
+        message: "No Data was provided",
+      });
+      return;
+    }
+
+    const houseData = await house.findOne({ _id: body.id });
+
+    if (houseData.createdBy === user.id) {
+      if (!file) {
+        if (body.newName !== "undefined") {
+          await house.findOneAndUpdate(
+            { _id: body.id },
+            { name: body.newName }
+          );
+          res.status(200).json({
+            status: "ok",
+          });
+        }
+      } else {
+        if (body.newName !== "undefined") {
+          let imgPath = path.join(
+            __dirname,
+            `./../public/img/${houseData.image}`
+          );
+          try {
+            fs.unlinkSync(imgPath, (err) => {
+              console.log(err);
+            });
+          } catch (err) {
+            console.log(err);
+          }
+          await house.findOneAndUpdate(
+            { _id: body.id },
+            { name: body.newName, image: file.filename }
+          );
+          res.status(200).json({
+            status: "ok",
+          });
+        } else {
+          let imgPath = path.join(
+            __dirname,
+            `./../public/img/${houseData.image}`
+          );
+          try {
+            fs.unlinkSync(imgPath);
+          } catch (err) {
+            console.log(err);
+          }
+          await house.findOneAndUpdate(
+            { _id: body.id },
+            { image: file.filename }
+          );
+          res.status(200).json({
+            status: "ok",
+          });
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({
       status: "fail",
       message: err.message,
     });
