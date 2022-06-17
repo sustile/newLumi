@@ -99,7 +99,7 @@ body {
     justify-content: center;
     margin: 0 auto;
     gap: 1.7rem;
-    width: 100%;
+    width: 60%;
 
     .main_cont {
       display: flex;
@@ -129,7 +129,7 @@ body {
         color: #333;
         box-shadow: 0 0 0 0.8rem transparent;
         transition: all 0.3s;
-        width: 60%;
+        width: 100%;
 
         &:placeholder-shown + label {
           opacity: 0;

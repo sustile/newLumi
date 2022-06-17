@@ -1,0 +1,12 @@
+@media (max-width: 1400px) {
+  html {
+    font-size: 45%;
+  }
+}
+@media (max-width: 1200px) {
+  html {
+    font-size: 40%;
+  }
+}
+
+/*# sourceMappingURL=mainQueries.css.map */
