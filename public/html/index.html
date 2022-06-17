@@ -64,7 +64,7 @@
             ></a>
             <!-- <a href=""><i class="ph-monitor-play-bold prevent"></i></a> -->
             <a href=""><i class="ph-microphone prevent muteBtn"></i></a>
-            <a href=""><i class="ph-gear-six prevent"></i></a>
+            <!-- <a href=""><i class="ph-gear-six prevent"></i></a> -->
           </div>
           <div class="nav_acc">
             <!-- <a href=""><i class="ph-identification-card-bold prevent"></i></a> -->
@@ -141,20 +141,16 @@
               />
               <!-- <input
                 type="file"
-                class="message-input"
-                required
-                placeholder="Message"
-                maxlength="200"
-                style="visibility: none"
+                id="textAreaImageInput"
+                style="visibility: visible"
               /> -->
             </form>
           </div>
         </div>
 
         <div class="house_model-cont" style="display: none">
-          <div class="house_message_section">
-            <div class="house-message_main-cont">
-              <!-- <div class="message">
+          <div class="house-message_main-cont">
+            <!-- <div class="message">
                 <div class="message_user">
                   <div class="img_cont">
                     <img src="./../img/1653719291251.jpg" alt="" />
@@ -163,37 +159,18 @@
                 </div>
                 <span class="message_cont">How You Doin?</span>
               </div> -->
-            </div>
-            <div class="house-message_enter" style="visibility: hidden">
-              <form class="house-message_form">
-                <input
-                  type="text"
-                  class="message-input"
-                  required
-                  placeholder="Send a Message To this House"
-                  maxlength="200"
-                />
-              </form>
-            </div>
           </div>
-
-          <!-- <div class="house_vc_section">
-            <div class="vc_btns">
-              <a href="" class="join-house-vc prevent">Join VC</a>
-              <a href="" class="leave-house-vc prevent">Leave VC</a>
-            </div>
-            <div class="vc_display" style="display: none">
-              <p class="vc_display-header">Users Connected Live</p>
-              <div class="vc_display_user-cont">
-                <div class="user">
-                  <div class="img_cont">
-                    <img src="./../img/default.png" alt="" />
-                  </div>
-                  <p>Systile</p>
-                </div>
-              </div>
-            </div>
-          </div> -->
+          <div class="house-message_enter" style="visibility: hidden">
+            <form class="house-message_form">
+              <input
+                type="text"
+                class="message-input"
+                required
+                placeholder="Send a Message To this House"
+                maxlength="200"
+              />
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -351,6 +328,10 @@
       class="video_cont"
       style="position: fixed; top: 0; left: 0; display: none"
     ></div>
+    <div class="errorPopup">
+      <i class="ph-circle-wavy-warning-bold"></i>
+      <p class="errorPopup_text">Something Went Wrong</p>
+    </div>
   </body>
   <script defer type="module" src="../js/base.js"></script>
 </html>

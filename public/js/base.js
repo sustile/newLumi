@@ -63,6 +63,8 @@ let housesOwned = [];
 
 let vcPeer = "";
 
+let ongoingError = false;
+
 let call;
 const activeCall = {
   status: false,
@@ -96,6 +98,26 @@ const wait = async (s) => {
     }, s * 1000);
   });
 };
+
+// POPUP ERROR
+
+const errorPopup = document.querySelector(".errorPopup");
+const errorPopup_text = document.querySelector(".errorPopup_text");
+
+const popupError = async (message) => {
+  ongoingError = true;
+  return new Promise(async (res) => {
+    errorPopup_text.textContent = message;
+    errorPopup.style.animation = "moveDown 0.5s forwards ease";
+    await wait(2);
+    errorPopup.style.animation = "moveUp 0.5s forwards ease";
+    await wait(1);
+    ongoingError = false;
+    res();
+  });
+};
+
+// POPUP ERROR
 
 const loadPrevent = () => {
   const prevent = document.querySelectorAll(".prevent");
@@ -263,10 +285,14 @@ createDM.addEventListener("click", async (e) => {
 
     if (dm.status === "fail") {
       if (dm.message === "Duplicate Dms") {
-        console.log("Duplicate Dms");
+        if (!ongoingError) {
+          await popupError("Duplicate Dms");
+        }
         form.querySelector("input").value = "";
       } else {
-        console.log("Invalid ID");
+        if (!ongoingError) {
+          await popupError("Invalid ID");
+        }
         form.querySelector("input").value = "";
       }
     } else {
@@ -312,9 +338,13 @@ createHouse.addEventListener("click", async (e) => {
       ).json();
       if (dm.status === "fail") {
         if (dm.message === "Duplicate Dms") {
-          console.log("Duplicate Dms");
+          if (!ongoingError) {
+            await popupError("Duplicate Dms");
+          }
         } else {
-          console.log("Invalid ID");
+          if (!ongoingError) {
+            await popupError("Invalid ID");
+          }
         }
       } else {
         loadServers();
@@ -351,9 +381,13 @@ createHouse.addEventListener("click", async (e) => {
       ).json();
       if (dm.status === "fail") {
         if (dm.message === "Duplicate Dms") {
-          console.log("Duplicate Dms");
+          if (!ongoingError) {
+            await popupError("Duplicate Dms");
+          }
         } else {
-          console.log("Invalid ID");
+          if (!ongoingError) {
+            await popupError("Invalid ID");
+          }
         }
       } else {
         loadServers();
@@ -402,12 +436,16 @@ userData_image.addEventListener("click", () => {
 
     if (newImage) {
       if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
-        console.log("Only images are allowed.");
+        if (!ongoingError) {
+          await popupError("Only images are allowed");
+        }
         return;
       }
       // check file size (< 10MB)
       if (newImage.size > 10 * 1024 * 1024) {
-        console.log("File must be less than 2MB.");
+        if (!ongoingError) {
+          await popupError("File must be less than 2MB");
+        }
         return;
       }
     }
@@ -434,7 +472,9 @@ userData_image.addEventListener("click", () => {
         "overlayProf_DownPrompt 0.3s forwards ease";
       getBasicData();
     } else {
-      console.log("Something went wrong");
+      if (!ongoingError) {
+        await popupError("Something went wrong");
+      }
     }
   });
 });
@@ -497,6 +537,12 @@ messageMain.addEventListener("scroll", () => {
     lazyLoadMessages(activeCont, currentDmPage);
   }
 });
+// messageMain.addEventListener("scroll", () => {
+//   if (messageMain.scrollTop === 0) {
+//     currentDmPage = currentDmPage + 1;
+//     lazyLoadMessages(activeCont, currentDmPage);
+//   }
+// });
 // CHECK IF USER HAS REACH THE TOP
 
 const saveMessage = async (dmId, message) => {
@@ -532,14 +578,20 @@ const lazyLoadMessages = async (
     })
   ).json();
 
-  dm.result.forEach((el, i) => {
-    displayMessage(el.message, el.name, el.image, "afterbegin");
-  });
-
   if (checkScrollAfterLoading) {
-    messageMain.scroll({
-      top: messageMain.scrollHeight,
-      behavior: "smooth",
+    dm.result.forEach(async (el, i) => {
+      const user = await getSomeOtherUserData(el.userId);
+      displayMessage(el.message, el.name, user.image, "afterbegin");
+      messageMain.scroll({
+        top: messageMain.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+  } else {
+    await wait(0.5);
+    dm.result.forEach(async (el, i) => {
+      const user = await getSomeOtherUserData(el.userId);
+      displayMessage(el.message, el.name, user.image, "afterbegin");
     });
   }
 };
@@ -652,8 +704,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
   houseMessageInput.value = "";
   displayHouseMessage(message, user.name, user.image);
 
-  houseMessageCont.scroll({
-    top: houseMessageCont.scrollHeight,
+  house_main_cont.scroll({
+    top: house_main_cont.scrollHeight,
     behavior: "smooth",
   });
 
@@ -678,8 +730,8 @@ const saveHouseMessage = async (houseId, message) => {
 };
 
 // CHECK IF USER HAS REACH THE TOP
-houseMessageCont.addEventListener("scroll", () => {
-  if (houseMessageCont.scrollTop === 0) {
+house_main_cont.addEventListener("scroll", () => {
+  if (house_main_cont.scrollTop === 0) {
     currentDmPage = currentDmPage + 1;
     lazyLoadHouseMessages(activeCont, currentDmPage);
   }
@@ -704,14 +756,21 @@ const lazyLoadHouseMessages = async (
     })
   ).json();
 
-  dm.result.forEach((el, i) => {
-    displayHouseMessage(el.message, el.name, el.image, "afterbegin");
-  });
-
   if (checkScrollAfterLoading) {
-    houseMessageCont.scroll({
-      top: houseMessageCont.scrollHeight,
-      behavior: "smooth",
+    dm.result.forEach(async (el, i) => {
+      const user = await getSomeOtherUserData(el.userId);
+      displayHouseMessage(el.message, el.name, user.image, "afterbegin");
+
+      house_main_cont.scroll({
+        top: house_main_cont.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+  } else {
+    await wait(0.5);
+    dm.result.forEach(async (el, i) => {
+      const user = await getSomeOtherUserData(el.userId);
+      displayHouseMessage(el.message, el.name, user.image, "afterbegin");
     });
   }
 };
@@ -719,13 +778,16 @@ const lazyLoadHouseMessages = async (
 socket.on("receive-house-message", (user, message, room, image) => {
   if (room === activeCont) {
     displayHouseMessage(message, user, image);
-    houseMessageCont.scroll({
-      top: houseMessageCont.scrollHeight,
+    // houseMessageCont.scroll({
+    //   top: houseMessageCont.scrollHeight,
+    //   behavior: "smooth",
+    // });
+    house_main_cont.scroll({
+      top: house_main_cont.scrollHeight,
       behavior: "smooth",
     });
   } else {
     // popup(message, user, room);
-    console.log(`${user} : ${message}`);
   }
 });
 
@@ -857,6 +919,11 @@ async function remoteConnection() {
         incomingCallData.room = room;
         sound_call.play();
 
+        sound_call.on("end", () => {
+          call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+          incomingCallData = undefined;
+        });
+
         call_prompt.querySelector("p").textContent = incomingCallData.name;
 
         const imgCont = (call_prompt
@@ -947,7 +1014,6 @@ async function remoteConnection() {
           });
 
           call.on("close", () => {
-            // console.log("closing");
             video.remove();
           });
         }
@@ -1033,14 +1099,12 @@ async function remoteConnection() {
           });
 
           call.on("close", () => {
-            // console.log("closing");
             video.remove();
           });
         }
       });
 
       socket.on("UserLeft-call_dm", (room, id) => {
-        // console.log(activeCall.room, room);
         // if (activeCall.room === room) {
         sound_callLeave.play();
         const allVids = videoCont.querySelectorAll("video");
@@ -1057,9 +1121,6 @@ async function remoteConnection() {
             user.remove();
           }
         });
-        // } else {
-        //   console.log("lol");
-        // }
       });
 
       socket.on("user-left-vc", (room, id) => {
@@ -1424,12 +1485,16 @@ houseCont.addEventListener("contextmenu", (e) => {
 
       if (newImage) {
         if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
-          console.log("Only images are allowed.");
+          if (!ongoingError) {
+            await popupError("Only images are allowed");
+          }
           return;
         }
         // check file size (< 10MB)
         if (newImage.size > 10 * 1024 * 1024) {
-          console.log("File must be less than 2MB.");
+          if (!ongoingError) {
+            await popupError("File must be less than 2MB");
+          }
           return;
         }
       }
@@ -1460,7 +1525,9 @@ houseCont.addEventListener("contextmenu", (e) => {
         await wait(0.2);
         loadServers();
       } else {
-        console.log("Something went wrong");
+        if (!ongoingError) {
+          await popupError("Something went wrong");
+        }
       }
     });
   });

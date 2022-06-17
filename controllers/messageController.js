@@ -58,7 +58,7 @@ exports.lazyLoadMessages = async (req, res) => {
       return;
     }
 
-    const limit = 9;
+    const limit = 15;
     const page = (body.page - 1) * limit;
 
     const result = await message
@@ -66,7 +66,6 @@ exports.lazyLoadMessages = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(page)
       .limit(limit);
-
     res.status(200).json({
       status: "ok",
       result,

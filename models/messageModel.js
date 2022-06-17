@@ -14,10 +14,6 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, "A user must have a Name"],
     },
-    image: {
-      type: String,
-      required: [true, "A user must have a Name"],
-    },
     message: {
       type: String,
       required: [true, "A Convo must have a Message"],

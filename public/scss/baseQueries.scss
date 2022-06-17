@@ -34,6 +34,13 @@
   }
 }
 
+//1600px
+// @media (max-width: 1610px) {
+//   .message_main-cont {
+//     max-height: 85vh !important;
+//   }
+// }
+
 // 1400px
 
 @media (max-width: 1400px) {
@@ -44,7 +51,18 @@
   .header_main-cont {
     grid-template-columns: 11vw 22vw 67vw;
   }
+
+  // .message_main-cont {
+  //   max-height: 83vh !important;
+  // }
 }
+
+//1200px
+// @media (max-width: 1210px) {
+//   .message_main-cont {
+//     max-height: 80vh !important;
+//   }
+// }
 
 // 1000px
 
