@@ -297,12 +297,15 @@ createDM.addEventListener("click", async (e) => {
       }
     } else {
       loadDms();
+      socket.emit("update-dms", person2);
     }
 
     createDM_input.style.animation =
       "overlayProf_DownPrompt 0.3s forwards ease";
   });
 });
+
+socket.on("end_update-dms");
 
 createHouse.addEventListener("click", async (e) => {
   askHouseOptions.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
@@ -471,6 +474,7 @@ userData_image.addEventListener("click", () => {
       account_details.style.animation =
         "overlayProf_DownPrompt 0.3s forwards ease";
       getBasicData();
+      socket.emit("user-data-update", user.id);
     } else {
       if (!ongoingError) {
         await popupError("Something went wrong");
@@ -805,7 +809,16 @@ async function clearAllStreams() {
 async function remoteConnection() {
   // SOCKETS
 
-  socket.on("connect", () => {});
+  // socket.on("connect", () => {
+  //   socket.emit("global-socket", user.id);
+  // });
+
+  socket.emit("global-socket", user.id);
+  socket.emit("update-dms", "6291c0fb6ed7f16cafbb6d55");
+
+  // socket.on("check", () => {
+  //   console.log("check");
+  // });
 
   // SOCKETS
 
@@ -1518,10 +1531,26 @@ houseCont.addEventListener("contextmenu", (e) => {
       ).json();
 
       if (result.status === "ok") {
+        socket.emit("house-data-update", house._id);
+
+        // const houseObj = houseCont.querySelectorAll("a");
+        // houseObj.forEach((cont) => {
+        //   console.log(house._id);
+        //   console.log(house);
+        //   if (cont.getAttribute("data-id") === house._id) {
+        //     const img = cont.querySelector("img");
+        //     img.src = `./../img/${image}`;
+        //     cont.setAttribute("data-name", name);
+
+        //     if (activeCont === house._id) {
+        //       mainHeader.textContent = name;
+        //     }
+        //   }
+        // });
+
         nameInput.value = "";
         house_details.style.animation =
           "overlayProf_DownPrompt 0.3s forwards ease";
-        houseCont.innerHTML = "";
         await wait(0.2);
         loadServers();
       } else {
@@ -1540,3 +1569,40 @@ document.addEventListener("click", async () => {
   dmContextMenu.style.visibility = "hidden";
   houseContextMenu.style.visibility = "hidden";
 });
+
+// UPDATE EVENTS
+socket.on("user-data-updated", (id, name, image) => {
+  const dmObj = dmsCont.querySelectorAll("a");
+  dmObj.forEach((dm) => {
+    if (dm.getAttribute("data-dm") === id) {
+      const img = dm.querySelector("img");
+      const text = dm.querySelector(".text_main_user");
+      img.src = `./../img/${image}`;
+      text.textContent = name;
+
+      if (activeCont === id) {
+        mainHeader.textContent = name;
+      }
+    }
+  });
+});
+
+socket.on("house-data-updated", (id, name, image) => {
+  const houseObj = houseCont.querySelectorAll("a");
+  houseObj.forEach((house) => {
+    if (house.getAttribute("data-id") === id) {
+      const img = house.querySelector("img");
+      img.src = `./../img/${image}`;
+      house.setAttribute("data-name", name);
+
+      if (activeCont === id) {
+        mainHeader.textContent = name;
+      }
+    }
+  });
+});
+
+socket.on("dm-update-event-client", () => {
+  loadDms();
+});
+// UPDATE EVENTS

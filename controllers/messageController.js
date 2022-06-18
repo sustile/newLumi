@@ -3,6 +3,11 @@ const messageModel = require("../models/messageModel");
 
 const message = mongoose.model("message", messageModel);
 
+// const changeStream = message.watch([]);
+// changeStream.on("change", (next) => {
+//   console.log(next);
+// });
+
 exports.saveMessage = async (req, res) => {
   try {
     const body = req.body;

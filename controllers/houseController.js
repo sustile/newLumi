@@ -9,6 +9,8 @@ const account = mongoose.model("User", accountModel);
 const fs = require("fs");
 const path = require("path");
 
+exports.house = house;
+
 exports.createHouse = async (req, res) => {
   try {
     const user = req.user;

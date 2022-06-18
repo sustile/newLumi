@@ -11,13 +11,69 @@ var ExpressPeerServer = require("peer").ExpressPeerServer;
 const { createServer } = require("https");
 const fs = require("fs");
 
+const { account } = require("./controllers/accountController");
+const { house } = require("./controllers/houseController");
+
 const io = require("socket.io")(4000, {
   cors: {
     origin: ["https://localhost"],
   },
 });
 
-io.on("connection", (socket) => {
+const activeSockets = [];
+
+io.on("connection", async (socket) => {
+  // GLOBAL SOCKETS
+  socket.on("global-socket", (id) => {
+    const user = {
+      id: socket.id,
+      userId: id,
+    };
+
+    activeSockets.push(user);
+    // console.log(`Connected : ${activeSockets.length}`);
+  });
+
+  socket.on("update-dms", (id) => {
+    activeSockets.forEach((user) => {
+      if (user.userId === id) {
+        socket.to(user.id).emit("dm-update-event-client");
+      }
+    });
+  });
+
+  socket.on("disconnect", () => {
+    activeSockets.forEach((user, i) => {
+      if (user.id === socket.id) {
+        activeSockets.splice(i, 1);
+      }
+    });
+    // console.log(`Disconnected : ${activeSockets.length}`);
+  });
+
+  // socket.on("disconnect", () => {
+  //   activeSockets.forEach((user) => {
+  //     if (user.id === socket.id) {
+  //       // console.log("yes");
+  //     }
+  //   });
+  // });
+
+  // GLOBAL SOCKETS
+
+  socket.on("user-data-update", async (id) => {
+    const user = await account.findOne({ _id: id });
+    const dms = user.dms;
+    dms.forEach((room) => {
+      socket.to(room).emit("user-data-updated", room, user.name, user.image);
+    });
+  });
+
+  socket.on("house-data-update", async (id) => {
+    const dms = await house.findOne({ _id: id });
+    socket.to(id).emit("house-data-updated", id, dms.name, dms.image);
+  });
+
   socket.on("join-room", (room) => {
     socket.join(room);
   });
@@ -102,7 +158,7 @@ app.use(function (req, res, next) {
 app.use("/peer", ExpressPeerServer(server, { debug: true }));
 app.use("/vcPeer", ExpressPeerServer(vcServer, { debug: true }));
 
-app.use(morgan("dev"));
+// app.use(morgan(""));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
