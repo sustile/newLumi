@@ -110,7 +110,7 @@ const notification = async (title, message, image) => {
   Push.create(title, {
     body: message,
     icon: `./../img/${image}`,
-    // timeout: 6000,
+    timeout: 3000,
     onClick: function () {
       window.focus();
       this.close();
