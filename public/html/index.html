@@ -28,7 +28,8 @@
   </head>
   <body>
     <!-- <div class="drag"></div> -->
-    <div class="header_main-cont">
+    <div class="slider_overlay"></div>
+    <div class="slider">
       <div class="houses">
         <div class="houses_main-cont">
           <!-- <a href=""><img src="./../img/default.png" alt="" /></a>
@@ -84,6 +85,20 @@
               >
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header_main-cont">
+      <div class="side-bar">
+        <i class="ph-list-bold slider_btns"></i>
+
+        <div class="nav_headers">
+          <i class="ph-moon-fill"></i>
+          <h2 class="main-heading">Lumi</h2>
+          <span class="dev"
+            >DEVELOPED BY <span class="systile">SYSTILE</span></span
+          >
         </div>
       </div>
       <div class="content">
@@ -183,37 +198,39 @@
           </div>
         </div>
 
-        <div class="house_model-cont" style="display: none">
-          <div class="house-message_main-cont">
-            <!-- <div class="message">
-                <div class="message_user">
-                  <div class="img_cont">
-                    <img src="./../img/1653719291251.jpg" alt="" />
+        <div class="house_main-cont" style="display: none">
+          <div class="house_model-cont">
+            <div class="house-message_main-cont">
+              <!-- <div class="message">
+                  <div class="message_user">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
                   </div>
-                  <span>Test User</span>
-                </div>
-                <span class="message_cont">How You Doin?</span>
-              </div> -->
-          </div>
-          <div class="house-message_enter" style="visibility: hidden">
-            <div
-              class="house_replybar"
-              data-replyTo=""
-              data-replyMessage=""
-              style="visibility: hidden"
-            >
-              <span>Replying to Systile</span>
-              <i class="ph-x-bold close_dm_replybar"></i>
+                  <span class="message_cont">How You Doin?</span>
+                </div> -->
             </div>
-            <form class="house-message_form">
-              <input
-                type="text"
-                class="message-input"
-                required
-                placeholder="Send a Message To this House"
-                maxlength="200"
-              />
-            </form>
+            <div class="house-message_enter" style="visibility: hidden">
+              <div
+                class="house_replybar"
+                data-replyTo=""
+                data-replyMessage=""
+                style="visibility: hidden"
+              >
+                <span>Replying to Systile</span>
+                <i class="ph-x-bold close_dm_replybar"></i>
+              </div>
+              <form class="house-message_form">
+                <input
+                  type="text"
+                  class="message-input"
+                  required
+                  placeholder="Send a Message To this House"
+                  maxlength="200"
+                />
+              </form>
+            </div>
           </div>
         </div>
       </div>

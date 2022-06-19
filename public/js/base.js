@@ -43,7 +43,8 @@ const call_prompt_decline = call_prompt.querySelector(".call_prompt_decline");
 
 const message_load_trigger = document.querySelector(".message_load_trigger");
 
-const house_main_cont = document.querySelector(".house_model-cont");
+// const house_main_cont = document.querySelector(".house_model-cont");
+const house_main_cont = document.querySelector(".house_main-cont");
 const dm_main_cont = document.querySelector(".messages_model-cont");
 const houseMessageCont = document.querySelector(".house-message_main-cont");
 const houseMessageForm = document.querySelector(".house-message_form");
@@ -223,7 +224,7 @@ const loadServers = async () => {
       house.result.image = "default.png";
     }
 
-    const html = `<a href="" data-id="${house.result._id}" data-name="${house.result.name}">
+    const html = `<a href="" class="closeOverlayTrigger" data-id="${house.result._id}" data-name="${house.result.name}">
     <div class="img_cont">
     <img
       src="./../img/${house.result.image}"
@@ -263,7 +264,7 @@ const loadDms = async () => {
 
     if (dm.status === "fail") return;
 
-    const html = `<a href="" data-dm = "${dm.dmId}"
+    const html = `<a href="" data-dm = "${dm.dmId}" class="closeOverlayTrigger"
   ><div class="img_cont">
     <img src="./../img/${dm.image}" alt="" />
   </div>
@@ -808,6 +809,15 @@ const popup = async (message, name, room) => {
   loadPrevent();
   remoteConnection();
   // mediaControl();
+  await wait(1);
+  const closeOverlayTrigger = document.querySelectorAll(".closeOverlayTrigger");
+  closeOverlayTrigger.forEach((el) => {
+    el.addEventListener("click", () => {
+      slider.style.transform = "translateX(-100%)";
+      sliderOverlay.style.opacity = "0";
+      sliderOverlay.style.visibility = "hidden";
+    });
+  });
 })();
 
 // COPY ID IF THEY CLICK ON IT (FOR THE CURRENT USING USER)
@@ -2088,3 +2098,23 @@ socket.on("dm-update-event-client", () => {
   loadDms();
 });
 // UPDATE EVENTS
+
+// SLIDER
+const sliderBtn = document.querySelector(".slider_btns");
+const slider = document.querySelector(".slider");
+const sliderOverlay = document.querySelector(".slider_overlay");
+
+sliderBtn.addEventListener("click", async () => {
+  slider.style.transform = "translateX(0)";
+  sliderOverlay.style.visibility = "visible";
+  sliderOverlay.style.opacity = "1";
+});
+
+sliderOverlay.addEventListener("click", async () => {
+  slider.style.transform = "translateX(-100%)";
+  sliderOverlay.style.opacity = "0";
+  // await wait(0.3);
+  sliderOverlay.style.visibility = "hidden";
+});
+
+// SLIDER
