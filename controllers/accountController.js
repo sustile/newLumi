@@ -268,11 +268,13 @@ exports.changeData = async (req, res) => {
       }
     } else {
       if (body.newName !== "undefined") {
-        let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
-        try {
-          fs.unlinkSync(imgPath);
-        } catch (err) {
-          console.log(err);
+        if (user.image !== "default.png") {
+          let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
+          try {
+            fs.unlinkSync(imgPath);
+          } catch (err) {
+            console.log(err);
+          }
         }
         await account.findOneAndUpdate(
           { _id: user.id },
@@ -282,11 +284,13 @@ exports.changeData = async (req, res) => {
           status: "ok",
         });
       } else {
-        let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
-        try {
-          fs.unlinkSync(imgPath);
-        } catch (err) {
-          console.log(err);
+        if (user.image !== "default.png") {
+          let imgPath = path.join(__dirname, `./../public/img/${user.image}`);
+          try {
+            fs.unlinkSync(imgPath);
+          } catch (err) {
+            console.log(err);
+          }
         }
         await account.findOneAndUpdate(
           { _id: user.id },

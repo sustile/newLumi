@@ -22,6 +22,7 @@
       defer
       src="https://unpkg.com/peerjs@1.4.5/dist/peerjs.min.js"
     ></script>
+    <script defer src="./../modules/push.js/push.js"></script>
 
     <title>Lumi</title>
   </head>
@@ -129,8 +130,42 @@
               </div>
               <span class="message_cont">How You Doin?</span>
             </div> -->
+            <!-- REPLY MESSAGE TEMPLATE -->
+            <!-- <div class="reply_message">
+              <div class="og">
+                <span class="og-reply-arrow"
+                  ><i class="ph-arrow-bend-left-down-bold"></i
+                ></span>
+                <span class="og-user"
+                  >Replying to <span class="og-user_name">Systile</span></span
+                >
+                <span class="og-colon">:</span>
+                <span class="og-message">Yo </span>
+              </div>
+              <div class="message">
+                <div class="message_user">
+                  <div class="img_cont">
+                    <img src="./../img/1653719291251.jpg" alt="" />
+                  </div>
+                  <span>Test User</span>
+                </div>
+                <span class="message_cont">How You Doin?</span>
+              </div>
+            </div> -->
+            <!-- REPLY MESSAGE TEMPLATE -->
           </div>
+
+          <!-- style="visibility: hidden" -->
           <div class="message_enter" style="visibility: hidden">
+            <div
+              class="dm_replybar"
+              data-replyTo=""
+              data-replyMessage=""
+              style="visibility: hidden"
+            >
+              <span>Replying to Systile</span>
+              <i class="ph-x-bold close_dm_replybar"></i>
+            </div>
             <form class="message_form">
               <input
                 type="text"
@@ -161,6 +196,15 @@
               </div> -->
           </div>
           <div class="house-message_enter" style="visibility: hidden">
+            <div
+              class="house_replybar"
+              data-replyTo=""
+              data-replyMessage=""
+              style="visibility: hidden"
+            >
+              <span>Replying to Systile</span>
+              <i class="ph-x-bold close_dm_replybar"></i>
+            </div>
             <form class="house-message_form">
               <input
                 type="text"
@@ -307,6 +351,18 @@
           <button type="submit" class="submit_acc_changes">Save</button>
         </div>
       </form>
+    </div>
+
+    <div class="dm-message-contextMenu">
+      <a href="" class="context_message-reply prevent"
+        ><i class="ph-chats-circle-bold"></i><span>Reply</span></a
+      >
+    </div>
+
+    <div class="house-message-contextMenu">
+      <a href="" class="context_message-reply prevent"
+        ><i class="ph-chats-circle-bold"></i><span>Reply</span></a
+      >
     </div>
 
     <div class="dm-contextMenu">

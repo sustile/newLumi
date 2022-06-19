@@ -31,7 +31,7 @@ io.on("connection", async (socket) => {
     };
 
     activeSockets.push(user);
-    // console.log(`Connected : ${activeSockets.length}`);
+    console.log(`Connected : ${activeSockets.length}`);
   });
 
   socket.on("update-dms", (id) => {
@@ -48,16 +48,8 @@ io.on("connection", async (socket) => {
         activeSockets.splice(i, 1);
       }
     });
-    // console.log(`Disconnected : ${activeSockets.length}`);
+    console.log(`Disconnected : ${activeSockets.length}`);
   });
-
-  // socket.on("disconnect", () => {
-  //   activeSockets.forEach((user) => {
-  //     if (user.id === socket.id) {
-  //       // console.log("yes");
-  //     }
-  //   });
-  // });
 
   // GLOBAL SOCKETS
 
@@ -78,13 +70,43 @@ io.on("connection", async (socket) => {
     socket.join(room);
   });
 
-  socket.on("send-message", (message, user, room, image) => {
-    socket.to(room).emit("receive-message", user, message, room, image);
-  });
+  socket.on(
+    "send-message",
+    (type, message, user, room, image, replyTo, replyMessage) => {
+      socket
+        .to(room)
+        .emit(
+          "receive-message",
+          type,
+          user,
+          message,
+          room,
+          image,
+          replyTo,
+          replyMessage
+        );
+    }
+  );
 
-  socket.on("send-house-message", (message, user, room, image) => {
-    socket.to(room).emit("receive-house-message", user, message, room, image);
-  });
+  socket.on(
+    "send-house-message",
+    (type, message, user, room, image, replyTo, replyMessage) => {
+      socket
+        .to(room)
+        .emit(
+          "receive-house-message",
+          type,
+          user,
+          message,
+          room,
+          image,
+          replyTo,
+          replyMessage
+        );
+
+      // socket.to(room).emit("receive-house-message", user, message, room, image);
+    }
+  );
 
   socket.on("send-call", (from, room) => {
     socket.to(room).emit("incoming-call", from, room);

@@ -1,5 +1,8 @@
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 
+// import Push from "./../modules/push.js/push.min.js";
+// import Push from "push.js";
+
 const socket = io("http://localhost:4000");
 
 const dmsCont = document.querySelector(".dms_main-cont");
@@ -17,8 +20,12 @@ const joinHouse_input = document.querySelector(".joinHouse_input_field");
 
 const messageFrom = document.querySelector(".message_form");
 const messageInput = messageFrom.querySelector(".message-input");
+// const messageInput = document.querySelector(".message_enter");
 const messageMain = document.querySelector(".message_main-cont");
 const mainHeader = document.querySelector(".content_main-header");
+
+const dm_replyBar = document.querySelector(".dm_replybar");
+const house_replyBar = document.querySelector(".house_replybar");
 
 const call_btn = document.querySelector(".call-user");
 const decline_btn = document.querySelector(".call-decline");
@@ -99,6 +106,18 @@ const wait = async (s) => {
   });
 };
 
+const notification = async (title, message, image) => {
+  Push.create(title, {
+    body: message,
+    icon: `./../img/${image}`,
+    // timeout: 6000,
+    onClick: function () {
+      window.focus();
+      this.close();
+    },
+  });
+};
+
 // POPUP ERROR
 
 const errorPopup = document.querySelector(".errorPopup");
@@ -139,6 +158,9 @@ dmsCont.addEventListener("click", (e) => {
   dm_main_cont.style.display = "flex";
   // resetDMbg();
   // target.style.backgroundColor = "red";
+
+  if (target.getAttribute("data-dm") === activeCont) return;
+
   activeCont = target.getAttribute("data-dm");
   mainHeader.textContent = user.textContent;
 
@@ -157,6 +179,8 @@ dmsCont.addEventListener("click", (e) => {
   // LAZY LOAD MESSAGES
 
   currentDmPage = 1;
+  closeReplyBarFunction();
+  closeHouseReplyBarFunction();
   lazyLoadMessages(activeCont, currentDmPage, true);
 });
 
@@ -496,32 +520,105 @@ messageFrom.addEventListener("submit", async (e) => {
   e.preventDefault();
   const message = messageInput.value;
   messageInput.value = "";
-  displayMessage(message, user.name, user.image);
+
+  if (dm_replyBar.style.visibility === "visible") {
+    // console.log("yes");
+    const replyTo = dm_replyBar.getAttribute("data-replyTo");
+    const replyMessage = dm_replyBar.getAttribute("data-replyMessage");
+
+    saveMessage("reply", activeCont, message, replyTo, replyMessage);
+    displayMessage(
+      "reply",
+      message,
+      user.name,
+      user.image,
+      replyTo,
+      replyMessage
+    );
+
+    socket.emit(
+      "send-message",
+      "reply",
+      message,
+      user.name,
+      activeCont,
+      user.image,
+      replyTo,
+      replyMessage
+    );
+    closeReplyBarFunction();
+  } else {
+    displayMessage("normal", message, user.name, user.image);
+
+    saveMessage("normal", activeCont, message);
+
+    socket.emit(
+      "send-message",
+      "normal",
+      message,
+      user.name,
+      activeCont,
+      user.image
+    );
+  }
 
   messageMain.scroll({
     top: messageMain.scrollHeight,
     behavior: "smooth",
   });
-
-  socket.emit("send-message", message, user.name, activeCont, user.image);
-
-  saveMessage(activeCont, message);
 });
 
-socket.on("receive-message", (user, message, room, image) => {
-  if (room === activeCont) {
-    displayMessage(message, user, image);
-    messageMain.scroll({
-      top: messageMain.scrollHeight,
-      behavior: "smooth",
-    });
-  } else {
-    popup(message, user, room);
+socket.on(
+  "receive-message",
+  (type, user, message, room, image, replyTo, replyMessage) => {
+    if (room === activeCont) {
+      displayMessage(type, message, user, image, replyTo, replyMessage);
+
+      messageMain.scroll({
+        top: messageMain.scrollHeight,
+        behavior: "smooth",
+      });
+    } else {
+      popup(message, user, room);
+      notification(user, message, image);
+    }
   }
-});
+);
 
-const displayMessage = (message, name, image, type = "beforeend") => {
-  const html = `<div class="message">
+const displayMessage = (
+  type,
+  message,
+  name,
+  image,
+  replyTo,
+  replyMessage,
+  printType = "beforeend"
+) => {
+  let html;
+  if (type === "reply") {
+    html = `<div class="reply_message">
+    <div class="og">
+      <span class="og-reply-arrow"
+        ><i class="ph-arrow-bend-left-down-bold"></i
+      ></span>
+      <span class="og-user"
+        >Replying to <span class="og-user_name">${replyTo}</span></span
+      >
+      <span class="og-colon">:</span>
+      <span class="og-message">${replyMessage}</span>
+    </div>
+    <div class="message">
+    <div class="message_user">
+      <div class="img_cont">
+        <img src="./../img/${image}" alt="" />
+      </div>
+      <span>${name}</span>
+    </div>
+    <span class="message_cont">${message}</span>
+  </div>
+  </div>`;
+  } else if (type === "normal") {
+    html = `<div class="message">
   <div class="message_user">
     <div class="img_cont">
       <img src="./../img/${image}" alt="" />
@@ -530,8 +627,9 @@ const displayMessage = (message, name, image, type = "beforeend") => {
   </div>
   <span class="message_cont">${message}</span>
 </div>`;
+  }
 
-  messageMain.insertAdjacentHTML(type, html);
+  messageMain.insertAdjacentHTML(printType, html);
 };
 
 // CHECK IF USER HAS REACH THE TOP
@@ -549,19 +647,38 @@ messageMain.addEventListener("scroll", () => {
 // });
 // CHECK IF USER HAS REACH THE TOP
 
-const saveMessage = async (dmId, message) => {
-  const dm = await (
-    await fetch("/api/saveMessage", {
-      method: "POST",
-      body: JSON.stringify({
-        dmId,
-        message,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  ).json();
+const saveMessage = async (type, dmId, message, replyTo, replyMessage) => {
+  if (type === "reply") {
+    const dm = await (
+      await fetch("/api/saveMessage", {
+        method: "POST",
+        body: JSON.stringify({
+          type,
+          dmId,
+          message,
+          replyTo,
+          replyMessage,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+  } else {
+    const dm = await (
+      await fetch("/api/saveMessage", {
+        method: "POST",
+        body: JSON.stringify({
+          type,
+          dmId,
+          message,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+  }
 };
 
 const lazyLoadMessages = async (
@@ -585,17 +702,58 @@ const lazyLoadMessages = async (
   if (checkScrollAfterLoading) {
     dm.result.forEach(async (el, i) => {
       const user = await getSomeOtherUserData(el.userId);
-      displayMessage(el.message, el.name, user.image, "afterbegin");
+
+      if (el.type === "reply") {
+        displayMessage(
+          "reply",
+          el.message,
+          el.name,
+          user.image,
+          el.replyTo,
+          el.replyMessage,
+          "afterbegin"
+        );
+      } else if (el.type === "normal") {
+        displayMessage(
+          "normal",
+          el.message,
+          el.name,
+          user.image,
+          "",
+          "",
+          "afterbegin"
+        );
+      }
       messageMain.scroll({
         top: messageMain.scrollHeight,
         behavior: "smooth",
       });
     });
   } else {
-    await wait(0.5);
+    // await wait(0.5);
     dm.result.forEach(async (el, i) => {
       const user = await getSomeOtherUserData(el.userId);
-      displayMessage(el.message, el.name, user.image, "afterbegin");
+      if (el.type === "reply") {
+        displayMessage(
+          "reply",
+          el.message,
+          el.name,
+          user.image,
+          el.replyTo,
+          el.replyMessage,
+          "afterbegin"
+        );
+      } else if (el.type === "normal") {
+        displayMessage(
+          "normal",
+          el.message,
+          el.name,
+          user.image,
+          "",
+          "",
+          "afterbegin"
+        );
+      }
     });
   }
 };
@@ -670,8 +828,12 @@ houseCont.addEventListener("click", (e) => {
   e.preventDefault();
   house_main_cont.style.display = "flex";
   dm_main_cont.style.display = "none";
+
+  if (target.getAttribute("data-id") == activeCont) return;
+
   activeCont = target.getAttribute("data-id");
   mainHeader.textContent = target.getAttribute("data-name");
+  closeReplyBarFunction();
   houseMessageInput.style.visibility = "visible";
 
   if (!leave_house_vc.style.animation.includes("popup_btn")) {
@@ -685,11 +847,45 @@ houseCont.addEventListener("click", (e) => {
   houseMessageCont.innerHTML = "";
 
   currentDmPage = 1;
+  closeReplyBarFunction();
+  closeHouseReplyBarFunction();
   lazyLoadHouseMessages(activeCont, currentDmPage, true);
 });
 
-const displayHouseMessage = (message, name, image, type = "beforeend") => {
-  const html = `<div class="message">
+const displayHouseMessage = (
+  type,
+  message,
+  name,
+  image,
+  replyTo,
+  replyMessage,
+  printType = "beforeend"
+) => {
+  let html;
+  if (type === "reply") {
+    html = `<div class="reply_message">
+    <div class="og">
+      <span class="og-reply-arrow"
+        ><i class="ph-arrow-bend-left-down-bold"></i
+      ></span>
+      <span class="og-user"
+        >Replying to <span class="og-user_name">${replyTo}</span></span
+      >
+      <span class="og-colon">:</span>
+      <span class="og-message">${replyMessage}</span>
+    </div>
+    <div class="message">
+    <div class="message_user">
+      <div class="img_cont">
+        <img src="./../img/${image}" alt="" />
+      </div>
+      <span>${name}</span>
+    </div>
+    <span class="message_cont">${message}</span>
+  </div>
+  </div>`;
+  } else if (type === "normal") {
+    html = `<div class="message">
   <div class="message_user">
     <div class="img_cont">
       <img src="./../img/${image}" alt="" />
@@ -698,39 +894,101 @@ const displayHouseMessage = (message, name, image, type = "beforeend") => {
   </div>
   <span class="message_cont">${message}</span>
 </div>`;
+  }
 
-  houseMessageCont.insertAdjacentHTML(type, html);
+  houseMessageCont.insertAdjacentHTML(printType, html);
 };
 
 houseMessageForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const message = houseMessageInput.value;
   houseMessageInput.value = "";
-  displayHouseMessage(message, user.name, user.image);
+
+  if (house_replyBar.style.visibility === "visible") {
+    // console.log("yes");
+    const replyTo = house_replyBar.getAttribute("data-replyTo");
+    const replyMessage = house_replyBar.getAttribute("data-replyMessage");
+
+    saveHouseMessage("reply", activeCont, message, replyTo, replyMessage);
+    displayHouseMessage(
+      "reply",
+      message,
+      user.name,
+      user.image,
+      replyTo,
+      replyMessage
+    );
+
+    socket.emit(
+      "send-house-message",
+      "reply",
+      message,
+      user.name,
+      activeCont,
+      user.image,
+      replyTo,
+      replyMessage
+    );
+    closeHouseReplyBarFunction();
+  } else {
+    displayHouseMessage("normal", message, user.name, user.image);
+
+    saveHouseMessage("normal", activeCont, message);
+
+    socket.emit(
+      "send-house-message",
+      "normal",
+      message,
+      user.name,
+      activeCont,
+      user.image
+    );
+  }
 
   house_main_cont.scroll({
     top: house_main_cont.scrollHeight,
     behavior: "smooth",
   });
-
-  socket.emit("send-house-message", message, user.name, activeCont, user.image);
-
-  saveHouseMessage(activeCont, message);
 });
 
-const saveHouseMessage = async (houseId, message) => {
-  const dm = await (
-    await fetch("/api/saveHouseMessage", {
-      method: "POST",
-      body: JSON.stringify({
-        houseId,
-        message,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  ).json();
+const saveHouseMessage = async (
+  type,
+  houseId,
+  message,
+  replyTo,
+  replyMessage
+) => {
+  if (type === "reply") {
+    const dm = await (
+      await fetch("/api/saveHouseMessage", {
+        method: "POST",
+        body: JSON.stringify({
+          type,
+          houseId,
+          message,
+          replyTo,
+          replyMessage,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+  } else {
+    const dm = await (
+      await fetch("/api/saveHouseMessage", {
+        method: "POST",
+        body: JSON.stringify({
+          type,
+          houseId,
+          message,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+  }
 };
 
 // CHECK IF USER HAS REACH THE TOP
@@ -763,7 +1021,30 @@ const lazyLoadHouseMessages = async (
   if (checkScrollAfterLoading) {
     dm.result.forEach(async (el, i) => {
       const user = await getSomeOtherUserData(el.userId);
-      displayHouseMessage(el.message, el.name, user.image, "afterbegin");
+
+      if (el.type === "reply") {
+        displayHouseMessage(
+          "reply",
+          el.message,
+          el.name,
+          user.image,
+          el.replyTo,
+          el.replyMessage,
+          "afterbegin"
+        );
+      } else if (el.type === "normal") {
+        displayHouseMessage(
+          "normal",
+          el.message,
+          el.name,
+          user.image,
+          "",
+          "",
+          "afterbegin"
+        );
+      }
+
+      // displayHouseMessage(el.message, el.name, user.image, "afterbegin");
 
       house_main_cont.scroll({
         top: house_main_cont.scrollHeight,
@@ -774,26 +1055,49 @@ const lazyLoadHouseMessages = async (
     await wait(0.5);
     dm.result.forEach(async (el, i) => {
       const user = await getSomeOtherUserData(el.userId);
-      displayHouseMessage(el.message, el.name, user.image, "afterbegin");
+
+      if (el.type === "reply") {
+        displayHouseMessage(
+          "reply",
+          el.message,
+          el.name,
+          user.image,
+          el.replyTo,
+          el.replyMessage,
+          "afterbegin"
+        );
+      } else if (el.type === "normal") {
+        displayHouseMessage(
+          "normal",
+          el.message,
+          el.name,
+          user.image,
+          "",
+          "",
+          "afterbegin"
+        );
+      }
+
+      // displayHouseMessage(el.message, el.name, user.image, "afterbegin");
     });
   }
 };
 
-socket.on("receive-house-message", (user, message, room, image) => {
-  if (room === activeCont) {
-    displayHouseMessage(message, user, image);
-    // houseMessageCont.scroll({
-    //   top: houseMessageCont.scrollHeight,
-    //   behavior: "smooth",
-    // });
-    house_main_cont.scroll({
-      top: house_main_cont.scrollHeight,
-      behavior: "smooth",
-    });
-  } else {
-    // popup(message, user, room);
+socket.on(
+  "receive-house-message",
+  (type, user, message, room, image, replyTo, replyMessage) => {
+    if (room === activeCont) {
+      displayHouseMessage(type, message, user, image, replyTo, replyMessage);
+
+      house_main_cont.scroll({
+        top: house_main_cont.scrollHeight,
+        behavior: "smooth",
+      });
+    } else {
+      // popup(message, user, room);
+    }
   }
-});
+);
 
 // ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
@@ -1369,6 +1673,17 @@ async function remoteConnection() {
 
 const dmContextMenu = document.querySelector(".dm-contextMenu");
 const houseContextMenu = document.querySelector(".house-contextMenu");
+const dm_MessageContextMenu = document.querySelector(".dm-message-contextMenu");
+const dm_MessageContextMenu_reply = dm_MessageContextMenu.querySelector(
+  ".context_message-reply"
+);
+
+const house_MessageContextMenu = document.querySelector(
+  ".house-message-contextMenu"
+);
+const house_MessageContextMenu_reply = house_MessageContextMenu.querySelector(
+  ".context_message-reply"
+);
 
 const contextCopyUserId = dmContextMenu.querySelector(".context_copy-user-id");
 const contextCopyHouseId = houseContextMenu.querySelector(
@@ -1383,8 +1698,9 @@ dmsCont.addEventListener("contextmenu", async (e) => {
   if (!target) return;
   e.preventDefault();
 
-  houseContextMenu.style.opacity = "0";
-  houseContextMenu.style.visibility = "hidden";
+  // houseContextMenu.style.opacity = "0";
+  // houseContextMenu.style.visibility = "hidden";
+  closeAllContextMenus();
 
   let x = e.pageX,
     y = e.pageY,
@@ -1410,13 +1726,171 @@ dmsCont.addEventListener("contextmenu", async (e) => {
   });
 });
 
+messageMain.addEventListener("contextmenu", async (e) => {
+  const target = e.target.closest(".message");
+  if (!target) return;
+  e.preventDefault();
+
+  closeAllContextMenus();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  dm_MessageContextMenu.style.left = `${x}px`;
+  dm_MessageContextMenu.style.top = `${y}px`;
+
+  dm_MessageContextMenu.style.visibility = "visible";
+  dm_MessageContextMenu.style.opacity = "1";
+
+  const closeDmReplyBar = dm_replyBar.querySelector(".close_dm_replybar");
+  closeDmReplyBar.addEventListener("click", () => {
+    closeReplyBarFunction();
+  });
+
+  dm_MessageContextMenu_reply.addEventListener("click", async () => {
+    // console.log(target);
+    const userCont = target.querySelector(".message_user");
+    const message = target.querySelector(".message_cont");
+    // console.log(userCont);
+    const user = userCont.querySelector("span");
+
+    const spanText = dm_replyBar.querySelector("span");
+    spanText.textContent = `Replying to ${user.textContent}`;
+    dm_replyBar.setAttribute("data-replyTo", user.textContent);
+    dm_replyBar.setAttribute("data-replyMessage", message.textContent);
+    dm_replyBar.style.visibility = "visible";
+
+    dm_MessageContextMenu.style.opacity = "0";
+    await wait(0.1);
+    dm_MessageContextMenu.style.visibility = "hidden";
+  });
+});
+
+const closeReplyBarFunction = async () => {
+  const spanText = dm_replyBar.querySelector("span");
+  spanText.textContent = `Replying to `;
+  dm_replyBar.setAttribute("data-replyTo", "");
+  dm_replyBar.setAttribute("data-replyMessage", "");
+  dm_replyBar.style.visibility = "hidden";
+};
+
+const closeHouseReplyBarFunction = async () => {
+  const spanText = house_replyBar.querySelector("span");
+  spanText.textContent = `Replying to `;
+  house_replyBar.setAttribute("data-replyTo", "");
+  house_replyBar.setAttribute("data-replyMessage", "");
+  house_replyBar.style.visibility = "hidden";
+};
+
+houseMessageCont.addEventListener("contextmenu", async (e) => {
+  const target = e.target.closest(".message");
+  if (!target) return;
+  e.preventDefault();
+
+  closeAllContextMenus();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  house_MessageContextMenu.style.left = `${x}px`;
+  house_MessageContextMenu.style.top = `${y}px`;
+
+  house_MessageContextMenu.style.visibility = "visible";
+  house_MessageContextMenu.style.opacity = "1";
+
+  const closeDmReplyBar = house_replyBar.querySelector(".close_dm_replybar");
+  closeDmReplyBar.addEventListener("click", () => {
+    closeHouseReplyBarFunction();
+  });
+
+  house_MessageContextMenu_reply.addEventListener("click", async () => {
+    // console.log(target);
+    const userCont = target.querySelector(".message_user");
+    const message = target.querySelector(".message_cont");
+    // console.log(userCont);
+    const user = userCont.querySelector("span");
+
+    const spanText = house_replyBar.querySelector("span");
+    spanText.textContent = `Replying to ${user.textContent}`;
+    house_replyBar.setAttribute("data-replyTo", user.textContent);
+    house_replyBar.setAttribute("data-replyMessage", message.textContent);
+    house_replyBar.style.visibility = "visible";
+
+    house_MessageContextMenu.style.opacity = "0";
+    await wait(0.1);
+    house_MessageContextMenu.style.visibility = "hidden";
+  });
+});
+
+messageMain.addEventListener("contextmenu", async (e) => {
+  const target = e.target.closest(".message");
+  if (!target) return;
+  e.preventDefault();
+
+  closeAllContextMenus();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  dm_MessageContextMenu.style.left = `${x}px`;
+  dm_MessageContextMenu.style.top = `${y}px`;
+
+  dm_MessageContextMenu.style.visibility = "visible";
+  dm_MessageContextMenu.style.opacity = "1";
+
+  const closeDmReplyBar = dm_replyBar.querySelector(".close_dm_replybar");
+  closeDmReplyBar.addEventListener("click", () => {
+    closeReplyBarFunction();
+  });
+
+  dm_MessageContextMenu_reply.addEventListener("click", async () => {
+    // console.log(target);
+    const userCont = target.querySelector(".message_user");
+    const message = target.querySelector(".message_cont");
+    // console.log(userCont);
+    const user = userCont.querySelector("span");
+
+    const spanText = dm_replyBar.querySelector("span");
+    spanText.textContent = `Replying to ${user.textContent}`;
+    dm_replyBar.setAttribute("data-replyTo", user.textContent);
+    dm_replyBar.setAttribute("data-replyMessage", message.textContent);
+    dm_replyBar.style.visibility = "visible";
+
+    dm_MessageContextMenu.style.opacity = "0";
+    await wait(0.1);
+    dm_MessageContextMenu.style.visibility = "hidden";
+  });
+});
+
 houseCont.addEventListener("contextmenu", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
 
-  dmContextMenu.style.opacity = "0";
-  dmContextMenu.style.visibility = "hidden";
+  // dmContextMenu.style.opacity = "0";
+  // dmContextMenu.style.visibility = "hidden";
+  closeAllContextMenus();
 
   let x = e.pageX,
     y = e.pageY,
@@ -1562,12 +2036,20 @@ houseCont.addEventListener("contextmenu", (e) => {
   });
 });
 
-document.addEventListener("click", async () => {
+const closeAllContextMenus = async () => {
   dmContextMenu.style.opacity = "0";
   houseContextMenu.style.opacity = "0";
-  await wait(0.1);
+  dm_MessageContextMenu.style.opacity = "0";
+  house_MessageContextMenu.style.opacity = "0";
+  // await wait(0.1);
   dmContextMenu.style.visibility = "hidden";
   houseContextMenu.style.visibility = "hidden";
+  dm_MessageContextMenu.style.visibility = "hidden";
+  house_MessageContextMenu.style.visibility = "hidden";
+};
+
+document.addEventListener("click", async () => {
+  closeAllContextMenus();
 });
 
 // UPDATE EVENTS

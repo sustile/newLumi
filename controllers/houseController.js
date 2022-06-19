@@ -188,16 +188,18 @@ exports.changeHouseData = async (req, res) => {
         }
       } else {
         if (body.newName !== "undefined") {
-          let imgPath = path.join(
-            __dirname,
-            `./../public/img/${houseData.image}`
-          );
-          try {
-            fs.unlinkSync(imgPath, (err) => {
+          if (houseData.image !== "default.png") {
+            let imgPath = path.join(
+              __dirname,
+              `./../public/img/${houseData.image}`
+            );
+            try {
+              fs.unlinkSync(imgPath, (err) => {
+                console.log(err);
+              });
+            } catch (err) {
               console.log(err);
-            });
-          } catch (err) {
-            console.log(err);
+            }
           }
           await house.findOneAndUpdate(
             { _id: body.id },
@@ -207,14 +209,18 @@ exports.changeHouseData = async (req, res) => {
             status: "ok",
           });
         } else {
-          let imgPath = path.join(
-            __dirname,
-            `./../public/img/${houseData.image}`
-          );
-          try {
-            fs.unlinkSync(imgPath);
-          } catch (err) {
-            console.log(err);
+          if (houseData.image !== "default.png") {
+            let imgPath = path.join(
+              __dirname,
+              `./../public/img/${houseData.image}`
+            );
+            try {
+              fs.unlinkSync(imgPath, (err) => {
+                console.log(err);
+              });
+            } catch (err) {
+              console.log(err);
+            }
           }
           await house.findOneAndUpdate(
             { _id: body.id },
