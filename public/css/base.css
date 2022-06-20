@@ -80,7 +80,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: 1.5rem;
   width: 7vw;
 }
 .slider .houses_main-cont {
@@ -90,7 +90,7 @@ body {
   align-items: center;
   gap: 1.5rem;
   overflow-y: auto;
-  height: 80vh;
+  height: 88vh;
 }
 .slider .houses_main-cont a .img_cont {
   width: 7rem;
@@ -138,7 +138,7 @@ body {
   justify-content: space-between;
   align-items: center;
   box-sizing: content-box;
-  width: 14vw;
+  width: 17vw;
 }
 .slider .dms_main-cont {
   padding: 1.5rem 1rem;
@@ -237,26 +237,6 @@ body {
   padding: 1rem;
   border-radius: 50%;
   cursor: pointer;
-}
-.slider .dms .nav_details .nav_controls {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-}
-.slider .dms .nav_details .nav_controls a {
-  text-decoration: none;
-}
-.slider .dms .nav_details .nav_controls a i {
-  color: var(--primary-green);
-  font-size: 2.5rem;
-  border: 0;
-  position: relative;
-  background-color: #333;
-  padding: 1rem;
-  border-radius: 50%;
-  transition: all 0.2s;
 }
 .slider .dms .nav_details .nav_acc {
   display: flex;
@@ -357,6 +337,34 @@ body {
 }
 .header_main-cont .side-bar .nav_headers .dev .systile {
   color: var(--primary-red);
+}
+.header_main-cont .side-bar .nav_controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 2rem;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  z-index: 5;
+}
+.header_main-cont .side-bar .nav_controls a {
+  text-decoration: none;
+}
+.header_main-cont .side-bar .nav_controls a i {
+  color: var(--primary-green);
+  font-size: 2.8rem;
+  border: 0;
+  position: relative;
+  background-color: #333;
+  padding: 1rem;
+  border-radius: 5px;
+  transition: all 0.2s;
 }
 .header_main-cont .slider_btns {
   position: absolute;
@@ -730,9 +738,7 @@ body {
 .header_main-cont .content .messages_model-cont .message_enter form {
   display: flex;
   justify-content: center;
-  align-items: center;
   width: 100%;
-  background-color: transparent;
 }
 .header_main-cont .content .messages_model-cont .message_enter form .message-input {
   background-color: rgb(65, 65, 65);
@@ -747,6 +753,7 @@ body {
   border-radius: 10rem;
   margin: 0 auto;
   z-index: 5;
+  position: relative;
 }
 .header_main-cont .content .vc_btns .join-vc {
   position: absolute;

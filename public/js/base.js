@@ -43,7 +43,7 @@ const call_prompt_decline = call_prompt.querySelector(".call_prompt_decline");
 
 const message_load_trigger = document.querySelector(".message_load_trigger");
 
-// const house_main_cont = document.querySelector(".house_model-cont");
+const house_scroll = document.querySelector(".house_model-cont");
 const house_main_cont = document.querySelector(".house_main-cont");
 const dm_main_cont = document.querySelector(".messages_model-cont");
 const houseMessageCont = document.querySelector(".house-message_main-cont");
@@ -96,6 +96,8 @@ const sound_call = new Howl({
   src: ["./../sounds/call.mp3"],
   volume: 0.3,
 });
+
+// console.log(sound_call.playing());
 
 // SOUND VARIABLES
 
@@ -808,7 +810,6 @@ const popup = async (message, name, room) => {
   loadDms();
   loadPrevent();
   remoteConnection();
-  // mediaControl();
   await wait(1);
   const closeOverlayTrigger = document.querySelectorAll(".closeOverlayTrigger");
   closeOverlayTrigger.forEach((el) => {
@@ -955,8 +956,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
     );
   }
 
-  house_main_cont.scroll({
-    top: house_main_cont.scrollHeight,
+  house_scroll.scroll({
+    top: house_scroll.scrollHeight,
     behavior: "smooth",
   });
 });
@@ -1056,8 +1057,8 @@ const lazyLoadHouseMessages = async (
 
       // displayHouseMessage(el.message, el.name, user.image, "afterbegin");
 
-      house_main_cont.scroll({
-        top: house_main_cont.scrollHeight,
+      house_scroll.scroll({
+        top: house_scroll.scrollHeight,
         behavior: "smooth",
       });
     });
@@ -1099,8 +1100,8 @@ socket.on(
     if (room === activeCont) {
       displayHouseMessage(type, message, user, image, replyTo, replyMessage);
 
-      house_main_cont.scroll({
-        top: house_main_cont.scrollHeight,
+      house_scroll.scroll({
+        top: house_scroll.scrollHeight,
         behavior: "smooth",
       });
     } else {
@@ -1153,98 +1154,25 @@ async function remoteConnection() {
 
       // ON CALL
 
-      // myPeer.on("call", async (incoming) => {
-      //   incomingCallData = await getSomeOtherUserData(incomingCallBasic.from);
-      //   incomingCallData.room = incomingCallBasic.room;
-      //   sound_call.play();
-
-      //   call_prompt.querySelector("p").textContent = incomingCallData.name;
-
-      //   const imgCont = (call_prompt
-      //     .querySelector(".img_cont")
-      //     .querySelector("img").src = `./../img/${incomingCallData.image}`);
-
-      //   call_prompt.style.animation = "popupPrompt 0.3s forwards ease";
-
-      //   call_prompt_attend.addEventListener("click", () => {
-      //     if (activeCall.status) {
-      //       socket.emit("leave-call", activeCont);
-
-      //       sound_callLeave.play();
-
-      //       call.close();
-      //       incoming.answer(stream);
-      //       call = incoming;
-      //       activeCall.status = true;
-
-      //       const video = document.createElement("video");
-      //       call.on("stream", (userVideoStream) => {
-      //         addVideoStream(video, userVideoStream);
-      //       });
-
-      //       sound_call.stop();
-      //       activeCall.with = incomingCallData.name;
-      //       activeCall.room = incomingCallData.room;
-
-      //       call_btn.style.animation = "popdown_btn 0.3s forwards ease";
-      //       call_status_text.textContent = `${incomingCallData.name} Connected`;
-      //       call_status.style.animation = "popup_btn 0.3s forwards ease";
-      //       decline_btn.style.animation = "popup_btn 0.3s forwards ease";
-
-      //       call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
-      //     } else {
-      //       incoming.answer(stream);
-      //       call = incoming;
-      //       activeCall.status = true;
-
-      //       const video = document.createElement("video");
-      //       call.on("stream", (userVideoStream) => {
-      //         addVideoStream(video, userVideoStream);
-      //       });
-
-      //       sound_call.stop();
-      //       activeCall.with = incomingCallData.name;
-      //       activeCall.room = incomingCallData.room;
-
-      //       call_btn.style.animation = "popdown_btn 0.3s forwards ease";
-      //       call_status_text.textContent = `${incomingCallData.name} Connected`;
-      //       call_status.style.animation = "popup_btn 0.3s forwards ease";
-      //       decline_btn.style.animation = "popup_btn 0.3s forwards ease";
-
-      //       call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
-      //     }
-      //   });
-
-      //   call_prompt_decline.addEventListener("click", () => {
-      //     socket.emit("leave-call", incomingCallData.room);
-      //     sound_call.stop();
-      //     // incomingCallData = undefined;
-      //     incomingCallData.name = "";
-      //     incomingCallData.image = "";
-      //     incomingCallData.room = "";
-      //     call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
-      //   });
-
-      //   sound_call.on("end", () => {
-      //     socket.emit("leave-call", incomingCallData.room);
-      //     sound_call.stop();
-      //     // incomingCallData = undefined;
-      //     incomingCallData.name = "";
-      //     incomingCallData.image = "";
-      //     incomingCallData.room = "";
-      //     call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
-      //   });
-      // });
-
       let incomingCallData = {};
       socket.on("incoming-call", async (from, room) => {
         if (activeCall.room === room) {
           return;
         }
 
+        if (incomingCallData) {
+          if (incomingCallData.room === room) {
+            console.log("ye2");
+            return;
+          }
+        }
+
         incomingCallData = await getSomeOtherUserData(from);
         incomingCallData.room = room;
-        sound_call.play();
+
+        if (!sound_call.playing()) {
+          sound_call.play();
+        }
 
         sound_call.on("end", () => {
           call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
@@ -1276,6 +1204,7 @@ async function remoteConnection() {
           sound_callJoin.play();
           socket.emit("joined-call", room, user.id, user.name, user.image);
 
+          vc_members_cont.innerHTML = "";
           vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
           insertVcMembers("mine", user.name, user.image);
 
@@ -1595,6 +1524,7 @@ async function remoteConnection() {
         activeCall.with = undefined;
         activeCall.room = undefined;
         activeCall.status = false;
+        incomingCallData = undefined;
 
         sound_callLeave.play();
 

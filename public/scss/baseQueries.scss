@@ -28,49 +28,97 @@
 // }
 
 // 1750px
-@media (max-width: 1750px) {
-  .header_main-cont {
-    grid-template-columns: 10vw 18vw 72vw;
+// @media (max-width: 1750px) {
+//   // .header_main-cont {
+//   //   grid-template-columns: 10vw 18vw 72vw;
+//   // }
+// }
+
+//1500px
+@media (max-width: 1500px) {
+  html {
+    font-size: 55%;
   }
 }
-
-//1600px
-// @media (max-width: 1610px) {
-//   .message_main-cont {
-//     max-height: 85vh !important;
-//   }
-// }
 
 // 1400px
 
 @media (max-width: 1400px) {
   html {
-    font-size: 55%;
+    font-size: 45%;
   }
-
   .header_main-cont {
-    grid-template-columns: 11vw 22vw 67vw;
+    .side-bar {
+      width: 7vw;
+    }
+
+    .content {
+      width: 93vw;
+    }
   }
 
-  // .message_main-cont {
-  //   max-height: 83vh !important;
-  // }
+  .slider {
+    .houses {
+    }
+
+    .dms {
+      width: 20vw;
+    }
+  }
 }
 
 //1200px
-// @media (max-width: 1210px) {
-//   .message_main-cont {
-//     max-height: 80vh !important;
-//   }
-// }
+
+@media (max-width: 1200px) {
+  html {
+    font-size: 40%;
+  }
+}
+
+// 1100px
+
+@media (max-width: 1100px) {
+  .header_main-cont {
+    .side-bar {
+      width: 7vw;
+    }
+
+    .content {
+      width: 93vw;
+    }
+  }
+
+  .slider {
+    .houses {
+      width: 9vw;
+    }
+
+    .dms {
+      width: 25vw;
+    }
+  }
+}
 
 // 1000px
 
 @media (max-width: 1000px) {
-  html {
-    font-size: 52%;
-  }
   .header_main-cont {
-    grid-template-columns: 11vw 22vw 67vw;
+    .side-bar {
+      width: 9vw;
+    }
+
+    .content {
+      width: 91vw;
+    }
+  }
+
+  .slider {
+    .houses {
+      width: 9vw;
+    }
+
+    .dms {
+      width: 25vw;
+    }
   }
 }
