@@ -1162,7 +1162,6 @@ async function remoteConnection() {
 
         if (incomingCallData) {
           if (incomingCallData.room === room) {
-            console.log("ye2");
             return;
           }
         }
@@ -1361,7 +1360,6 @@ async function remoteConnection() {
       });
 
       socket.on("UserLeft-call_dm", (room, id) => {
-        // if (activeCall.room === room) {
         sound_callLeave.play();
         const allVids = videoCont.querySelectorAll("video");
         allVids.forEach((vid) => {

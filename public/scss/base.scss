@@ -607,6 +607,7 @@ body {
       top: 13rem;
       visibility: hidden;
       border-radius: 10rem;
+      z-index: 15;
       p {
         color: var(--primary-green);
         font-size: 2rem;
@@ -667,6 +668,7 @@ body {
       max-height: 50rem;
       overflow-y: auto;
       opacity: 0;
+      z-index: 15;
       @keyframes popupMembers {
         0% {
           transform: scale(0.8);

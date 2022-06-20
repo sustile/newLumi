@@ -481,6 +481,7 @@ body {
   top: 13rem;
   visibility: hidden;
   border-radius: 10rem;
+  z-index: 15;
 }
 .header_main-cont .content .call_status p {
   color: var(--primary-green);
@@ -530,6 +531,7 @@ body {
   max-height: 50rem;
   overflow-y: auto;
   opacity: 0;
+  z-index: 15;
 }
 @keyframes popupMembers {
   0% {
