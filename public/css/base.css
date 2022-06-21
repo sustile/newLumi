@@ -645,7 +645,7 @@ body {
   overflow-wrap: break-word;
 }
 .header_main-cont .content .messages_model-cont .message_main-cont .message:hover {
-  background-color: rgb(41, 41, 41);
+  background-color: rgb(65, 65, 65);
 }
 .header_main-cont .content .messages_model-cont .message_main-cont .reply_message {
   transition: all 0.1s ease;
@@ -703,7 +703,7 @@ body {
   white-space: nowrap;
 }
 .header_main-cont .content .messages_model-cont .message_main-cont .reply_message:hover {
-  background-color: rgb(41, 41, 41);
+  background-color: rgb(65, 65, 65);
 }
 .header_main-cont .content .messages_model-cont .message_enter {
   background-color: transparent;
@@ -917,7 +917,7 @@ body {
   overflow-wrap: break-word;
 }
 .header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .message:hover {
-  background-color: rgb(41, 41, 41);
+  background-color: rgb(65, 65, 65);
 }
 .header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .reply_message {
   transition: all 0.1s ease;
@@ -975,7 +975,7 @@ body {
   white-space: nowrap;
 }
 .header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .reply_message:hover {
-  background-color: rgb(41, 41, 41);
+  background-color: rgb(65, 65, 65);
 }
 .header_main-cont .content .house_main-cont .house_model-cont .house-message_enter {
   background-color: transparent;
@@ -1683,7 +1683,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 5;
+  z-index: 55;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.2s ease;

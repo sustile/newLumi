@@ -802,7 +802,7 @@ body {
           }
 
           &:hover {
-            background-color: rgb(41, 41, 41);
+            background-color: rgb(65, 65, 65);
           }
         }
 
@@ -866,7 +866,7 @@ body {
           }
 
           &:hover {
-            background-color: rgb(41, 41, 41);
+            background-color: rgb(65, 65, 65);
           }
         }
       }
@@ -1142,7 +1142,7 @@ body {
             }
 
             &:hover {
-              background-color: rgb(41, 41, 41);
+              background-color: rgb(65, 65, 65);
             }
           }
 
@@ -1205,7 +1205,7 @@ body {
             }
 
             &:hover {
-              background-color: rgb(41, 41, 41);
+              background-color: rgb(65, 65, 65);
             }
           }
         }
@@ -1991,7 +1991,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 5;
+  z-index: 55;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.2s ease;
