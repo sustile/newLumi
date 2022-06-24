@@ -1,8 +1,5 @@
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 
-// import Push from "./../modules/push.js/push.min.js";
-// import Push from "push.js";
-
 const socket = io("http://localhost:4000");
 
 const dmsCont = document.querySelector(".dms_main-cont");
@@ -156,7 +153,7 @@ dmsCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
-  const user = target.querySelector("span");
+  const user = target.querySelector(".text_main_user");
   house_main_cont.style.display = "none";
   dm_main_cont.style.display = "flex";
   // resetDMbg();
@@ -269,6 +266,7 @@ const loadDms = async () => {
     const html = `<a href="" data-dm = "${dm.dmId}" class="closeOverlayTrigger"
   ><div class="img_cont">
     <img src="./../img/${dm.image}" alt="" />
+    <span class="user-status-indicator"></span>
   </div>
   <span class="text_main"
     ><span class="text_main_user">${dm.to}</span
@@ -278,6 +276,8 @@ const loadDms = async () => {
     dmsCont.insertAdjacentHTML("afterbegin", html);
 
     socket.emit("join-room", dm.dmId, peerId);
+
+    socket.emit("checkOnline_dms", dm.dmId);
   });
 };
 
@@ -1197,18 +1197,23 @@ async function remoteConnection() {
 
         call_prompt.style.animation = "popupPrompt 0.3s forwards ease";
 
-        call_prompt_attend.addEventListener("click", () => {
+        call_prompt_attend.addEventListener("click", (e) => {
+          e.stopImmediatePropagation();
+          if (call) {
+            call.close();
+          }
+
+          socket.emit("send-call", user.id, activeCont);
+
           activeCall.status = true;
           activeCall.room = room;
           sound_callJoin.play();
+
           socket.emit("joined-call", room, user.id, user.name, user.image);
 
-          vc_members_cont.innerHTML = "";
           vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-          insertVcMembers("mine", user.name, user.image);
+          insertVcMembers("mine", user.name, user.image, user.id);
 
-          // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-          // await wait(0.2);
           call_status_text.textContent = `${incomingCallData.name} VC Connected`;
           call_status.style.animation = "popup_btn 0.3s forwards ease";
 
@@ -1257,25 +1262,36 @@ async function remoteConnection() {
             id,
             stream.id,
             user.name,
-            user.image
+            user.image,
+            user.id
           );
 
           const video = document.createElement("video");
 
           call.on("stream", (userVideoStream) => {
-            video.setAttribute("data-id", userVideoStream.id);
-            addVideoStream(video, userVideoStream);
-            insertVcMembers(userVideoStream.id, name, image);
+            const allVids = Array.from(videoCont.querySelectorAll("video"));
+            const checkArray = allVids.filter(
+              (el) => el.getAttribute("data-user-id") === id
+            );
+            if (checkArray.length === 0) {
+              video.setAttribute("data-id", userVideoStream.id);
+              video.setAttribute("data-user-id", id);
+              addVideoStream(video, userVideoStream);
+              insertVcMembers(userVideoStream.id, name, image, id);
+            } else {
+              updateVideoCont(id, userVideoStream);
+            }
           });
 
           call.on("close", () => {
             video.remove();
+            // console.log(`${user.name} left`);
           });
         }
       });
 
-      function insertVcMembers(id, name, image) {
-        const html = `<p data-id="${id}" >
+      function insertVcMembers(id, name, image, from) {
+        const html = `<p data-id="${id}" data-user-id = "${from}" >
         <img src="./../img/${image}" alt="" />
         <span>${name}</span>
       </p>`;
@@ -1284,6 +1300,8 @@ async function remoteConnection() {
       }
 
       // HOUSE VC
+      let checkStatusInterval;
+      let checkStatusIntervalArray;
       join_house_vc.addEventListener("click", async () => {
         if (call) {
           call.close();
@@ -1295,7 +1313,7 @@ async function remoteConnection() {
         socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
 
         vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-        insertVcMembers("mine", user.name, user.image);
+        insertVcMembers("mine", user.name, user.image, user.id);
 
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
@@ -1309,8 +1327,9 @@ async function remoteConnection() {
         if (call) {
           call.close();
         }
+        clearInterval(checkStatusInterval);
 
-        socket.emit("leave-vc", activeCall.room, stream.id);
+        socket.emit("leave-vc", activeCall.room, stream.id, user.id);
 
         clearAllStreams();
 
@@ -1342,47 +1361,40 @@ async function remoteConnection() {
             id,
             stream.id,
             user.name,
-            user.image
+            user.image,
+            user.id
           );
 
           const video = document.createElement("video");
 
           call.on("stream", (userVideoStream) => {
-            video.setAttribute("data-id", userVideoStream.id);
-            addVideoStream(video, userVideoStream);
-            insertVcMembers(userVideoStream.id, name, image);
+            const allVids = Array.from(videoCont.querySelectorAll("video"));
+            const checkArray = allVids.filter(
+              (el) => el.getAttribute("data-user-id") === id
+            );
+            if (checkArray.length === 0) {
+              video.setAttribute("data-id", userVideoStream.id);
+              video.setAttribute("data-user-id", id);
+              addVideoStream(video, userVideoStream);
+              insertVcMembers(userVideoStream.id, name, image, id);
+            } else {
+              updateVideoCont(id, userVideoStream);
+            }
           });
 
           call.on("close", () => {
+            // console.log(`${name} left`);
             video.remove();
           });
         }
       });
 
       socket.on("UserLeft-call_dm", (room, id) => {
-        sound_callLeave.play();
-        const allVids = videoCont.querySelectorAll("video");
-        allVids.forEach((vid) => {
-          if (vid.getAttribute("data-id") === id) {
-            vid.remove();
-          }
-        });
-
-        const allUsers = vc_members_cont.querySelectorAll("p");
-
-        allUsers.forEach((user) => {
-          if (user.getAttribute("data-id") === id) {
-            user.remove();
-          }
-        });
-      });
-
-      socket.on("user-left-vc", (room, id) => {
         if (activeCall.room === room) {
           sound_callLeave.play();
           const allVids = videoCont.querySelectorAll("video");
           allVids.forEach((vid) => {
-            if (vid.getAttribute("data-id") === id) {
+            if (vid.getAttribute("data-user-id") === from) {
               vid.remove();
             }
           });
@@ -1390,22 +1402,58 @@ async function remoteConnection() {
           const allUsers = vc_members_cont.querySelectorAll("p");
 
           allUsers.forEach((user) => {
-            if (user.getAttribute("data-id") === id) {
+            // console.log(user);
+            if (user.getAttribute("data-user-id") === from) {
               user.remove();
             }
           });
         }
       });
 
-      socket.on("user-vc-calling-id", (to, id, name, image) => {
-        if (to === user.id) {
-          insertVcMembers(id, name, image);
+      socket.on("user-left-vc", (room, id, from) => {
+        if (activeCall.room === room) {
+          sound_callLeave.play();
+          const allVids = videoCont.querySelectorAll("video");
+          allVids.forEach((vid) => {
+            if (vid.getAttribute("data-user-id") === from) {
+              vid.remove();
+            }
+          });
+
+          const allUsers = vc_members_cont.querySelectorAll("p");
+
+          allUsers.forEach((user) => {
+            // console.log(user);
+            if (user.getAttribute("data-user-id") === from) {
+              user.remove();
+            }
+          });
         }
       });
 
-      socket.on("user-call-calling-id", (to, id, name, image) => {
+      socket.on("user-vc-calling-id", async (to, id, name, image, from) => {
         if (to === user.id) {
-          insertVcMembers(id, name, image);
+          insertVcMembers(id, name, image, from);
+          await wait(3);
+          const allVids = Array.from(videoCont.querySelectorAll("video"));
+          allVids.forEach((vid) => {
+            if (vid.getAttribute("data-id") === id) {
+              vid.setAttribute("data-user-id", from);
+            }
+          });
+        }
+      });
+
+      socket.on("user-call-calling-id", async (to, id, name, image, from) => {
+        if (to === user.id) {
+          insertVcMembers(id, name, image, from);
+          await wait(3);
+          const allVids = Array.from(videoCont.querySelectorAll("video"));
+          allVids.forEach((vid) => {
+            if (vid.getAttribute("data-id") === id) {
+              vid.setAttribute("data-user-id", from);
+            }
+          });
         }
       });
 
@@ -1498,7 +1546,7 @@ async function remoteConnection() {
         socket.emit("joined-call", activeCont, user.id, user.name, user.image);
 
         vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-        insertVcMembers("mine", user.name, user.image);
+        insertVcMembers("mine", user.name, user.image, user.id);
 
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
@@ -1512,6 +1560,7 @@ async function remoteConnection() {
         if (call) {
           call.close();
         }
+        call = undefined;
 
         socket.emit("leave-call_dm", activeCall.room, stream.id);
 
@@ -1543,6 +1592,15 @@ async function remoteConnection() {
       video.play();
     });
     videoCont.append(video);
+  };
+
+  const updateVideoCont = (id, stream) => {
+    const allVids = Array.from(videoCont.querySelectorAll("video"));
+    allVids.forEach((el) => {
+      if (el.getAttribute("data-user-id") === id) {
+        el.srcObject = stream;
+      }
+    });
   };
 
   const connectToNewUser = async (id, stream) => {
@@ -2025,6 +2083,60 @@ socket.on("house-data-updated", (id, name, image) => {
 socket.on("dm-update-event-client", () => {
   loadDms();
 });
+
+socket.on("user-left-server_check-vc", (room, id) => {
+  if (activeCall.room === room) {
+    sound_callLeave.play();
+    const allVids = videoCont.querySelectorAll("video");
+    allVids.forEach((vid) => {
+      if (vid.getAttribute("data-user-id") === id) {
+        vid.remove();
+      }
+    });
+
+    const allUsers = vc_members_cont.querySelectorAll("p");
+
+    allUsers.forEach((user) => {
+      // console.log(user);
+      if (user.getAttribute("data-user-id") === id) {
+        user.remove();
+      }
+    });
+  }
+});
+
+socket.on("areYouOnline_dms", (room) => {
+  socket.emit("yesIamOnline_dms", room);
+});
+
+socket.on("userOnline", (room) => {
+  setUserOnline(room);
+});
+
+socket.on("userOffline", (room) => {
+  setUserOffline(room);
+});
+
+const setUserOnline = (room) => {
+  const allDms = dmsCont.querySelectorAll("a");
+  allDms.forEach((dm) => {
+    if (dm.getAttribute("data-dm") === room) {
+      const online = dm.querySelector(".user-status-indicator");
+      online.style.backgroundColor = "#80ed99";
+    }
+  });
+};
+
+const setUserOffline = (room) => {
+  const allDms = dmsCont.querySelectorAll("a");
+  allDms.forEach((dm) => {
+    if (dm.getAttribute("data-dm") === room) {
+      const online = dm.querySelector(".user-status-indicator");
+      online.style.backgroundColor = "rgb(102, 102, 102)";
+    }
+  });
+};
+
 // UPDATE EVENTS
 
 // SLIDER

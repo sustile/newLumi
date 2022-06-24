@@ -166,6 +166,7 @@ body {
   width: 6rem;
   height: 4.3rem;
   transform: scale(1.1);
+  position: relative;
 }
 .slider .dms_main-cont a .img_cont img {
   width: 100%;
@@ -173,6 +174,16 @@ body {
   object-fit: cover;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
+}
+.slider .dms_main-cont a .img_cont .user-status-indicator {
+  background-color: rgb(102, 102, 102);
+  padding: 0.5rem;
+  border: 3px solid rgb(65, 65, 65);
+  border-radius: 10rem;
+  transition: all 0.2s ease;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 .slider .dms_main-cont a .text_main {
   display: flex;

@@ -24,7 +24,7 @@ const activeSockets = [];
 
 io.on("connection", async (socket) => {
   // GLOBAL SOCKETS
-  socket.on("global-socket", (id) => {
+  socket.on("global-socket", async (id) => {
     const user = {
       id: socket.id,
       userId: id,
@@ -32,6 +32,11 @@ io.on("connection", async (socket) => {
 
     activeSockets.push(user);
     console.log(`Connected : ${activeSockets.length}`);
+
+    const userData = await account.findOne({ _id: id });
+    userData.dms.forEach((room) => {
+      socket.to(room).emit("userOnline", room);
+    });
   });
 
   socket.on("update-dms", (id) => {
@@ -42,10 +47,19 @@ io.on("connection", async (socket) => {
     });
   });
 
-  socket.on("disconnect", () => {
-    activeSockets.forEach((user, i) => {
+  socket.on("disconnect", async () => {
+    activeSockets.forEach(async (user, i) => {
       if (user.id === socket.id) {
+        const userData = await account.findOne({ _id: user.userId });
         activeSockets.splice(i, 1);
+        userData.dms.forEach((room) => {
+          socket.to(room).emit("userOffline", room);
+
+          socket.to(room).emit("user-left-server_check-vc", room, user.userId);
+        });
+        userData.house.forEach((room) => {
+          socket.to(room).emit("user-left-server_check-vc", room, user.userId);
+        });
       }
     });
     console.log(`Disconnected : ${activeSockets.length}`);
@@ -68,6 +82,14 @@ io.on("connection", async (socket) => {
 
   socket.on("join-room", (room) => {
     socket.join(room);
+  });
+
+  socket.on("checkOnline_dms", (room) => {
+    socket.to(room).emit("areYouOnline_dms", room);
+  });
+
+  socket.on("yesIamOnline_dms", (room) => {
+    socket.to(room).emit("userOnline", room);
   });
 
   socket.on(
@@ -112,32 +134,30 @@ io.on("connection", async (socket) => {
     socket.to(room).emit("incoming-call", from, room);
   });
 
-  // socket.on("join-call", (room) => {
-  //   socket.to(room).emit("user-joined-call");
-  // });
-
   socket.on("joined-vc", (room, id, name, image) => {
     socket.to(room).emit("user-joined-vc", room, id, name, image);
+    // console.log(id);
   });
 
   socket.on("joined-call", (room, id, name, image) => {
+    // console.log(`joined ${name}`);
     socket.to(room).emit("user-joined-call", room, id, name, image);
   });
 
-  socket.on("user-vc-calling", (room, to, id, name, image) => {
-    socket.to(room).emit("user-vc-calling-id", to, id, name, image);
+  socket.on("user-vc-calling", (room, to, id, name, image, from) => {
+    socket.to(room).emit("user-vc-calling-id", to, id, name, image, from);
   });
 
-  socket.on("user-call-calling", (room, to, id, name, image) => {
-    socket.to(room).emit("user-call-calling-id", to, id, name, image);
+  socket.on("user-call-calling", (room, to, id, name, image, from) => {
+    socket.to(room).emit("user-call-calling-id", to, id, name, image, from);
   });
 
   socket.on("leave-call_dm", (room, id) => {
     socket.to(room).emit("UserLeft-call_dm", room, id);
   });
 
-  socket.on("leave-vc", (room, id) => {
-    socket.to(room).emit("user-left-vc", room, id);
+  socket.on("leave-vc", (room, id, from) => {
+    socket.to(room).emit("user-left-vc", room, id, from);
   });
 });
 
@@ -180,7 +200,7 @@ app.use(function (req, res, next) {
 app.use("/peer", ExpressPeerServer(server, { debug: true }));
 app.use("/vcPeer", ExpressPeerServer(vcServer, { debug: true }));
 
-// app.use(morgan(""));
+// app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
