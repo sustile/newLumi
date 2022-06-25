@@ -539,7 +539,7 @@ body {
   border-radius: 10px;
   gap: 1.5rem;
   max-width: 30rem;
-  max-height: 50rem;
+  max-height: 30rem;
   overflow-y: auto;
   opacity: 0;
   z-index: 15;
@@ -1509,7 +1509,8 @@ body {
 }
 
 .account_details,
-.house_details {
+.house_details,
+.house-members-cont {
   z-index: 120;
   position: fixed;
   top: 50%;
@@ -1521,7 +1522,8 @@ body {
   visibility: hidden;
 }
 .account_details::before,
-.house_details::before {
+.house_details::before,
+.house-members-cont::before {
   content: "";
   display: inline-block;
   width: 200vw;
@@ -1534,7 +1536,8 @@ body {
   transform: translate(-50%, -50%);
 }
 .account_details h2,
-.house_details h2 {
+.house_details h2,
+.house-members-cont h2 {
   font-family: "Rubik", sans-serif;
   font-size: 3.5rem;
   font-weight: 400;
@@ -1542,14 +1545,16 @@ body {
   text-align: left;
 }
 .account_details .close_account_details,
-.house_details .close_account_details {
+.house_details .close_account_details,
+.house-members-cont .close_account_details {
   text-decoration: none;
   position: absolute;
   top: 3rem;
   right: 3rem;
 }
 .account_details .close_account_details i,
-.house_details .close_account_details i {
+.house_details .close_account_details i,
+.house-members-cont .close_account_details i {
   font-size: 3rem;
   background-color: #333;
   padding: 1rem;
@@ -1558,28 +1563,32 @@ body {
   cursor: pointer;
 }
 .account_details .form,
-.house_details .form {
+.house_details .form,
+.house-members-cont .form {
   margin-top: 7rem;
   display: flex;
   flex-direction: column;
   gap: 5rem;
 }
 .account_details .form div,
-.house_details .form div {
+.house_details .form div,
+.house-members-cont .form div {
   display: flex;
   align-items: center;
   justify-content: space-around;
   gap: 3rem;
 }
 .account_details .form label,
-.house_details .form label {
+.house_details .form label,
+.house-members-cont .form label {
   font-size: "Rubik", sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
   color: #ddd;
 }
 .account_details .form input,
-.house_details .form input {
+.house_details .form input,
+.house-members-cont .form input {
   text-align: center;
   padding: 0.8rem 2rem;
   border: 0;
@@ -1593,32 +1602,37 @@ body {
   width: 50%;
 }
 .account_details .form .imageChange_cont,
-.house_details .form .imageChange_cont {
+.house_details .form .imageChange_cont,
+.house-members-cont .form .imageChange_cont {
   display: flex;
   justify-content: center;
   gap: 5rem;
 }
 .account_details .form .imageChange_cont label,
-.house_details .form .imageChange_cont label {
+.house_details .form .imageChange_cont label,
+.house-members-cont .form .imageChange_cont label {
   background-color: var(--primary-red);
   padding: 1rem 3rem;
   border-radius: 10rem;
   cursor: pointer;
 }
 .account_details .form .imageChange_cont img,
-.house_details .form .imageChange_cont img {
+.house_details .form .imageChange_cont img,
+.house-members-cont .form .imageChange_cont img {
   width: 7rem;
   height: 7rem;
   border-radius: 50%;
 }
 .account_details .form .submit-cont,
-.house_details .form .submit-cont {
+.house_details .form .submit-cont,
+.house-members-cont .form .submit-cont {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
 .account_details .form .submit-cont .submit_acc_changes,
-.house_details .form .submit-cont .submit_acc_changes {
+.house_details .form .submit-cont .submit_acc_changes,
+.house-members-cont .form .submit-cont .submit_acc_changes {
   cursor: pointer;
   border: 0;
   outline: 0;
@@ -1632,14 +1646,16 @@ body {
   color: #333;
 }
 .account_details .logout-cont,
-.house_details .logout-cont {
+.house_details .logout-cont,
+.house-members-cont .logout-cont {
   margin-top: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .account_details .logout-cont a,
-.house_details .logout-cont a {
+.house_details .logout-cont a,
+.house-members-cont .logout-cont a {
   text-decoration: none;
   color: #333;
   font-size: 2rem;
@@ -1683,10 +1699,105 @@ body {
   }
 }
 
+.trigger_members-cont {
+  text-decoration: none;
+  color: #d8315b;
+  font-family: "Rubik", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  padding: 0.8rem 3rem;
+  visibility: hidden;
+  position: relative;
+  z-index: 1;
+  margin-right: 5rem;
+  transition: all 0.5s ease;
+}
+.trigger_members-cont::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  content: "";
+  display: inline-block;
+  background-color: #ddd;
+  z-index: -1;
+  transform: skew(-20deg);
+  transition: all 0.3s ease;
+  transform-origin: center;
+  border-radius: 5px;
+}
+.trigger_members-cont:hover::before {
+  width: 100%;
+}
+.trigger_members-cont:hover {
+  color: rgb(32, 32, 32);
+}
+
+.house-members-cont .close_house-members-cont {
+  text-decoration: none;
+  position: absolute;
+  top: 3rem;
+  right: 3rem;
+}
+.house-members-cont .close_house-members-cont i {
+  font-size: 3rem;
+  background-color: #333;
+  padding: 1rem;
+  color: #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.house-members-cont .member-list {
+  margin-top: 3rem;
+  width: 100%;
+  max-height: 50rem;
+  overflow-y: auto;
+  gap: 1rem;
+}
+.house-members-cont .member-list p {
+  cursor: pointer;
+  margin-top: 1.5rem;
+  color: var(--primary-green);
+  font-size: 1.8rem;
+  font-family: "Rubik", sans-serif;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  width: 30rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+.house-members-cont .member-list p:first-of-type {
+  margin-top: 0;
+}
+.house-members-cont .member-list p:hover {
+  background-color: rgb(32, 32, 32);
+}
+.house-members-cont .member-list p img {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+}
+.house-members-cont .member-list p span {
+  width: 80%;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .dm-contextMenu,
 .house-contextMenu,
 .dm-message-contextMenu,
-.house-message-contextMenu {
+.house-message-contextMenu,
+.house_member-list-copy-id {
   background-color: rgb(41, 41, 41);
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -1702,7 +1813,8 @@ body {
 .dm-contextMenu a,
 .house-contextMenu a,
 .dm-message-contextMenu a,
-.house-message-contextMenu a {
+.house-message-contextMenu a,
+.house_member-list-copy-id a {
   text-decoration: none;
   color: #ddd;
   display: flex;
@@ -1716,13 +1828,15 @@ body {
 .dm-contextMenu a i,
 .house-contextMenu a i,
 .dm-message-contextMenu a i,
-.house-message-contextMenu a i {
+.house-message-contextMenu a i,
+.house_member-list-copy-id a i {
   font-size: 2.5rem;
 }
 .dm-contextMenu a span,
 .house-contextMenu a span,
 .dm-message-contextMenu a span,
-.house-message-contextMenu a span {
+.house-message-contextMenu a span,
+.house_member-list-copy-id a span {
   font-family: "Rubik", sans-serif;
   font-size: 1.6rem;
   font-weight: 500;
@@ -1791,6 +1905,10 @@ body {
   100% {
     transform: translate(-50%, -100%);
   }
+}
+
+.house_member-list-copy-id {
+  z-index: 130;
 }
 
 /*# sourceMappingURL=base.css.map */

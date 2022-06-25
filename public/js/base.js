@@ -58,6 +58,8 @@ const join_house_vc = document.querySelector(".join-vc");
 const leave_house_vc = document.querySelector(".leave-vc");
 const vc_members_cont = document.querySelector(".vc_members");
 
+const house_members_cont = document.querySelector(".trigger_members-cont");
+
 let user = {};
 let activeCont = "";
 let peerId = "";
@@ -175,6 +177,8 @@ dmsCont.addEventListener("click", (e) => {
   const el = target.querySelector(".text_main_notis");
   el.style.visibility = "hidden";
   el.style.opacity = "0";
+
+  house_members_cont.style.visibility = "hidden";
 
   // LAZY LOAD MESSAGES
 
@@ -846,6 +850,8 @@ houseCont.addEventListener("click", (e) => {
   mainHeader.textContent = target.getAttribute("data-name");
   closeReplyBarFunction();
   houseMessageInput.style.visibility = "visible";
+
+  house_members_cont.style.visibility = "visible";
 
   if (!leave_house_vc.style.animation.includes("popup_btn")) {
     join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
@@ -1681,6 +1687,10 @@ const house_MessageContextMenu_reply = house_MessageContextMenu.querySelector(
   ".context_message-reply"
 );
 
+const house_members_usersCopyId = document.querySelector(
+  ".house_member-list-copy-id"
+);
+
 const contextCopyUserId = dmContextMenu.querySelector(".context_copy-user-id");
 const contextCopyHouseId = houseContextMenu.querySelector(
   ".context_copy-house-id"
@@ -2032,16 +2042,96 @@ houseCont.addEventListener("contextmenu", (e) => {
   });
 });
 
+const house_members = document.querySelector(".house-members-cont");
+const house_members_main_cont = house_members.querySelector(".member-list");
+
+house_members_cont.addEventListener("click", async () => {
+  let house = await (
+    await fetch("/api/getHouse", {
+      method: "POST",
+      body: JSON.stringify({
+        id: activeCont,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+
+  if (!house) return;
+
+  house = house.result.members;
+
+  house_members_main_cont.innerHTML = "";
+
+  house.forEach(async (id) => {
+    const user = await getSomeOtherUserData(id);
+
+    const html = `
+    <p data-id="${id}" >
+    <img src="./../img/${user.image}" alt="" />
+    <span>${user.name}</span>
+  </p>
+    `;
+
+    house_members_main_cont.insertAdjacentHTML("beforeend", html);
+  });
+
+  house_members.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
+
+  const closeBtn = house_members.querySelector(".close_house-members-cont");
+
+  closeBtn.addEventListener("click", () => {
+    house_members.style.animation = "overlayProf_DownPrompt 0.3s forwards ease";
+  });
+});
+
+const context_copyId_house_member_list =
+  house_members_usersCopyId.querySelector(".context_copyId_house_member_list");
+
+house_members_main_cont.addEventListener("contextmenu", (e) => {
+  const target = e.target.closest("p");
+  if (!target) return;
+  e.preventDefault();
+
+  closeAllContextMenus();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  house_members_usersCopyId.style.left = `${x}px`;
+  house_members_usersCopyId.style.top = `${y}px`;
+
+  house_members_usersCopyId.style.visibility = "visible";
+  house_members_usersCopyId.style.opacity = "1";
+
+  context_copyId_house_member_list.addEventListener("click", async () => {
+    navigator.clipboard.writeText(target.getAttribute("data-id"));
+    house_members_usersCopyId.style.opacity = "0";
+    await wait(0.1);
+    house_members_usersCopyId.style.visibility = "hidden";
+  });
+});
+
 const closeAllContextMenus = async () => {
   dmContextMenu.style.opacity = "0";
   houseContextMenu.style.opacity = "0";
   dm_MessageContextMenu.style.opacity = "0";
   house_MessageContextMenu.style.opacity = "0";
+  house_members_usersCopyId.style.opacity = "0";
   // await wait(0.1);
   dmContextMenu.style.visibility = "hidden";
   houseContextMenu.style.visibility = "hidden";
   dm_MessageContextMenu.style.visibility = "hidden";
   house_MessageContextMenu.style.visibility = "hidden";
+  house_members_usersCopyId.style.visibility = "hidden";
 };
 
 document.addEventListener("click", async () => {
