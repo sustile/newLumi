@@ -152,12 +152,28 @@ io.on("connection", async (socket) => {
     socket.to(room).emit("user-call-calling-id", to, id, name, image, from);
   });
 
-  socket.on("leave-call_dm", (room, id) => {
-    socket.to(room).emit("UserLeft-call_dm", room, id);
+  socket.on("leave-call_dm", (room, streamId, id) => {
+    socket.to(room).emit("UserLeft-call_dm", room, streamId, id);
   });
 
   socket.on("leave-vc", (room, id, from) => {
     socket.to(room).emit("user-left-vc", room, id, from);
+  });
+
+  socket.on("video-stream-send-request", (room, id, name) => {
+    socket.to(room).emit("incoming-video-stream-call-request", room, id, name);
+  });
+
+  socket.on("video-stream-data-request", (room) => {
+    socket.to(room).emit("video-stream-data-request-incoming", room);
+  });
+
+  socket.on("video-stream-data-sending", (room, id) => {
+    socket.to(room).emit("video-stream-data-packet-incoming", room, id);
+  });
+
+  socket.on("stop-video-stream", (room, id) => {
+    socket.to(room).emit("stop-video-stream-request", room, id);
   });
 });
 
@@ -184,8 +200,20 @@ const vcServer = createServer(
   app
 );
 
+const videoStreamServer = createServer(
+  {
+    cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+    key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+  },
+  app
+);
+
 vcServer.listen(3002, () => {
   console.log("Vc Server Started on Port 3002");
+});
+
+videoStreamServer.listen(3004, () => {
+  console.log("VideoStream Server Started on Port 3004");
 });
 
 app.use(function (req, res, next) {
@@ -199,6 +227,10 @@ app.use(function (req, res, next) {
 
 app.use("/peer", ExpressPeerServer(server, { debug: true }));
 app.use("/vcPeer", ExpressPeerServer(vcServer, { debug: true }));
+app.use(
+  "/videoStreamPeer",
+  ExpressPeerServer(videoStreamServer, { debug: true })
+);
 
 // app.use(morgan("dev"));
 app.use(cookieParser());

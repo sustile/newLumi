@@ -33,6 +33,7 @@ const videoCont = document.querySelector(".video_cont");
 
 const muteBtn = document.querySelector(".muteBtn");
 const deafenBtn = document.querySelector(".deafenBtn");
+const screenShareBtn = document.querySelector(".screenShareBtn");
 
 const call_prompt = document.querySelector(".call_prompt_call");
 const call_prompt_attend = call_prompt.querySelector(".call_prompt_accept");
@@ -64,6 +65,10 @@ let user = {};
 let activeCont = "";
 let peerId = "";
 let myPeer;
+let videoStreamPeer;
+
+let audioStream;
+
 let currentDmPage = 1;
 
 let housesOwned = [];
@@ -796,6 +801,8 @@ const popup = async (message, name, room) => {
   });
 };
 
+// IDONT GIVE A SHIT
+
 (async () => {
   await getBasicData();
   vcPeer = new Peer(user.id, {
@@ -810,10 +817,17 @@ const popup = async (message, name, room) => {
     port: "443",
   });
 
+  videoStreamPeer = new Peer(user.id, {
+    host: "localhost",
+    path: "/videoStreamPeer",
+    port: "3004",
+  });
+
   loadServers();
   loadDms();
   loadPrevent();
   remoteConnection();
+  loadVideoStreams();
   await wait(1);
   const closeOverlayTrigger = document.querySelectorAll(".closeOverlayTrigger");
   closeOverlayTrigger.forEach((el) => {
@@ -1155,6 +1169,7 @@ async function remoteConnection() {
       audio: true,
     })
     .then((stream) => {
+      audioStream = stream;
       stream.userId = user.id;
       addVideoStream(myVideo, stream);
 
@@ -1208,6 +1223,8 @@ async function remoteConnection() {
           if (call) {
             call.close();
           }
+
+          screenShareBtn.style.display = "flex";
 
           socket.emit("send-call", user.id, activeCont);
 
@@ -1272,6 +1289,8 @@ async function remoteConnection() {
             user.id
           );
 
+          checkVideoStreaming(room, id, name);
+
           const video = document.createElement("video");
 
           call.on("stream", (userVideoStream) => {
@@ -1313,6 +1332,8 @@ async function remoteConnection() {
           call.close();
         }
 
+        screenShareBtn.style.display = "flex";
+
         activeCall.status = true;
         activeCall.room = activeCont;
         sound_callJoin.play();
@@ -1333,6 +1354,10 @@ async function remoteConnection() {
         if (call) {
           call.close();
         }
+
+        clearVideoStreams();
+
+        screenShareBtn.style.display = "none";
         clearInterval(checkStatusInterval);
 
         socket.emit("leave-vc", activeCall.room, stream.id, user.id);
@@ -1371,6 +1396,8 @@ async function remoteConnection() {
             user.id
           );
 
+          checkVideoStreaming(room, id, name);
+
           const video = document.createElement("video");
 
           call.on("stream", (userVideoStream) => {
@@ -1395,12 +1422,15 @@ async function remoteConnection() {
         }
       });
 
-      socket.on("UserLeft-call_dm", (room, id) => {
+      socket.on("UserLeft-call_dm", (room, id, from) => {
         if (activeCall.room === room) {
           sound_callLeave.play();
           const allVids = videoCont.querySelectorAll("video");
           allVids.forEach((vid) => {
-            if (vid.getAttribute("data-user-id") === from) {
+            if (
+              vid.getAttribute("data-user-id") === from ||
+              vid.getAttribute("data-id") === id
+            ) {
               vid.remove();
             }
           });
@@ -1440,7 +1470,7 @@ async function remoteConnection() {
       socket.on("user-vc-calling-id", async (to, id, name, image, from) => {
         if (to === user.id) {
           insertVcMembers(id, name, image, from);
-          await wait(3);
+          await wait(1);
           const allVids = Array.from(videoCont.querySelectorAll("video"));
           allVids.forEach((vid) => {
             if (vid.getAttribute("data-id") === id) {
@@ -1453,7 +1483,7 @@ async function remoteConnection() {
       socket.on("user-call-calling-id", async (to, id, name, image, from) => {
         if (to === user.id) {
           insertVcMembers(id, name, image, from);
-          await wait(3);
+          await wait(1);
           const allVids = Array.from(videoCont.querySelectorAll("video"));
           allVids.forEach((vid) => {
             if (vid.getAttribute("data-id") === id) {
@@ -1544,6 +1574,8 @@ async function remoteConnection() {
           call.close();
         }
 
+        screenShareBtn.style.display = "flex";
+
         socket.emit("send-call", user.id, activeCont);
 
         activeCall.status = true;
@@ -1566,9 +1598,14 @@ async function remoteConnection() {
         if (call) {
           call.close();
         }
+
+        clearVideoStreams();
+
         call = undefined;
 
-        socket.emit("leave-call_dm", activeCall.room, stream.id);
+        screenShareBtn.style.display = "none";
+
+        socket.emit("leave-call_dm", activeCall.room, stream.id, user.id);
 
         clearAllStreams();
 
@@ -2192,6 +2229,23 @@ socket.on("user-left-server_check-vc", (room, id) => {
         user.remove();
       }
     });
+
+    const allVideoStreamVids = videoSharing_UsersCont.querySelectorAll(".user");
+    allVideoStreamVids.forEach((vid) => {
+      if (vid.getAttribute("data-user-id") === id) {
+        vid.remove();
+      }
+    });
+
+    const streamMainContVideo = videoSharing_MainCont.querySelector("video");
+
+    if (streamMainContVideo.getAttribute("data-user-id") === id) {
+      videoSharing_MainCont.innerHTML = "";
+      const html = `<span>*Sad Cricket Noises*</span>
+      <video></video>`;
+
+      videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+    }
   }
 });
 
@@ -2248,3 +2302,205 @@ sliderOverlay.addEventListener("click", async () => {
 });
 
 // SLIDER
+
+// SCREEN SHARING
+const videoSharingCont = document.querySelector(".videoAndScreenShareCont");
+const closevideoSharingCont = videoSharingCont.querySelector(
+  ".close_videoAndScreenShareCont"
+);
+
+const videoSharing_MainCont = document.querySelector(
+  ".videoAndScreenShareCont_main-cont"
+);
+const videoSharing_UsersCont = document.querySelector(
+  ".videoAndScreenShareCont_users-cont"
+);
+
+let videoStream;
+
+async function loadVideoStreams() {
+  closevideoSharingCont.addEventListener("click", () => {
+    videoSharingCont.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
+  });
+
+  call_status.addEventListener("click", async (e) => {
+    videoSharingCont.style.animation =
+      "overlayProf_UpPrompt 0.3s forwards ease";
+  });
+
+  let videoStreamCall;
+
+  // const streamMainContVideo = videoSharing_MainCont.querySelector("video");
+  // const streamMainContTitle = videoSharing_MainCont.querySelector("span");
+
+  screenShareBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (activeCall.status) {
+      if (screenShareBtn.getAttribute("data-active") == "false") {
+        screenShareBtn.setAttribute("data-active", true);
+        screenShareBtn.style.color = "var(--primary-green)";
+
+        navigator.mediaDevices
+          .getDisplayMedia({
+            video: {
+              mediaDevices: "screen",
+              cursor: "always",
+              width: 1280,
+              height: 720,
+            },
+            audio: false,
+          })
+          .then(async (stream) => {
+            const streamMainContVideo =
+              videoSharing_MainCont.querySelector("video");
+            const streamMainContTitle =
+              videoSharing_MainCont.querySelector("span");
+
+            streamMainContVideo.srcObject = stream;
+            streamMainContTitle.textContent = user.name;
+            streamMainContVideo.addEventListener("loadedmetadata", () => {
+              streamMainContVideo.play();
+            });
+            videoStream = stream;
+
+            socket.emit("video-stream-data-request", activeCall.room);
+
+            await wait(1);
+
+            socket.emit(
+              "video-stream-send-request",
+              activeCall.room,
+              user.id,
+              user.name
+            );
+          });
+      } else if (screenShareBtn.getAttribute("data-active") == "true") {
+        screenShareBtn.setAttribute("data-active", false);
+        screenShareBtn.style.color = "var(--primary-red)";
+
+        const vid = videoStream.getTracks()[0];
+        vid.stop();
+        videoStream = "";
+
+        socket.emit("stop-video-stream", activeCall.room, user.id);
+
+        videoSharing_MainCont.innerHTML = "";
+        const html = `<span>*Sad Cricket Noises*</span>
+  <video></video>`;
+
+        videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+      }
+    }
+  });
+
+  socket.on("video-stream-data-packet-incoming", (room, id) => {
+    if (activeCall.room === room) {
+      videoStreamPeer.call(id, videoStream);
+    }
+  });
+
+  socket.on("video-stream-data-request-incoming", (room) => {
+    if (activeCall.room === room) {
+      socket.emit("video-stream-data-sending", room, user.id);
+    }
+  });
+
+  let userVideoStream;
+
+  videoStreamPeer.on("call", (call) => {
+    call.answer();
+
+    call.on("stream", (stream) => {
+      userVideoStream = stream;
+    });
+  });
+
+  socket.on("incoming-video-stream-call-request", async (room, id, name) => {
+    if (activeCall.room === room) {
+      const html = `
+        <div class="user" data-id="${userVideoStream.id}" data-user-id="${id}">
+        <span>${name}</span>
+        <video></video>
+      </div>
+        `;
+
+      videoSharing_UsersCont.insertAdjacentHTML("afterbegin", html);
+
+      const allVids = videoSharing_UsersCont.querySelectorAll(".user");
+      allVids.forEach((vid) => {
+        if (vid.getAttribute("data-user-id") === id) {
+          const video = vid.querySelector("video");
+          video.srcObject = userVideoStream;
+
+          video.addEventListener("loadedmetadata", () => {
+            video.play();
+          });
+        }
+      });
+
+      userVideoStream = "";
+    }
+  });
+
+  socket.on("stop-video-stream-request", (room, id) => {
+    if (activeCall.room === room) {
+      const allVids = videoSharing_UsersCont.querySelectorAll(".user");
+      allVids.forEach((vid) => {
+        if (vid.getAttribute("data-user-id") === id) {
+          vid.remove();
+        }
+      });
+    }
+  });
+}
+
+async function clearVideoStreams() {
+  const allVids = videoSharing_UsersCont.querySelectorAll(".user");
+  allVids.forEach((vid) => {
+    vid.remove();
+  });
+
+  videoSharing_MainCont.innerHTML = "";
+  const html = `<span>*Sad Cricket Noises*</span>
+  <video></video>`;
+
+  videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+}
+
+async function checkVideoStreaming(room, id, name) {
+  if (screenShareBtn.getAttribute("data-active") == "true") {
+    videoStreamPeer.call(id, videoStream);
+
+    await wait(1);
+
+    socket.emit("video-stream-send-request", room, user.id, user.name);
+  }
+}
+
+videoSharing_UsersCont.addEventListener("click", async (e) => {
+  const target = e.target.closest(".user");
+  if (!target) return;
+  e.preventDefault();
+
+  const video = target.querySelector("video");
+  const userName = target.querySelector("span");
+
+  const streamMainContVideo = videoSharing_MainCont.querySelector("video");
+
+  streamMainContVideo.srcObject = video.srcObject;
+  const id = target.getAttribute("data-user-id");
+
+  streamMainContVideo.setAttribute("data-user-id", id);
+
+  streamMainContVideo.addEventListener("loadedmetadata", () => {
+    streamMainContVideo.play();
+  });
+
+  const streamMainContTitle = videoSharing_MainCont.querySelector("span");
+
+  streamMainContTitle.textContent = userName.textContent;
+});
+
+// SCREEN SHARING
