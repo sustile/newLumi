@@ -1182,6 +1182,7 @@ body {
   flex-direction: column;
   gap: 2rem;
   visibility: hidden;
+  width: 55rem;
 }
 .createDm_input_field::before {
   content: "";
@@ -1200,6 +1201,7 @@ body {
   color: var(--primary-red);
   font-weight: bolder;
   font-size: 1.7rem;
+  text-align: center;
 }
 .createDm_input_field form {
   display: flex;
@@ -1208,7 +1210,14 @@ body {
   align-items: center;
   gap: 1.5rem;
 }
-.createDm_input_field form input {
+.createDm_input_field form .input_div {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.createDm_input_field form .input_div input {
   width: 80%;
   border: 0;
   outline: 0;
@@ -1219,6 +1228,18 @@ body {
   font-weight: 500;
   color: #ddd;
   background-color: #333;
+}
+.createDm_input_field form .input_div button {
+  border: 0;
+  outline: 0;
+  font-family: "Rubik", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #333;
+  padding: 0.7rem 1rem;
+  border-radius: 5px;
+  background-color: #04e762;
+  cursor: pointer;
 }
 .createDm_input_field form a {
   text-decoration: none;
@@ -1269,7 +1290,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  width: 25%;
+  width: 55rem;
   visibility: hidden;
 }
 .createHouse_input_field::before {
@@ -1298,7 +1319,14 @@ body {
   gap: 1.5rem;
   width: 100%;
 }
-.createHouse_input_field form input {
+.createHouse_input_field form .input_div {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.createHouse_input_field form .input_div input {
   width: 80%;
   border: 0;
   outline: 0;
@@ -1309,6 +1337,18 @@ body {
   font-weight: 500;
   color: #ddd;
   background-color: #333;
+}
+.createHouse_input_field form .input_div button {
+  border: 0;
+  outline: 0;
+  font-family: "Rubik", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #333;
+  padding: 0.7rem 1rem;
+  border-radius: 5px;
+  background-color: #04e762;
+  cursor: pointer;
 }
 .createHouse_input_field form a {
   text-decoration: none;
@@ -1437,7 +1477,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  width: 25%;
+  width: 55rem;
   visibility: hidden;
 }
 .joinHouse_input_field::before {
@@ -1466,7 +1506,14 @@ body {
   gap: 1.5rem;
   width: 100%;
 }
-.joinHouse_input_field form input {
+.joinHouse_input_field form .input_div {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.joinHouse_input_field form .input_div input {
   width: 80%;
   border: 0;
   outline: 0;
@@ -1477,6 +1524,18 @@ body {
   font-weight: 500;
   color: #ddd;
   background-color: #333;
+}
+.joinHouse_input_field form .input_div button {
+  border: 0;
+  outline: 0;
+  font-family: "Rubik", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #333;
+  padding: 0.7rem 1rem;
+  border-radius: 5px;
+  background-color: #04e762;
+  cursor: pointer;
 }
 .joinHouse_input_field form a {
   text-decoration: none;

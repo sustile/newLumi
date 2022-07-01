@@ -1452,6 +1452,7 @@ body {
   flex-direction: column;
   gap: 2rem;
   visibility: hidden;
+  width: 55rem;
 
   &::before {
     content: "";
@@ -1471,6 +1472,7 @@ body {
     color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
+    text-align: center;
   }
 
   form {
@@ -1480,17 +1482,38 @@ body {
     align-items: center;
     gap: 1.5rem;
 
-    input {
-      width: 80%;
-      border: 0;
-      outline: 0;
-      font-family: "Rubik", sans-serif;
-      padding: 0.8rem 2rem;
-      border-radius: 1rem;
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: #ddd;
-      background-color: #333;
+    .input_div {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      input {
+        width: 80%;
+        border: 0;
+        outline: 0;
+        font-family: "Rubik", sans-serif;
+        padding: 0.8rem 2rem;
+        border-radius: 1rem;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #ddd;
+        background-color: #333;
+      }
+
+      button {
+        border: 0;
+        outline: 0;
+        font-family: "Rubik", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #333;
+
+        padding: 0.7rem 1rem;
+        border-radius: 5px;
+        background-color: #04e762;
+        cursor: pointer;
+      }
     }
 
     a {
@@ -1550,7 +1573,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  width: 25%;
+  width: 55rem;
   visibility: hidden;
 
   &::before {
@@ -1581,17 +1604,38 @@ body {
     gap: 1.5rem;
     width: 100%;
 
-    input {
-      width: 80%;
-      border: 0;
-      outline: 0;
-      font-family: "Rubik", sans-serif;
-      padding: 0.8rem 2rem;
-      border-radius: 1rem;
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: #ddd;
-      background-color: #333;
+    .input_div {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      input {
+        width: 80%;
+        border: 0;
+        outline: 0;
+        font-family: "Rubik", sans-serif;
+        padding: 0.8rem 2rem;
+        border-radius: 1rem;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #ddd;
+        background-color: #333;
+      }
+
+      button {
+        border: 0;
+        outline: 0;
+        font-family: "Rubik", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #333;
+
+        padding: 0.7rem 1rem;
+        border-radius: 5px;
+        background-color: #04e762;
+        cursor: pointer;
+      }
     }
 
     a {
@@ -1651,7 +1695,6 @@ body {
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  // width: 20%;
   gap: 3rem;
   visibility: hidden;
 
@@ -1738,7 +1781,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  width: 25%;
+  width: 55rem;
   visibility: hidden;
 
   &::before {
@@ -1769,17 +1812,38 @@ body {
     gap: 1.5rem;
     width: 100%;
 
-    input {
-      width: 80%;
-      border: 0;
-      outline: 0;
-      font-family: "Rubik", sans-serif;
-      padding: 0.8rem 2rem;
-      border-radius: 1rem;
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: #ddd;
-      background-color: #333;
+    .input_div {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      input {
+        width: 80%;
+        border: 0;
+        outline: 0;
+        font-family: "Rubik", sans-serif;
+        padding: 0.8rem 2rem;
+        border-radius: 1rem;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #ddd;
+        background-color: #333;
+      }
+
+      button {
+        border: 0;
+        outline: 0;
+        font-family: "Rubik", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #333;
+
+        padding: 0.7rem 1rem;
+        border-radius: 5px;
+        background-color: #04e762;
+        cursor: pointer;
+      }
     }
 
     a {
