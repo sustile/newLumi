@@ -64,8 +64,6 @@ const house_members_cont = document.querySelector(".trigger_members-cont");
 
 let user = {};
 let activeCont = "";
-let peerId = "";
-let myPeer;
 let videoStreamPeer;
 
 let audioStream;
@@ -245,7 +243,7 @@ const loadServers = async () => {
 
     houseCont.insertAdjacentHTML("afterbegin", html);
 
-    socket.emit("join-room", house.result._id, peerId);
+    socket.emit("join-room", house.result._id);
   });
 };
 
@@ -285,7 +283,7 @@ const loadDms = async () => {
 
     dmsCont.insertAdjacentHTML("afterbegin", html);
 
-    socket.emit("join-room", dm.dmId, peerId);
+    socket.emit("join-room", dm.dmId);
 
     socket.emit("checkOnline_dms", dm.dmId);
   });
@@ -809,12 +807,6 @@ const popup = async (message, name, room) => {
   vcPeer = new Peer(user.id, {
     host: "localhost",
     path: "/vcPeer",
-    port: "3002",
-  });
-
-  myPeer = new Peer(user.id, {
-    host: "localhost",
-    path: "/peer",
     port: "443",
   });
 
@@ -1134,7 +1126,7 @@ socket.on(
 // ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
 async function clearAllStreams() {
-  const allVids = videoCont.querySelectorAll("video");
+  const allVids = videoCont.querySelectorAll("audio");
   allVids.forEach((vid) => {
     if (vid.getAttribute("data-id") !== "mine") {
       vid.remove();
@@ -1160,7 +1152,7 @@ async function remoteConnection() {
 
   // PEER
 
-  const myVideo = document.createElement("video");
+  const myVideo = document.createElement("audio");
   myVideo.muted = true;
   myVideo.setAttribute("data-id", "mine");
 
@@ -1292,10 +1284,10 @@ async function remoteConnection() {
 
           checkVideoStreaming(room, id, name);
 
-          const video = document.createElement("video");
+          const video = document.createElement("audio");
 
           call.on("stream", (userVideoStream) => {
-            const allVids = Array.from(videoCont.querySelectorAll("video"));
+            const allVids = Array.from(videoCont.querySelectorAll("audio"));
             const checkArray = allVids.filter(
               (el) => el.getAttribute("data-user-id") === id
             );
@@ -1416,10 +1408,10 @@ async function remoteConnection() {
 
           checkVideoStreaming(room, id, name);
 
-          const video = document.createElement("video");
+          const video = document.createElement("audio");
 
           call.on("stream", (userVideoStream) => {
-            const allVids = Array.from(videoCont.querySelectorAll("video"));
+            const allVids = Array.from(videoCont.querySelectorAll("audio"));
             const checkArray = allVids.filter(
               (el) => el.getAttribute("data-user-id") === id
             );
@@ -1443,7 +1435,7 @@ async function remoteConnection() {
       socket.on("UserLeft-call_dm", (room, id, from) => {
         if (activeCall.room === room) {
           sound_callLeave.play();
-          const allVids = videoCont.querySelectorAll("video");
+          const allVids = videoCont.querySelectorAll("audio");
           allVids.forEach((vid) => {
             if (
               vid.getAttribute("data-user-id") === from ||
@@ -1467,7 +1459,7 @@ async function remoteConnection() {
       socket.on("user-left-vc", (room, id, from) => {
         if (activeCall.room === room) {
           sound_callLeave.play();
-          const allVids = videoCont.querySelectorAll("video");
+          const allVids = videoCont.querySelectorAll("audio");
           allVids.forEach((vid) => {
             if (vid.getAttribute("data-user-id") === from) {
               vid.remove();
@@ -1489,7 +1481,7 @@ async function remoteConnection() {
         if (to === user.id) {
           insertVcMembers(id, name, image, from);
           await wait(1);
-          const allVids = Array.from(videoCont.querySelectorAll("video"));
+          const allVids = Array.from(videoCont.querySelectorAll("audio"));
           allVids.forEach((vid) => {
             if (vid.getAttribute("data-id") === id) {
               vid.setAttribute("data-user-id", from);
@@ -1502,7 +1494,7 @@ async function remoteConnection() {
         if (to === user.id) {
           insertVcMembers(id, name, image, from);
           await wait(1);
-          const allVids = Array.from(videoCont.querySelectorAll("video"));
+          const allVids = Array.from(videoCont.querySelectorAll("audio"));
           allVids.forEach((vid) => {
             if (vid.getAttribute("data-id") === id) {
               vid.setAttribute("data-user-id", from);
@@ -1511,31 +1503,12 @@ async function remoteConnection() {
         }
       });
 
-      myPeer.on("call", (incoming) => {
-        incoming.answer(stream);
-
-        call = incoming;
-
-        const video = document.createElement("video");
-        call.on("stream", (userVideoStream) => {
-          video.setAttribute("data-id", userVideoStream.id);
-          addVideoStream(video, userVideoStream);
-        });
-
-        call.on("close", () => {
-          video.remove();
-        });
-        incoming.on("close", () => {
-          video.remove();
-        });
-      });
-
       vcPeer.on("call", (incoming) => {
         incoming.answer(stream);
 
         call = incoming;
 
-        const video = document.createElement("video");
+        const video = document.createElement("audio");
         call.on("stream", (userVideoStream) => {
           video.setAttribute("data-id", userVideoStream.id);
           addVideoStream(video, userVideoStream);
@@ -1672,72 +1645,13 @@ async function remoteConnection() {
   };
 
   const updateVideoCont = (id, stream) => {
-    const allVids = Array.from(videoCont.querySelectorAll("video"));
+    const allVids = Array.from(videoCont.querySelectorAll("audio"));
     allVids.forEach((el) => {
       if (el.getAttribute("data-user-id") === id) {
         el.srcObject = stream;
       }
     });
   };
-
-  const connectToNewUser = async (id, stream) => {
-    socket.emit("send-call", user.id, id, activeCont);
-
-    const dm = await (
-      await fetch("/api/getDm", {
-        method: "POST",
-        body: JSON.stringify({
-          id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-
-    if (activeCall.status) {
-      socket.emit("leave-call", activeCont);
-
-      sound_callLeave.play();
-
-      call.close();
-      call = myPeer.call(dm.toId, stream);
-
-      const data = await getSomeOtherUserData(dm.toId);
-      activeCall.with = data.name;
-      activeCall.room = dm.toId;
-
-      const video = document.createElement("video");
-      call.on("stream", (userVideoStream) => {
-        addVideoStream(video, userVideoStream);
-      });
-
-      call.on("close", () => {
-        video.remove();
-      });
-    } else {
-      call = myPeer.call(dm.toId, stream);
-
-      const data = await getSomeOtherUserData(dm.toId);
-      activeCall.with = data.name;
-      activeCall.room = dm.toId;
-
-      const video = document.createElement("video");
-      call.on("stream", (userVideoStream) => {
-        addVideoStream(video, userVideoStream);
-      });
-
-      activeCall.status = true;
-
-      call.on("close", () => {
-        video.remove();
-      });
-    }
-  };
-
-  myPeer.on("open", (id) => {
-    peerId = id;
-  });
 
   // PEER
 }
@@ -2248,7 +2162,7 @@ socket.on("dm-update-event-client", () => {
 socket.on("user-left-server_check-vc", (room, id) => {
   if (activeCall.room === room) {
     sound_callLeave.play();
-    const allVids = videoCont.querySelectorAll("video");
+    const allVids = videoCont.querySelectorAll("audio");
     allVids.forEach((vid) => {
       if (vid.getAttribute("data-user-id") === id) {
         vid.remove();

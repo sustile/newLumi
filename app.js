@@ -192,13 +192,13 @@ const server = createServer(
   app
 );
 
-const vcServer = createServer(
-  {
-    cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-    key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-  },
-  app
-);
+// const vcServer = createServer(
+//   {
+//     cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+//     key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+//   },
+//   app
+// );
 
 const videoStreamServer = createServer(
   {
@@ -208,9 +208,9 @@ const videoStreamServer = createServer(
   app
 );
 
-vcServer.listen(3002, () => {
-  console.log("Vc Server Started on Port 3002");
-});
+// vcServer.listen(3002, () => {
+//   console.log("Vc Server Started on Port 3002");
+// });
 
 videoStreamServer.listen(3004, () => {
   console.log("VideoStream Server Started on Port 3004");
@@ -225,8 +225,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use("/peer", ExpressPeerServer(server, { debug: true }));
-app.use("/vcPeer", ExpressPeerServer(vcServer, { debug: true }));
+// app.use("/peer", ExpressPeerServer(server, { debug: true }));
+app.use("/vcPeer", ExpressPeerServer(server, { debug: true }));
 app.use(
   "/videoStreamPeer",
   ExpressPeerServer(videoStreamServer, { debug: true })
