@@ -34,6 +34,7 @@ const videoCont = document.querySelector(".video_cont");
 const muteBtn = document.querySelector(".muteBtn");
 const deafenBtn = document.querySelector(".deafenBtn");
 const screenShareBtn = document.querySelector(".screenShareBtn");
+const screenShareBtnCont = document.querySelector(".screenShareBtnCont");
 
 const call_prompt = document.querySelector(".call_prompt_call");
 const call_prompt_attend = call_prompt.querySelector(".call_prompt_accept");
@@ -1224,7 +1225,7 @@ async function remoteConnection() {
             call.close();
           }
 
-          screenShareBtn.style.display = "flex";
+          screenShareBtnCont.style.animation = "popup_btn 0.3s forwards ease";
 
           socket.emit("send-call", user.id, activeCont);
 
@@ -1332,7 +1333,7 @@ async function remoteConnection() {
           call.close();
         }
 
-        screenShareBtn.style.display = "flex";
+        screenShareBtnCont.style.animation = "popup_btn 0.3s forwards ease";
 
         activeCall.status = true;
         activeCall.room = activeCont;
@@ -1357,7 +1358,8 @@ async function remoteConnection() {
 
         clearVideoStreams();
 
-        screenShareBtn.style.display = "none";
+        screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
+
         clearInterval(checkStatusInterval);
 
         socket.emit("leave-vc", activeCall.room, stream.id, user.id);
@@ -1590,7 +1592,7 @@ async function remoteConnection() {
           call.close();
         }
 
-        screenShareBtn.style.display = "flex";
+        screenShareBtnCont.style.animation = "popup_btn 0.3s forwards ease";
 
         socket.emit("send-call", user.id, activeCont);
 
@@ -1619,7 +1621,7 @@ async function remoteConnection() {
 
         call = undefined;
 
-        screenShareBtn.style.display = "none";
+        screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
 
         socket.emit("leave-call_dm", activeCall.room, stream.id, user.id);
 
@@ -2387,7 +2389,7 @@ async function loadVideoStreams() {
             const streamMainContTitle =
               videoSharing_MainCont.querySelector("span");
 
-            streamMainContVideo.setAttribute("data-user-id", "mine");
+            streamMainContVideo.setAttribute("data-user-id", user.id);
 
             streamMainContVideo.srcObject = stream;
             streamMainContTitle.textContent = user.name;
@@ -2427,6 +2429,10 @@ async function loadVideoStreams() {
               user.id,
               user.name
             );
+          })
+          .catch((err) => {
+            screenShareBtn.setAttribute("data-active", false);
+            screenShareBtn.style.color = "var(--primary-red)";
           });
       } else if (screenShareBtn.getAttribute("data-active") == "true") {
         screenShareBtn.setAttribute("data-active", false);
@@ -2441,12 +2447,19 @@ async function loadVideoStreams() {
         const streamMainContVideo =
           videoSharing_MainCont.querySelector("video");
 
-        if (streamMainContVideo.getAttribute("data-user-id") === "mine") {
+        if (streamMainContVideo.getAttribute("data-user-id") === user.id) {
           videoSharing_MainCont.innerHTML = "";
           const html = `<span>*Sad Cricket Noises*</span>
     <video></video>`;
           videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
         }
+
+        const allVids = videoSharing_UsersCont.querySelectorAll(".user");
+        allVids.forEach((vid) => {
+          if (vid.getAttribute("data-user-id") === user.id) {
+            vid.remove();
+          }
+        });
       }
     }
   });
