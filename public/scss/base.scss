@@ -828,6 +828,26 @@ body {
             line-height: 1.5;
             overflow-wrap: break-word;
           }
+          &_cont-link {
+            font-family: "Rubik", sans-serif;
+            font-weight: 400;
+            font-size: 1.6rem;
+            color: #d8315b;
+            padding: 0 5.6rem;
+            // background-color: aqua;
+            line-height: 1.5;
+            overflow-wrap: break-word;
+          }
+
+          .message-image_cont {
+            margin-top: 1rem;
+            margin-left: 4.5rem;
+            max-width: 30rem;
+            max-height: 30rem;
+            border-radius: 5px;
+            object-fit: contain;
+            cursor: pointer;
+          }
 
           &:hover {
             background-color: rgb(65, 65, 65);
@@ -934,17 +954,20 @@ body {
         }
 
         form {
-          // padding: 1rem;
+          padding: 0 1rem;
           display: flex;
           justify-content: center;
+          align-items: center;
           width: 100%;
+          background-color: red;
+          gap: 2rem;
           // position: relative;
 
           .message-input {
             // display: flex;
             background-color: rgb(65, 65, 65);
-            width: 95%;
             padding: 1.2rem 3rem;
+            width: 90%;
             font-size: 1.8rem;
             font-family: "Rubik", sans-serif;
             font-weight: 500;
@@ -952,9 +975,27 @@ body {
             border: 0;
             outline: 0;
             border-radius: 10rem;
-            margin: 0 auto;
             z-index: 5;
             position: relative;
+          }
+
+          label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #d8315b;
+            padding: 0.8rem 2rem;
+            border-radius: 10rem;
+            cursor: pointer;
+
+            // visibility: visible;
+
+            i {
+              color: #fff;
+              font-family: "Rubik", sans-serif;
+              font-weight: 500;
+              font-size: 3rem;
+            }
           }
 
           // #textAreaImageInput {
@@ -1169,6 +1210,16 @@ body {
               line-height: 1.5;
               overflow-wrap: break-word;
               // width: 142rem;
+            }
+            &_cont-link {
+              font-family: "Rubik", sans-serif;
+              font-weight: 400;
+              font-size: 1.6rem;
+              color: #d8315b;
+              padding: 0 5.6rem;
+              // background-color: aqua;
+              line-height: 1.5;
+              overflow-wrap: break-word;
             }
 
             &:hover {

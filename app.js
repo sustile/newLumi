@@ -37,6 +37,8 @@ io.on("connection", async (socket) => {
     userData.dms.forEach((room) => {
       socket.to(room).emit("userOnline", room);
     });
+
+    console.log(activeSockets);
   });
 
   socket.on("update-dms", (id) => {
@@ -47,7 +49,7 @@ io.on("connection", async (socket) => {
     });
   });
 
-  socket.on("disconnect", async () => {
+  socket.on("disconnect", async (reason) => {
     activeSockets.forEach(async (user, i) => {
       if (user.id === socket.id) {
         const userData = await account.findOne({ _id: user.userId });
@@ -63,6 +65,7 @@ io.on("connection", async (socket) => {
       }
     });
     console.log(`Disconnected : ${activeSockets.length}`);
+    console.log(activeSockets, reason);
   });
 
   // GLOBAL SOCKETS
@@ -129,6 +132,10 @@ io.on("connection", async (socket) => {
       // socket.to(room).emit("receive-house-message", user, message, room, image);
     }
   );
+
+  socket.on("sendingDmImage", (room, image) => {
+    console.log(image);
+  });
 
   socket.on("send-call", (from, room) => {
     socket.to(room).emit("incoming-call", from, room);

@@ -664,6 +664,24 @@ body {
   line-height: 1.5;
   overflow-wrap: break-word;
 }
+.header_main-cont .content .messages_model-cont .message_main-cont .message_cont-link {
+  font-family: "Rubik", sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: #d8315b;
+  padding: 0 5.6rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+.header_main-cont .content .messages_model-cont .message_main-cont .message .message-image_cont {
+  margin-top: 1rem;
+  margin-left: 4.5rem;
+  max-width: 30rem;
+  max-height: 30rem;
+  border-radius: 5px;
+  object-fit: contain;
+  cursor: pointer;
+}
 .header_main-cont .content .messages_model-cont .message_main-cont .message:hover {
   background-color: rgb(65, 65, 65);
 }
@@ -758,14 +776,18 @@ body {
   cursor: pointer;
 }
 .header_main-cont .content .messages_model-cont .message_enter form {
+  padding: 0 1rem;
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
+  background-color: red;
+  gap: 2rem;
 }
 .header_main-cont .content .messages_model-cont .message_enter form .message-input {
   background-color: rgb(65, 65, 65);
-  width: 95%;
   padding: 1.2rem 3rem;
+  width: 90%;
   font-size: 1.8rem;
   font-family: "Rubik", sans-serif;
   font-weight: 500;
@@ -773,9 +795,23 @@ body {
   border: 0;
   outline: 0;
   border-radius: 10rem;
-  margin: 0 auto;
   z-index: 5;
   position: relative;
+}
+.header_main-cont .content .messages_model-cont .message_enter form label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #d8315b;
+  padding: 0.8rem 2rem;
+  border-radius: 10rem;
+  cursor: pointer;
+}
+.header_main-cont .content .messages_model-cont .message_enter form label i {
+  color: #fff;
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  font-size: 3rem;
 }
 .header_main-cont .content .vc_btns .join-vc {
   position: absolute;
@@ -932,6 +968,15 @@ body {
   font-weight: 400;
   font-size: 1.6rem;
   color: #ddd;
+  padding: 0 5.6rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+.header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .message_cont-link {
+  font-family: "Rubik", sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: #d8315b;
   padding: 0 5.6rem;
   line-height: 1.5;
   overflow-wrap: break-word;
