@@ -25,6 +25,13 @@
     ></script>
     <script defer src="./../modules/push.js/push.js"></script>
 
+    <script src="./../js/jquery.min.js"></script>
+    <!-- <script src="/path/to/cdn/fuse.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+
+    <script src="./../js/emoji_keyboard.js"></script>
+    <link rel="stylesheet" href="./../css/emoji_keyboard.css" />
+
     <title>Lumi</title>
   </head>
   <body>
@@ -192,6 +199,16 @@
               <img class="message-image_cont" src="./../img/1653719570371.jpeg"></img>
             </div> -->
             <!-- REPLY MESSAGE TEMPLATE -->
+
+            <!-- <div class="message">
+              <div class="message_user">
+                <div class="img_cont">
+                  <img src="./../img/1653719291251.jpg" alt="" />
+                </div>
+                <span>Test User</span>
+              </div>
+              <span class="message_cont-ping"><span> @Systile </span></span>
+            </div> -->
           </div>
 
           <!-- style="visibility: hidden" -->
@@ -213,7 +230,7 @@
                 placeholder="Message"
                 maxlength="200"
               />
-              <input
+              <!-- <input
                 type="file"
                 id="sendImagesDm"
                 style="display: none"
@@ -221,13 +238,14 @@
               />
               <label for="sendImagesDm" id="sendImagesDm_Label"
                 ><i class="ph-image"></i>
-              </label>
+              </label> -->
               <!-- <input
                 type="file"
                 id="textAreaImageInput"
                 style="visibility: visible"
               /> -->
             </form>
+            <button class="emoji_btn"><i class="ph-smiley"></i></button>
           </div>
         </div>
 
@@ -263,6 +281,7 @@
                   maxlength="200"
                 />
               </form>
+              <button class="emoji_btn_house"><i class="ph-smiley"></i></button>
             </div>
           </div>
         </div>

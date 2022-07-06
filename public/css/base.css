@@ -7,7 +7,7 @@
 }
 
 ::-webkit-scrollbar {
-  width: 0.8rem;
+  width: 0.5rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -664,6 +664,13 @@ body {
   line-height: 1.5;
   overflow-wrap: break-word;
 }
+.header_main-cont .content .messages_model-cont .message_main-cont .message .ping-cont {
+  background-color: rgb(65, 65, 65);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: #d8315b;
+  font-weight: 500;
+}
 .header_main-cont .content .messages_model-cont .message_main-cont .message_cont-link {
   font-family: "Rubik", sans-serif;
   font-weight: 400;
@@ -776,18 +783,17 @@ body {
   cursor: pointer;
 }
 .header_main-cont .content .messages_model-cont .message_enter form {
-  padding: 0 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   background-color: red;
-  gap: 2rem;
+  position: relative;
 }
 .header_main-cont .content .messages_model-cont .message_enter form .message-input {
   background-color: rgb(65, 65, 65);
   padding: 1.2rem 3rem;
-  width: 90%;
+  width: 95%;
   font-size: 1.8rem;
   font-family: "Rubik", sans-serif;
   font-weight: 500;
@@ -798,20 +804,23 @@ body {
   z-index: 5;
   position: relative;
 }
-.header_main-cont .content .messages_model-cont .message_enter form label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #d8315b;
-  padding: 0.8rem 2rem;
-  border-radius: 10rem;
+.header_main-cont .content .messages_model-cont .message_enter .emoji_btn {
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 6;
+  right: 6rem;
+  bottom: 0;
   cursor: pointer;
+  transform: translateY(0.2rem);
 }
-.header_main-cont .content .messages_model-cont .message_enter form label i {
-  color: #fff;
-  font-family: "Rubik", sans-serif;
-  font-weight: 500;
+.header_main-cont .content .messages_model-cont .message_enter .emoji_btn i {
+  padding: 1rem;
   font-size: 3rem;
+  color: #ddd;
+  border-radius: 50%;
 }
 .header_main-cont .content .vc_btns .join-vc {
   position: absolute;
@@ -972,6 +981,13 @@ body {
   line-height: 1.5;
   overflow-wrap: break-word;
 }
+.header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .message .ping-cont {
+  background-color: rgb(65, 65, 65);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: #d8315b;
+  font-weight: 500;
+}
 .header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .message_cont-link {
   font-family: "Rubik", sans-serif;
   font-weight: 400;
@@ -1083,8 +1099,8 @@ body {
 }
 .header_main-cont .content .house_main-cont .house_model-cont .house-message_enter form .message-input {
   background-color: rgb(65, 65, 65);
-  width: 95%;
   padding: 1.2rem 3rem;
+  width: 95%;
   font-size: 1.8rem;
   font-family: "Rubik", sans-serif;
   font-weight: 500;
@@ -1092,7 +1108,26 @@ body {
   border: 0;
   outline: 0;
   border-radius: 10rem;
-  margin: 0 auto;
+  z-index: 5;
+  position: relative;
+}
+.header_main-cont .content .house_main-cont .house_model-cont .house-message_enter .emoji_btn_house {
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 6;
+  right: 6rem;
+  bottom: 0;
+  cursor: pointer;
+  transform: translateY(0.2rem);
+}
+.header_main-cont .content .house_main-cont .house_model-cont .house-message_enter .emoji_btn_house i {
+  padding: 1rem;
+  font-size: 3rem;
+  color: #ddd;
+  border-radius: 50%;
 }
 
 .message-popup {
@@ -1658,21 +1693,30 @@ body {
   text-align: left;
 }
 .account_details .close_account_details,
+.account_details .close_house-members-cont,
 .house_details .close_account_details,
-.house-members-cont .close_account_details {
+.house_details .close_house-members-cont,
+.house-members-cont .close_account_details,
+.house-members-cont .close_house-members-cont {
   text-decoration: none;
   position: absolute;
-  top: 3rem;
-  right: 3rem;
+  top: 0;
+  right: 0;
 }
 .account_details .close_account_details i,
+.account_details .close_house-members-cont i,
 .house_details .close_account_details i,
-.house-members-cont .close_account_details i {
-  font-size: 3rem;
+.house_details .close_house-members-cont i,
+.house-members-cont .close_account_details i,
+.house-members-cont .close_house-members-cont i {
+  font-size: 2.5rem;
   background-color: #333;
   padding: 1rem;
   color: #ddd;
-  border-radius: 50%;
+  border-bottom: 3px solid var(--primary-red);
+  border-left: 3px solid var(--primary-red);
+  border-bottom-left-radius: 1rem;
+  border-top-right-radius: 1rem;
   cursor: pointer;
 }
 .account_details .form,
@@ -1816,16 +1860,20 @@ body {
 
 .trigger_members-cont {
   text-decoration: none;
-  color: #d8315b;
+  color: #ddd;
   font-family: "Rubik", sans-serif;
-  font-size: 1.7rem;
-  font-weight: 500;
-  padding: 0.8rem 3rem;
+  font-size: 2rem;
+  font-weight: 400;
+  height: 100%;
+  padding: 0 3rem;
   visibility: hidden;
   position: relative;
   z-index: 1;
-  margin-right: 5rem;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .trigger_members-cont::before {
   position: absolute;
@@ -1835,34 +1883,15 @@ body {
   width: 0%;
   content: "";
   display: inline-block;
-  background-color: #ddd;
+  background-color: #d8315b;
   z-index: -1;
-  transform: skew(-20deg);
   transition: all 0.3s ease;
-  transform-origin: center;
   border-radius: 5px;
 }
 .trigger_members-cont:hover::before {
   width: 100%;
 }
-.trigger_members-cont:hover {
-  color: rgb(32, 32, 32);
-}
 
-.house-members-cont .close_house-members-cont {
-  text-decoration: none;
-  position: absolute;
-  top: 3rem;
-  right: 3rem;
-}
-.house-members-cont .close_house-members-cont i {
-  font-size: 3rem;
-  background-color: #333;
-  padding: 1rem;
-  color: #ddd;
-  border-radius: 50%;
-  cursor: pointer;
-}
 .house-members-cont .member-list {
   margin-top: 3rem;
   width: 100%;
@@ -2035,10 +2064,10 @@ body {
   background-color: #161b22;
   border-radius: 1rem;
   padding: 2rem;
-  height: 95vh;
-  width: 90vw;
+  height: 98vh;
+  width: 99vw;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1rem;
   visibility: hidden;
 }
@@ -2057,23 +2086,27 @@ body {
 .videoAndScreenShareCont .close_videoAndScreenShareCont {
   text-decoration: none;
   position: absolute;
-  top: 3rem;
-  right: 3rem;
+  top: 0;
+  right: 0;
   z-index: 10;
 }
 .videoAndScreenShareCont .close_videoAndScreenShareCont i {
-  font-size: 3rem;
+  font-size: 2.5rem;
   background-color: #333;
   padding: 1rem;
   color: #ddd;
-  border-radius: 50%;
+  border-bottom: 3px solid var(--primary-red);
+  border-left: 3px solid var(--primary-red);
+  border-bottom-left-radius: 1rem;
+  border-top-right-radius: 1rem;
   cursor: pointer;
 }
 .videoAndScreenShareCont_main-cont {
   width: 100%;
-  height: 73vh;
+  height: 98vh;
   border-radius: 5px;
   position: relative;
+  padding-top: 1rem;
 }
 .videoAndScreenShareCont_main-cont span {
   position: absolute;
@@ -2083,26 +2116,26 @@ body {
   top: 0;
   left: 0;
   font-size: 2.5rem;
-  padding: 1rem 2rem;
+  padding: 0 1rem;
+  transform: translateY(-20%);
   z-index: 1;
 }
 .videoAndScreenShareCont_main-cont video {
   width: 100%;
-  height: 100%;
+  height: 96vh;
 }
 .videoAndScreenShareCont_users-cont {
-  height: 22vh;
-  max-width: 80vw;
+  max-height: 98vh;
   border-radius: 5px;
   padding: 0.5rem;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 .videoAndScreenShareCont_users-cont .user {
-  height: 100%;
-  min-width: 20rem;
+  max-width: 18vw;
   border-radius: 5px;
   position: relative;
   cursor: pointer;

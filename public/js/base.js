@@ -62,8 +62,13 @@ const vc_members_cont = document.querySelector(".vc_members");
 
 const house_members_cont = document.querySelector(".trigger_members-cont");
 
+// EMOJI BTNS
+const emoji_btn_dms = document.querySelector(".emoji_btn");
+const emoji_btn_house = document.querySelector(".emoji_btn_house");
+// EMOJI BTNS
+
 //IMAGES SENDING BTNS
-const sendImagesDm = document.querySelector("#sendImagesDm_Label");
+// const sendImagesDm = document.querySelector("#sendImagesDm_Label");
 //IMAGES SENDING BTNS
 
 let user = {};
@@ -182,17 +187,24 @@ dmsCont.addEventListener("click", (e) => {
 
   messageMain.innerHTML = "";
   messageInput.style.visibility = "visible";
+  emoji_btn_dms.style.visibility = "visible";
+
+  try {
+    closeEmojiBoxes();
+  } catch (err) {}
+
   const el = target.querySelector(".text_main_notis");
   el.style.visibility = "hidden";
   el.style.opacity = "0";
 
   house_members_cont.style.visibility = "hidden";
 
-  sendImagesDm.style.visibility = "visible";
+  // sendImagesDm.style.visibility = "visible";
 
   // LAZY LOAD MESSAGES
 
   currentDmPage = 1;
+
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
   lazyLoadMessages(activeCont, currentDmPage, true);
@@ -277,7 +289,7 @@ const loadDms = async () => {
 
     if (dm.status === "fail") return;
 
-    const html = `<a href="" data-dm = "${dm.dmId}" class="closeOverlayTrigger"
+    const html = `<a href="" data-dm = "${dm.dmId}" data-user-id=${dm.toId} class="closeOverlayTrigger"
   ><div class="img_cont">
     <img src="./../img/${dm.image}" alt="" />
     <span class="user-status-indicator"></span>
@@ -557,7 +569,8 @@ messageFrom.addEventListener("submit", async (e) => {
         user.name,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+        true
       );
 
       socket.emit(
@@ -579,7 +592,8 @@ messageFrom.addEventListener("submit", async (e) => {
         user.name,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+        true
       );
 
       socket.emit(
@@ -596,7 +610,15 @@ messageFrom.addEventListener("submit", async (e) => {
     }
   } else {
     if (isLink) {
-      displayMessage("normal-link", message, user.name, user.image);
+      displayMessage(
+        "normal-link",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        true
+      );
 
       saveMessage("normal-link", activeCont, message);
 
@@ -609,7 +631,7 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image
       );
     } else {
-      displayMessage("normal", message, user.name, user.image);
+      displayMessage("normal", message, user.name, user.image, "", "", true);
 
       saveMessage("normal", activeCont, message);
 
@@ -623,42 +645,80 @@ messageFrom.addEventListener("submit", async (e) => {
       );
     }
   }
-
-  messageMain.scroll({
-    top: messageMain.scrollHeight,
-    behavior: "smooth",
-  });
 });
 
 socket.on(
   "receive-message",
-  async (type, user, message, room, image, replyTo, replyMessage) => {
-    if (room === activeCont) {
-      displayMessage(type, message, user, image, replyTo, replyMessage);
+  async (type, userFrom, message, room, image, replyTo, replyMessage) => {
+    if (message.includes("@")) {
+      const wholeMessage = message.split(" ");
+      wholeMessage.forEach((str) => {
+        if (str[0] === "@") {
+          const userId = str.slice(1);
 
-      // await wait(0.1);
-
-      messageMain.scroll({
-        top: messageMain.scrollHeight,
-        behavior: "smooth",
+          if (userId === user.id) {
+            popup(message, userFrom, room);
+          }
+        }
       });
+    }
+    if (room === activeCont) {
+      displayMessage(
+        type,
+        message,
+        userFrom,
+        image,
+        replyTo,
+        replyMessage,
+        true
+      );
     } else {
-      popup(message, user, room);
-      notification(user, message, image);
+      popup(message, userFrom, room);
+      notification(userFrom, message, image);
     }
   }
 );
 
-const displayMessage = (
+const displayMessage = async (
   type,
   message,
   name,
   image,
   replyTo,
   replyMessage,
+  scrollCheck = false,
   printType = "beforeend"
 ) => {
   let html;
+  const finalMsg = [];
+
+  const wholeMessage = message.split(" ");
+  wholeMessage.forEach(async (str, i) => {
+    if (str[0] === "@") {
+      const userId = str.slice(1);
+
+      dmsCont.querySelectorAll("a").forEach(async (dm) => {
+        if (dm.getAttribute("data-dm") === activeCont) {
+          if (
+            dm.getAttribute("data-user-id") === userId ||
+            user.id === userId
+          ) {
+            const getData = await getSomeOtherUserData(userId);
+            const newString = `<span class="ping-cont" >@${getData.name}</span>`;
+            finalMsg.push(newString);
+          } else {
+            finalMsg.push(str);
+          }
+        }
+      });
+    } else {
+      finalMsg.push(str);
+    }
+  });
+
+  await wait(0.2);
+  message = finalMsg.join(" ");
+
   if (type === "reply") {
     html = `<div class="reply_message">
     <div class="og">
@@ -731,26 +791,42 @@ const displayMessage = (
       </div>
       <span>${name}</span>
     </div>
-    <img class="message-image_cont" src="${message}"></img>
+    <img class="message-image_cont"></img>
   </div>`;
+
+    const parser = new DOMParser();
+    const element = parser
+      .parseFromString(html, "text/html")
+      .querySelector(".message");
+
+    const imageCont = element.querySelector(".message-image_cont");
+    imageCont.src = `data:image/jpg;base64,${message}`;
+
+    messageMain.insertAdjacentElement(printType, element);
+    return;
   }
 
   messageMain.insertAdjacentHTML(printType, html);
+
+  if (scrollCheck) {
+    messageMain.scroll({
+      top: messageMain.scrollHeight,
+      behavior: "smooth",
+    });
+  }
 };
 
 // CHECK IF USER HAS REACH THE TOP
-messageMain.addEventListener("scroll", () => {
+messageMain.addEventListener("scroll", async () => {
   if (messageMain.scrollTop === 0) {
-    currentDmPage = currentDmPage + 1;
-    lazyLoadMessages(activeCont, currentDmPage);
+    await wait(1);
+    if (messageMain.scrollTop === 0) {
+      currentDmPage = currentDmPage + 1;
+      lazyLoadMessages(activeCont, currentDmPage);
+    }
   }
 });
-// messageMain.addEventListener("scroll", () => {
-//   if (messageMain.scrollTop === 0) {
-//     currentDmPage = currentDmPage + 1;
-//     lazyLoadMessages(activeCont, currentDmPage);
-//   }
-// });
+
 // CHECK IF USER HAS REACH THE TOP
 
 const saveMessage = async (type, dmId, message, replyTo, replyMessage) => {
@@ -817,6 +893,7 @@ const lazyLoadMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          true,
           "afterbegin"
         );
       } else if (el.type === "normal" || el.type === "normal-link") {
@@ -827,13 +904,10 @@ const lazyLoadMessages = async (
           user.image,
           "",
           "",
+          true,
           "afterbegin"
         );
       }
-      messageMain.scroll({
-        top: messageMain.scrollHeight,
-        behavior: "smooth",
-      });
     });
   } else {
     // await wait(0.5);
@@ -847,6 +921,7 @@ const lazyLoadMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          false,
           "afterbegin"
         );
       } else if (el.type === "normal") {
@@ -857,6 +932,7 @@ const lazyLoadMessages = async (
           user.image,
           "",
           "",
+          false,
           "afterbegin"
         );
       }
@@ -952,6 +1028,11 @@ houseCont.addEventListener("click", (e) => {
   mainHeader.textContent = target.getAttribute("data-name");
   closeReplyBarFunction();
   houseMessageInput.style.visibility = "visible";
+  emoji_btn_house.style.visibility = "visible";
+
+  try {
+    closeEmojiBoxes();
+  } catch (err) {}
 
   house_members_cont.style.visibility = "visible";
 
@@ -971,16 +1052,55 @@ houseCont.addEventListener("click", (e) => {
   lazyLoadHouseMessages(activeCont, currentDmPage, true);
 });
 
-const displayHouseMessage = (
+const displayHouseMessage = async (
   type,
   message,
   name,
   image,
   replyTo,
   replyMessage,
+  scrollCheck = false,
   printType = "beforeend"
 ) => {
   let html;
+  const finalMsg = [];
+
+  const wholeMessage = message.split(" ");
+  wholeMessage.forEach(async (str, i) => {
+    if (str[0] === "@") {
+      const userId = str.slice(1);
+
+      let house = await (
+        await fetch("/api/getHouse", {
+          method: "POST",
+          body: JSON.stringify({
+            id: activeCont,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+
+      if (!house) return;
+
+      house = house.result.members;
+
+      if (house.includes(userId)) {
+        const getData = await getSomeOtherUserData(userId);
+        const newString = `<span class="ping-cont" >@${getData.name}</span>`;
+        finalMsg.push(newString);
+      } else {
+        finalMsg.push(str);
+      }
+    } else {
+      finalMsg.push(str);
+    }
+  });
+
+  await wait(0.2);
+  message = finalMsg.join(" ");
+
   if (type === "reply") {
     html = `<div class="reply_message">
     <div class="og">
@@ -1048,6 +1168,13 @@ const displayHouseMessage = (
   }
 
   houseMessageCont.insertAdjacentHTML(printType, html);
+
+  if (scrollCheck) {
+    house_scroll.scroll({
+      top: house_scroll.scrollHeight,
+      behavior: "smooth",
+    });
+  }
 };
 
 houseMessageForm.addEventListener("submit", async (e) => {
@@ -1080,7 +1207,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.name,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+        true
       );
 
       socket.emit(
@@ -1102,7 +1230,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.name,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+        true
       );
 
       socket.emit(
@@ -1119,7 +1248,15 @@ houseMessageForm.addEventListener("submit", async (e) => {
     }
   } else {
     if (isLink) {
-      displayHouseMessage("normal-link", message, user.name, user.image);
+      displayHouseMessage(
+        "normal-link",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        true
+      );
 
       saveHouseMessage("normal-link", activeCont, message);
 
@@ -1132,7 +1269,15 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image
       );
     } else {
-      displayHouseMessage("normal", message, user.name, user.image);
+      displayHouseMessage(
+        "normal",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        true
+      );
 
       saveHouseMessage("normal", activeCont, message);
 
@@ -1232,6 +1377,7 @@ const lazyLoadHouseMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          true,
           "afterbegin"
         );
       } else if (el.type === "normal" || el.type === "normal-link") {
@@ -1242,14 +1388,17 @@ const lazyLoadHouseMessages = async (
           user.image,
           "",
           "",
+          true,
           "afterbegin"
         );
       }
 
-      house_scroll.scroll({
-        top: house_scroll.scrollHeight,
-        behavior: "smooth",
-      });
+      // await wait(0.1);
+
+      // house_scroll.scroll({
+      //   top: house_scroll.scrollHeight,
+      //   behavior: "smooth",
+      // });
     });
   } else {
     await wait(0.5);
@@ -1264,6 +1413,7 @@ const lazyLoadHouseMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          false,
           "afterbegin"
         );
       } else if (el.type === "normal") {
@@ -1274,6 +1424,7 @@ const lazyLoadHouseMessages = async (
           user.image,
           "",
           "",
+          false,
           "afterbegin"
         );
       }
@@ -1283,9 +1434,33 @@ const lazyLoadHouseMessages = async (
 
 socket.on(
   "receive-house-message",
-  (type, user, message, room, image, replyTo, replyMessage) => {
+  async (type, userFrom, message, room, image, replyTo, replyMessage) => {
+    if (message.includes("@")) {
+      const wholeMessage = message.split(" ");
+      wholeMessage.forEach((str) => {
+        if (str[0] === "@") {
+          const userId = str.slice(1);
+
+          if (userId === user.id) {
+            // popup(message, userFrom, room);
+            sound_notification.play();
+          }
+        }
+      });
+    }
+
     if (room === activeCont) {
-      displayHouseMessage(type, message, user, image, replyTo, replyMessage);
+      displayHouseMessage(
+        type,
+        message,
+        userFrom,
+        image,
+        replyTo,
+        replyMessage,
+        true
+      );
+
+      await wait(0.1);
 
       house_scroll.scroll({
         top: house_scroll.scrollHeight,
@@ -1884,7 +2059,7 @@ dmsCont.addEventListener("contextmenu", async (e) => {
   dmContextMenu.style.opacity = "1";
 
   contextCopyUserId.addEventListener("click", async () => {
-    navigator.clipboard.writeText(target.getAttribute("data-dm"));
+    navigator.clipboard.writeText(target.getAttribute("data-user-id"));
     dmContextMenu.style.opacity = "0";
     await wait(0.1);
     dmContextMenu.style.visibility = "hidden";
@@ -2673,46 +2848,80 @@ videoSharing_UsersCont.addEventListener("click", async (e) => {
 // SCREEN SHARING
 
 //SEND IMAGES
-const sendImagesDm_ImageCont = document.querySelector("#sendImagesDm");
-sendImagesDm_ImageCont.addEventListener("change", async (e) => {
-  var data = sendImagesDm_ImageCont.files[0];
+// const sendImagesDm_ImageCont = document.querySelector("#sendImagesDm");
+// sendImagesDm_ImageCont.addEventListener("change", async (e) => {
+//   const data = sendImagesDm_ImageCont.files[0];
 
-  if (!["image/jpeg", "image/png"].includes(data.type)) {
-    if (!ongoingError) {
-      await popupError("Only images are allowed");
-    }
-    return;
-  }
-  // check file size (< 10MB)
-  if (data.size > 10 * 1024 * 1024) {
-    if (!ongoingError) {
-      await popupError("File must be less than 2MB");
-    }
-    return;
+//   if (!["image/jpeg", "image/png"].includes(data.type)) {
+//     if (!ongoingError) {
+//       await popupError("Only images are allowed");
+//     }
+//     return;
+//   }
+//   // check file size (< 10MB)
+//   if (data.size > 10 * 1024 * 1024) {
+//     if (!ongoingError) {
+//       await popupError("File must be less than 2MB");
+//     }
+//     return;
+//   }
+
+//   const str = await base64(data);
+
+//   await wait(0.3);
+
+//   messageMain.scroll({
+//     top: messageMain.scrollHeight,
+//     behavior: "smooth",
+//   });
+
+//   socket.emit(
+//     "send-message",
+//     "normal-image",
+//     str.base64,
+//     user.name,
+//     activeCont,
+//     user.image
+//   );
+// });
+
+async function base64(file) {
+  var coolFile = {};
+  function readerOnload(e) {
+    var base64 = btoa(e.target.result);
+    coolFile.base64 = base64;
   }
 
   var reader = new FileReader();
-  reader.onload = async function (evt) {
-    const msg = evt.target.result;
+  reader.onload = readerOnload;
 
-    displayMessage("normal-image", msg, user.name, user.image);
+  coolFile.filetype = file.type;
+  coolFile.size = file.size;
+  coolFile.filename = file.name;
+  reader.readAsBinaryString(file);
 
-    await wait(0.3);
+  await wait(0.5);
 
-    messageMain.scroll({
-      top: messageMain.scrollHeight,
-      behavior: "smooth",
-    });
-
-    socket.emit(
-      "send-message",
-      "normal-image",
-      msg,
-      user.name,
-      activeCont,
-      user.image
-    );
-  };
-  reader.readAsDataURL(data);
-});
+  return coolFile;
+}
 //SEND IMAGES
+
+// EMOJI
+const emojiKeyboard = new EmojiKeyboard();
+
+emojiKeyboard.instantiate(emoji_btn_dms);
+emojiKeyboard.instantiate(emoji_btn_house);
+
+emojiKeyboard.callback = (emoji, closed) => {
+  if (house_main_cont.style.display === "flex") {
+    houseMessageInput.value += emoji.emoji;
+  } else {
+    messageInput.value += emoji.emoji;
+  }
+};
+
+function closeEmojiBoxes() {
+  emojiKeyboard.close();
+}
+
+// EMOJI
