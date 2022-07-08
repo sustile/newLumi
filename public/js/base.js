@@ -224,7 +224,7 @@ const loadServers = async () => {
   houseCont.innerHTML = "";
   housesOwned = [];
 
-  result.forEach(async (id) => {
+  for (let id of result) {
     const house = await (
       await fetch("/api/getHouse", {
         method: "POST",
@@ -256,13 +256,14 @@ const loadServers = async () => {
       alt=""
       class="house_image"
     />
-  </div>
+    </div>
+    <span class="house-text-notis" > </span>
     </a>`;
 
     houseCont.insertAdjacentHTML("afterbegin", html);
 
     socket.emit("join-room", house.result._id);
-  });
+  }
 };
 
 const loadDms = async () => {
@@ -272,7 +273,7 @@ const loadDms = async () => {
 
   dmsCont.innerHTML = "";
 
-  result.forEach(async (id) => {
+  for (let id of result) {
     const dm = await (
       await fetch("/api/getDm", {
         method: "POST",
@@ -304,7 +305,7 @@ const loadDms = async () => {
     socket.emit("join-room", dm.dmId);
 
     socket.emit("checkOnline_dms", dm.dmId);
-  });
+  }
 };
 
 createDM.addEventListener("click", async (e) => {
@@ -344,13 +345,14 @@ createDM.addEventListener("click", async (e) => {
         form.querySelector("input").value = "";
       } else {
         if (!ongoingError) {
+          console.log(dm.message);
           await popupError("Invalid ID");
         }
         form.querySelector("input").value = "";
       }
     } else {
-      loadDms();
       socket.emit("update-dms", person2);
+      loadDms();
     }
 
     createDM_input.style.animation =
@@ -365,6 +367,12 @@ createHouse.addEventListener("click", async (e) => {
 
   const joinHouse = askHouseOptions.querySelector(".join-house");
   const createHouse = askHouseOptions.querySelector(".create-house");
+  const cancelMain = askHouseOptions.querySelector("a");
+
+  cancelMain.addEventListener("click", async (e) => {
+    askHouseOptions.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
+  });
 
   createHouse.addEventListener("click", () => {
     askHouseOptions.style.animation =
@@ -557,6 +565,30 @@ messageFrom.addEventListener("submit", async (e) => {
     isLink = true;
   }
 
+  const dateSent = new Date();
+  let hours =
+    dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
+  let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+  let day = dateSent.getDate();
+  if (day[-1] === "1") {
+    day = `${dateSent.getDate()}st`;
+  } else if (day[-1] === "2") {
+    day = `${dateSent.getDate()}nd`;
+  } else if (day[-1] === "3") {
+    day = `${dateSent.getDate()}rd`;
+  } else if (day == "11" || day == "12" || day == "13") {
+    day = `${dateSent.getDate()}th`;
+  } else {
+    day = `${dateSent.getDate()}th`;
+  }
+  const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
+    2,
+    "0"
+  )} ${pmAm}, ${day} ${
+    monthLoadList[dateSent.getMonth()]
+  }, ${dateSent.getFullYear()}`;
+
   if (dm_replyBar.style.visibility === "visible") {
     const replyTo = dm_replyBar.getAttribute("data-replyTo");
     const replyMessage = dm_replyBar.getAttribute("data-replyMessage");
@@ -570,6 +602,7 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
+        finalDateString,
         true
       );
 
@@ -581,7 +614,8 @@ messageFrom.addEventListener("submit", async (e) => {
         activeCont,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+        finalDateString
       );
       closeReplyBarFunction();
     } else {
@@ -593,6 +627,7 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
+        finalDateString,
         true
       );
 
@@ -604,7 +639,8 @@ messageFrom.addEventListener("submit", async (e) => {
         activeCont,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+        finalDateString
       );
       closeReplyBarFunction();
     }
@@ -617,6 +653,7 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
+        finalDateString,
         true
       );
 
@@ -631,7 +668,16 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image
       );
     } else {
-      displayMessage("normal", message, user.name, user.image, "", "", true);
+      displayMessage(
+        "normal",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        finalDateString,
+        true
+      );
 
       saveMessage("normal", activeCont, message);
 
@@ -650,6 +696,30 @@ messageFrom.addEventListener("submit", async (e) => {
 socket.on(
   "receive-message",
   async (type, userFrom, message, room, image, replyTo, replyMessage) => {
+    const dateSent = new Date();
+    let hours =
+      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
+    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+    let day = dateSent.getDate();
+    if (day[-1] === "1") {
+      day = `${dateSent.getDate()}st`;
+    } else if (day[-1] === "2") {
+      day = `${dateSent.getDate()}nd`;
+    } else if (day[-1] === "3") {
+      day = `${dateSent.getDate()}rd`;
+    } else if (day == "11" || day == "12" || day == "13") {
+      day = `${dateSent.getDate()}th`;
+    } else {
+      day = `${dateSent.getDate()}th`;
+    }
+    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
+      2,
+      "0"
+    )} ${pmAm}, ${day} ${
+      monthLoadList[dateSent.getMonth()]
+    }, ${dateSent.getFullYear()}`;
+
     if (message.includes("@")) {
       const wholeMessage = message.split(" ");
       wholeMessage.forEach((str) => {
@@ -670,6 +740,7 @@ socket.on(
         image,
         replyTo,
         replyMessage,
+        finalDateString,
         true
       );
     } else {
@@ -679,21 +750,8 @@ socket.on(
   }
 );
 
-const displayMessage = async (
-  type,
-  message,
-  name,
-  image,
-  replyTo,
-  replyMessage,
-  scrollCheck = false,
-  printType = "beforeend"
-) => {
-  let html;
-  const finalMsg = [];
-
-  const wholeMessage = message.split(" ");
-  wholeMessage.forEach(async (str, i) => {
+const checkMessage = async function (str) {
+  return new Promise((res) => {
     if (str[0] === "@") {
       const userId = str.slice(1);
 
@@ -705,18 +763,40 @@ const displayMessage = async (
           ) {
             const getData = await getSomeOtherUserData(userId);
             const newString = `<span class="ping-cont" >@${getData.name}</span>`;
-            finalMsg.push(newString);
+            res(newString);
           } else {
-            finalMsg.push(str);
+            res(str);
           }
         }
       });
     } else {
-      finalMsg.push(str);
+      res(str);
     }
   });
+};
 
-  await wait(0.2);
+const displayMessage = async (
+  type,
+  message,
+  name,
+  image,
+  replyTo,
+  replyMessage,
+  time,
+  scrollCheck = false,
+  printType = "beforeend"
+) => {
+  let html;
+  let finalMsg = [];
+
+  const wholeMessage = message.split(" ");
+
+  for (let str of wholeMessage) {
+    finalMsg.push(await checkMessage(str));
+  }
+
+  // const finalMsg = await checkMessage(wholeMessage);
+  // console.log(finalMsg);
   message = finalMsg.join(" ");
 
   if (type === "reply") {
@@ -737,6 +817,7 @@ const displayMessage = async (
         <img src="./../img/${image}" alt="" />
       </div>
       <span>${name}</span>
+      <p>${time}</p>
     </div>
     <span class="message_cont">${message}</span>
   </div>
@@ -748,6 +829,7 @@ const displayMessage = async (
       <img src="./../img/${image}" alt="" />
     </div>
     <span>${name}</span>
+    <p>${time}</p>
   </div>
   <span class="message_cont">${message}</span>
 </div>`;
@@ -769,6 +851,7 @@ const displayMessage = async (
         <img src="./../img/${image}" alt="" />
       </div>
       <span>${name}</span>
+      <p>${time}</p>
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>
@@ -780,6 +863,7 @@ const displayMessage = async (
         <img src="./../img/${image}" alt="" />
       </div>
       <span>${name}</span>
+      <p>${time}</p>
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>`;
@@ -790,6 +874,7 @@ const displayMessage = async (
         <img src="./../img/${image}" alt="" />
       </div>
       <span>${name}</span>
+      <p>${time}</p>
     </div>
     <img class="message-image_cont"></img>
   </div>`;
@@ -863,6 +948,21 @@ const saveMessage = async (type, dmId, message, replyTo, replyMessage) => {
   }
 };
 
+const monthLoadList = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const lazyLoadMessages = async (
   dmId,
   page,
@@ -882,8 +982,35 @@ const lazyLoadMessages = async (
   ).json();
 
   if (checkScrollAfterLoading) {
-    dm.result.forEach(async (el, i) => {
+    for (let el of dm.result) {
       const user = await getSomeOtherUserData(el.userId);
+
+      const dateSent = new Date(el.createdAt);
+      let hours =
+        dateSent.getHours() > 12
+          ? dateSent.getHours() - 12
+          : dateSent.getHours();
+      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+      let day = dateSent.getDate();
+      if (day[-1] === "1") {
+        day = `${dateSent.getDate()}st`;
+      } else if (day[-1] === "2") {
+        day = `${dateSent.getDate()}nd`;
+      } else if (day[-1] === "3") {
+        day = `${dateSent.getDate()}rd`;
+      } else if (day == "11" || day == "12" || day == "13") {
+        day = `${dateSent.getDate()}th`;
+      } else {
+        day = `${dateSent.getDate()}th`;
+      }
+      const finalDateString = `${hours}:${String(
+        dateSent.getMinutes()
+      ).padStart(2, "0")} ${pmAm}, ${day} ${
+        monthLoadList[dateSent.getMonth()]
+      }, ${dateSent.getFullYear()}`;
+
+      // console.log(finalDateString);
 
       if (el.type === "reply" || el.type === "reply-link") {
         displayMessage(
@@ -893,6 +1020,7 @@ const lazyLoadMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          finalDateString,
           true,
           "afterbegin"
         );
@@ -904,15 +1032,41 @@ const lazyLoadMessages = async (
           user.image,
           "",
           "",
+          finalDateString,
           true,
           "afterbegin"
         );
       }
-    });
+    }
   } else {
-    // await wait(0.5);
-    dm.result.forEach(async (el, i) => {
+    for (let el of dm.result) {
       const user = await getSomeOtherUserData(el.userId);
+
+      const dateSent = new Date(el.createdAt);
+      let hours =
+        dateSent.getHours() > 12
+          ? dateSent.getHours() - 12
+          : dateSent.getHours();
+      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+      let day = dateSent.getDate();
+      if (day[-1] === "1") {
+        day = `${dateSent.getDate()}st`;
+      } else if (day[-1] === "2") {
+        day = `${dateSent.getDate()}nd`;
+      } else if (day[-1] === "3") {
+        day = `${dateSent.getDate()}rd`;
+      } else if (day == "11" || day == "12" || day == "13") {
+        day = `${dateSent.getDate()}th`;
+      } else {
+        day = `${dateSent.getDate()}th`;
+      }
+      const finalDateString = `${hours}:${String(
+        String(dateSent.getMinutes()).padStart(2, "0")
+      ).padStart(2, "0")} ${pmAm}, ${day} ${
+        monthLoadList[dateSent.getMonth()]
+      }, ${dateSent.getFullYear()}`;
+
       if (el.type === "reply") {
         displayMessage(
           "reply",
@@ -921,6 +1075,7 @@ const lazyLoadMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          finalDateString,
           false,
           "afterbegin"
         );
@@ -932,11 +1087,12 @@ const lazyLoadMessages = async (
           user.image,
           "",
           "",
+          finalDateString,
           false,
           "afterbegin"
         );
       }
-    });
+    }
   }
 };
 
@@ -964,6 +1120,17 @@ const popup = async (message, name, room) => {
   dmsCont.querySelectorAll("a").forEach((dm) => {
     if (dm.getAttribute("data-dm") === room) {
       const el = dm.querySelector(".text_main_notis");
+      el.style.visibility = "visible";
+      el.style.opacity = "1";
+      sound_notification.play();
+    }
+  });
+};
+
+const popupHouse = async (room) => {
+  houseCont.querySelectorAll("a").forEach((dm) => {
+    if (dm.getAttribute("data-id") === room) {
+      const el = dm.querySelector(".house-text-notis");
       el.style.visibility = "visible";
       el.style.opacity = "1";
       sound_notification.play();
@@ -1034,6 +1201,10 @@ houseCont.addEventListener("click", (e) => {
     closeEmojiBoxes();
   } catch (err) {}
 
+  const el = target.querySelector(".house-text-notis");
+  el.style.visibility = "hidden";
+  el.style.opacity = "0";
+
   house_members_cont.style.visibility = "visible";
 
   if (!leave_house_vc.style.animation.includes("popup_btn")) {
@@ -1046,27 +1217,17 @@ houseCont.addEventListener("click", (e) => {
 
   houseMessageCont.innerHTML = "";
 
+  // checkCallAndCloseVcCont();
+
   currentDmPage = 1;
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
   lazyLoadHouseMessages(activeCont, currentDmPage, true);
+  // checkVcStatus();
 });
 
-const displayHouseMessage = async (
-  type,
-  message,
-  name,
-  image,
-  replyTo,
-  replyMessage,
-  scrollCheck = false,
-  printType = "beforeend"
-) => {
-  let html;
-  const finalMsg = [];
-
-  const wholeMessage = message.split(" ");
-  wholeMessage.forEach(async (str, i) => {
+const checkHouseMessage = async function (str) {
+  return new Promise(async (res) => {
     if (str[0] === "@") {
       const userId = str.slice(1);
 
@@ -1089,17 +1250,37 @@ const displayHouseMessage = async (
       if (house.includes(userId)) {
         const getData = await getSomeOtherUserData(userId);
         const newString = `<span class="ping-cont" >@${getData.name}</span>`;
-        finalMsg.push(newString);
+        res(newString);
       } else {
-        finalMsg.push(str);
+        res(str);
       }
     } else {
-      finalMsg.push(str);
+      res(str);
     }
   });
+};
 
-  await wait(0.2);
+const displayHouseMessage = async (
+  type,
+  message,
+  name,
+  image,
+  replyTo,
+  replyMessage,
+  time,
+  scrollCheck = false,
+  printType = "beforeend"
+) => {
+  let html;
+  const finalMsg = [];
+
+  const wholeMessage = message.split(" ");
+  for (let str of wholeMessage) {
+    finalMsg.push(await checkHouseMessage(str));
+  }
+
   message = finalMsg.join(" ");
+  // console.log(time);
 
   if (type === "reply") {
     html = `<div class="reply_message">
@@ -1119,6 +1300,7 @@ const displayHouseMessage = async (
         <img src="./../img/${image}" alt="" />
       </div>
       <span>${name}</span>
+      <p>${time}</p>
     </div>
     <span class="message_cont">${message}</span>
   </div>
@@ -1130,6 +1312,7 @@ const displayHouseMessage = async (
       <img src="./../img/${image}" alt="" />
     </div>
     <span>${name}</span>
+    <p>${time}</p>
   </div>
   <span class="message_cont">${message}</span>
 </div>`;
@@ -1151,6 +1334,7 @@ const displayHouseMessage = async (
         <img src="./../img/${image}" alt="" />
       </div>
       <span>${name}</span>
+      <p>${time}</p>
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>
@@ -1162,6 +1346,7 @@ const displayHouseMessage = async (
         <img src="./../img/${image}" alt="" />
       </div>
       <span>${name}</span>
+      <p>${time}</p>
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>`;
@@ -1189,6 +1374,30 @@ houseMessageForm.addEventListener("submit", async (e) => {
     isLink = true;
   }
 
+  const dateSent = new Date();
+  let hours =
+    dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
+  let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+  let day = dateSent.getDate();
+  if (day[-1] === "1") {
+    day = `${dateSent.getDate()}st`;
+  } else if (day[-1] === "2") {
+    day = `${dateSent.getDate()}nd`;
+  } else if (day[-1] === "3") {
+    day = `${dateSent.getDate()}rd`;
+  } else if (day == "11" || day == "12" || day == "13") {
+    day = `${dateSent.getDate()}th`;
+  } else {
+    day = `${dateSent.getDate()}th`;
+  }
+  const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
+    2,
+    "0"
+  )} ${pmAm}, ${day} ${
+    monthLoadList[dateSent.getMonth()]
+  }, ${dateSent.getFullYear()}`;
+
   if (house_replyBar.style.visibility === "visible") {
     const replyTo = house_replyBar.getAttribute("data-replyTo");
     const replyMessage = house_replyBar.getAttribute("data-replyMessage");
@@ -1208,6 +1417,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
+        finalDateString,
         true
       );
 
@@ -1219,7 +1429,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         activeCont,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+        finalDateString
       );
       closeHouseReplyBarFunction();
     } else {
@@ -1231,6 +1442,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
+        finalDateString,
         true
       );
 
@@ -1255,6 +1467,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
+        finalDateString,
         true
       );
 
@@ -1276,6 +1489,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
+        finalDateString,
         true
       );
 
@@ -1339,10 +1553,13 @@ const saveHouseMessage = async (
 };
 
 // CHECK IF USER HAS REACH THE TOP
-house_main_cont.addEventListener("scroll", () => {
+house_scroll.addEventListener("scroll", async () => {
   if (house_main_cont.scrollTop === 0) {
-    currentDmPage = currentDmPage + 1;
-    lazyLoadHouseMessages(activeCont, currentDmPage);
+    await wait(1);
+    if (house_main_cont.scrollTop === 0) {
+      currentDmPage = currentDmPage + 1;
+      lazyLoadHouseMessages(activeCont, currentDmPage);
+    }
   }
 });
 // CHECK IF USER HAS REACH THE TOP
@@ -1366,8 +1583,33 @@ const lazyLoadHouseMessages = async (
   ).json();
 
   if (checkScrollAfterLoading) {
-    dm.result.forEach(async (el, i) => {
+    for (let el of dm.result) {
       const user = await getSomeOtherUserData(el.userId);
+
+      const dateSent = new Date(el.createdAt);
+      let hours =
+        dateSent.getHours() > 12
+          ? dateSent.getHours() - 12
+          : dateSent.getHours();
+      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+      let day = dateSent.getDate();
+      if (day[-1] === "1") {
+        day = `${dateSent.getDate()}st`;
+      } else if (day[-1] === "2") {
+        day = `${dateSent.getDate()}nd`;
+      } else if (day[-1] === "3") {
+        day = `${dateSent.getDate()}rd`;
+      } else if (day == "11" || day == "12" || day == "13") {
+        day = `${dateSent.getDate()}th`;
+      } else {
+        day = `${dateSent.getDate()}th`;
+      }
+      const finalDateString = `${hours}:${String(
+        dateSent.getMinutes()
+      ).padStart(2, "0")} ${pmAm}, ${day} ${
+        monthLoadList[dateSent.getMonth()]
+      }, ${dateSent.getFullYear()}`;
 
       if (el.type === "reply" || el.type === "reply-link") {
         displayHouseMessage(
@@ -1377,6 +1619,7 @@ const lazyLoadHouseMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          finalDateString,
           true,
           "afterbegin"
         );
@@ -1388,22 +1631,40 @@ const lazyLoadHouseMessages = async (
           user.image,
           "",
           "",
+          finalDateString,
           true,
           "afterbegin"
         );
       }
-
-      // await wait(0.1);
-
-      // house_scroll.scroll({
-      //   top: house_scroll.scrollHeight,
-      //   behavior: "smooth",
-      // });
-    });
+    }
   } else {
-    await wait(0.5);
-    dm.result.forEach(async (el, i) => {
+    for (let el of dm.result) {
       const user = await getSomeOtherUserData(el.userId);
+
+      const dateSent = new Date(el.createdAt);
+      let hours =
+        dateSent.getHours() > 12
+          ? dateSent.getHours() - 12
+          : dateSent.getHours();
+      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+      let day = dateSent.getDate();
+      if (day[-1] === "1") {
+        day = `${dateSent.getDate()}st`;
+      } else if (day[-1] === "2") {
+        day = `${dateSent.getDate()}nd`;
+      } else if (day[-1] === "3") {
+        day = `${dateSent.getDate()}rd`;
+      } else if (day == "11" || day == "12" || day == "13") {
+        day = `${dateSent.getDate()}th`;
+      } else {
+        day = `${dateSent.getDate()}th`;
+      }
+      const finalDateString = `${hours}:${String(
+        dateSent.getMinutes()
+      ).padStart(2, "0")} ${pmAm}, ${day} ${
+        monthLoadList[dateSent.getMonth()]
+      }, ${dateSent.getFullYear()}`;
 
       if (el.type === "reply") {
         displayHouseMessage(
@@ -1413,6 +1674,7 @@ const lazyLoadHouseMessages = async (
           user.image,
           el.replyTo,
           el.replyMessage,
+          finalDateString,
           false,
           "afterbegin"
         );
@@ -1424,17 +1686,42 @@ const lazyLoadHouseMessages = async (
           user.image,
           "",
           "",
+          finalDateString,
           false,
           "afterbegin"
         );
       }
-    });
+    }
   }
 };
 
 socket.on(
   "receive-house-message",
   async (type, userFrom, message, room, image, replyTo, replyMessage) => {
+    const dateSent = new Date();
+    let hours =
+      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
+    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+    let day = dateSent.getDate();
+    if (day[-1] === "1") {
+      day = `${dateSent.getDate()}st`;
+    } else if (day[-1] === "2") {
+      day = `${dateSent.getDate()}nd`;
+    } else if (day[-1] === "3") {
+      day = `${dateSent.getDate()}rd`;
+    } else if (day == "11" || day == "12" || day == "13") {
+      day = `${dateSent.getDate()}th`;
+    } else {
+      day = `${dateSent.getDate()}th`;
+    }
+    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
+      2,
+      "0"
+    )} ${pmAm}, ${day} ${
+      monthLoadList[dateSent.getMonth()]
+    }, ${dateSent.getFullYear()}`;
+
     if (message.includes("@")) {
       const wholeMessage = message.split(" ");
       wholeMessage.forEach((str) => {
@@ -1457,6 +1744,7 @@ socket.on(
         image,
         replyTo,
         replyMessage,
+        finalDateString,
         true
       );
 
@@ -1467,7 +1755,7 @@ socket.on(
         behavior: "smooth",
       });
     } else {
-      // popup(message, user, room);
+      popupHouse(room);
     }
   }
 );
@@ -1481,6 +1769,14 @@ async function clearAllStreams() {
       vid.remove();
     }
   });
+}
+function insertVcMembers(id, name, image, from) {
+  const html = `<p data-id="${id}" data-user-id = "${from}" >
+  <img src="./../img/${image}" alt="" />
+  <span>${name}</span>
+</p>`;
+
+  vc_members_cont.insertAdjacentHTML("beforeend", html);
 }
 
 async function remoteConnection() {
@@ -1657,15 +1953,6 @@ async function remoteConnection() {
         }
       });
 
-      function insertVcMembers(id, name, image, from) {
-        const html = `<p data-id="${id}" data-user-id = "${from}" >
-        <img src="./../img/${image}" alt="" />
-        <span>${name}</span>
-      </p>`;
-
-        vc_members_cont.insertAdjacentHTML("beforeend", html);
-      }
-
       // HOUSE VC
       let checkStatusInterval;
       let checkStatusIntervalArray;
@@ -1778,6 +2065,9 @@ async function remoteConnection() {
             // console.log(`${name} left`);
             video.remove();
           });
+        } else if (activeCont === room) {
+          vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
+          insertVcMembers(id, name, image, id);
         }
       });
 
@@ -1805,7 +2095,7 @@ async function remoteConnection() {
         }
       });
 
-      socket.on("user-left-vc", (room, id, from) => {
+      socket.on("user-left-vc", async (room, id, from) => {
         if (activeCall.room === room) {
           sound_callLeave.play();
           const allVids = videoCont.querySelectorAll("audio");
@@ -1818,11 +2108,25 @@ async function remoteConnection() {
           const allUsers = vc_members_cont.querySelectorAll("p");
 
           allUsers.forEach((user) => {
-            // console.log(user);
             if (user.getAttribute("data-user-id") === from) {
               user.remove();
             }
           });
+        } else if (activeCont === room) {
+          const allUsers = vc_members_cont.querySelectorAll("p");
+
+          if (allUsers.length === 1) {
+            vc_members_cont.style.animation =
+              "popdownMembers 0.2s forwards ease";
+            await wait(0.2);
+            vc_members_cont.innerHTML = "";
+          } else {
+            allUsers.forEach((user) => {
+              if (user.getAttribute("data-user-id") === from) {
+                user.remove();
+              }
+            });
+          }
         }
       });
 
@@ -2005,6 +2309,32 @@ async function remoteConnection() {
   // PEER
 }
 
+//CHECK VC STATUS
+// const checkVcStatus = async function () {
+//   socket.emit("check-vc-status", activeCont, user.id);
+// };
+
+// socket.on("vc-check-status-incoming", (room, requestId) => {
+//   if (activeCall.room === room) {
+//     socket.emit(
+//       "vc-check-status-outgoing",
+//       room,
+//       user.id,
+//       user.name,
+//       user.image,
+//       requestId
+//     );
+//   }
+// });
+
+// socket.on("vc-check-status-results", (room, id, name, image, requestId) => {
+//   if (activeCont === room && requestId === user.id) {
+//     vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
+//     insertVcMembers(id, name, image, id);
+//   }
+// });
+//CHECK VC STATUS
+
 // CONTEXT MENU EVENTS
 
 const dmContextMenu = document.querySelector(".dm-contextMenu");
@@ -2058,6 +2388,8 @@ dmsCont.addEventListener("contextmenu", async (e) => {
   dmContextMenu.style.visibility = "visible";
   dmContextMenu.style.opacity = "1";
 
+  // checkCallAndCloseVcCont();
+
   contextCopyUserId.addEventListener("click", async () => {
     navigator.clipboard.writeText(target.getAttribute("data-user-id"));
     dmContextMenu.style.opacity = "0";
@@ -2066,52 +2398,14 @@ dmsCont.addEventListener("contextmenu", async (e) => {
   });
 });
 
-// messageMain.addEventListener("contextmenu", async (e) => {
-//   const target = e.target.closest(".message");
-//   if (!target) return;
-//   e.preventDefault();
-
-//   closeAllContextMenus();
-
-//   let x = e.pageX,
-//     y = e.pageY,
-//     winWidth = window.innerWidth,
-//     cmwidth = dmContextMenu.offsetWidth,
-//     winHeight = window.innerHeight,
-//     cmHeight = dmContextMenu.offsetHeight;
-
-//   x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
-//   y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
-
-//   dm_MessageContextMenu.style.left = `${x}px`;
-//   dm_MessageContextMenu.style.top = `${y}px`;
-
-//   dm_MessageContextMenu.style.visibility = "visible";
-//   dm_MessageContextMenu.style.opacity = "1";
-
-//   const closeDmReplyBar = dm_replyBar.querySelector(".close_dm_replybar");
-//   closeDmReplyBar.addEventListener("click", () => {
-//     closeReplyBarFunction();
-//   });
-
-//   dm_MessageContextMenu_reply.addEventListener("click", async () => {
-//     // console.log(target);
-//     const userCont = target.querySelector(".message_user");
-//     const message = target.querySelector(".message_cont");
-//     // console.log(userCont);
-//     const user = userCont.querySelector("span");
-
-//     const spanText = dm_replyBar.querySelector("span");
-//     spanText.textContent = `Replying to ${user.textContent}`;
-//     dm_replyBar.setAttribute("data-replyTo", user.textContent);
-//     dm_replyBar.setAttribute("data-replyMessage", message.textContent);
-//     dm_replyBar.style.visibility = "visible";
-
-//     dm_MessageContextMenu.style.opacity = "0";
-//     await wait(0.1);
-//     dm_MessageContextMenu.style.visibility = "hidden";
-//   });
-// });
+// const checkCallAndCloseVcCont = async () => {
+//   if (!activeCall.status) {
+//     console.log(vc_members_cont.style.animation);
+//     vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+//     await wait(0.2);
+//     vc_members_cont.innerHTML = "";
+//   }
+// };
 
 const closeReplyBarFunction = async () => {
   const spanText = dm_replyBar.querySelector("span");
@@ -2399,7 +2693,7 @@ house_members_cont.addEventListener("click", async () => {
 
   house_members_main_cont.innerHTML = "";
 
-  house.forEach(async (id) => {
+  for (let id of house) {
     const user = await getSomeOtherUserData(id);
 
     const html = `
@@ -2410,7 +2704,7 @@ house_members_cont.addEventListener("click", async () => {
     `;
 
     house_members_main_cont.insertAdjacentHTML("beforeend", html);
-  });
+  }
 
   house_members.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
 

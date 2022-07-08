@@ -91,6 +91,16 @@ io.on("connection", async (socket) => {
     socket.to(room).emit("areYouOnline_dms", room);
   });
 
+  socket.on("check-vc-status", (room, requestId) => {
+    socket.to(room).emit("vc-check-status-incoming", room, requestId);
+  });
+
+  socket.on("vc-check-status-outgoing", (room, id, name, image, requestId) => {
+    socket
+      .to(room)
+      .emit("vc-check-status-results", room, id, name, image, requestId);
+  });
+
   socket.on("yesIamOnline_dms", (room) => {
     socket.to(room).emit("userOnline", room);
   });

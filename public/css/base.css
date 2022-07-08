@@ -92,6 +92,9 @@ body {
   overflow-y: auto;
   height: 88vh;
 }
+.slider .houses_main-cont a {
+  position: relative;
+}
 .slider .houses_main-cont a .img_cont {
   width: 7rem;
   height: 7rem;
@@ -101,18 +104,41 @@ body {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  clip-path: circle(50% at 50% 50%);
   cursor: pointer;
+  transition: border-radius 0.3s ease;
+}
+.slider .houses_main-cont a .img_cont:hover img {
+  border-radius: 30%;
+}
+.slider .houses_main-cont a .house-text-notis {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--primary-green);
+  padding: 0.6rem;
+  border: solid 4px rgb(65, 65, 65);
+  border-radius: 10rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s ease;
+  text-align: center;
+  visibility: hidden;
+  opacity: 0;
 }
 .slider .houses .createHouse {
   text-decoration: none;
 }
 .slider .houses .createHouse i {
-  color: #333;
-  background-color: #ddd;
-  font-size: 3.5rem;
-  padding: 1rem;
+  color: #d8315b;
+  background-color: rgb(41, 41, 41);
+  font-size: 3rem;
+  padding: 0.8rem;
   border-radius: 50%;
+  transition: border-radius 0.3s ease;
+}
+.slider .houses .createHouse:hover i {
+  border-radius: 30%;
 }
 .slider .houses .nav_headers {
   display: flex;
@@ -217,7 +243,8 @@ body {
   top: 0;
   border-radius: 1rem;
   left: 0;
-  background-image: linear-gradient(70deg, var(--primary-red) 0%, var(--primary-red) 50%, transparent 50%);
+  color: #161b22;
+  background-image: linear-gradient(70deg, #161b22 0%, #161b22 50%, transparent 50%);
   background-size: 0%;
   background-repeat: no-repeat;
   height: 100%;
@@ -242,12 +269,19 @@ body {
   align-items: center;
 }
 .slider .dms .nav_details .createDm_cont .createDm {
-  color: #333;
-  background-color: #ddd;
-  font-size: 3rem;
-  padding: 1rem;
-  border-radius: 50%;
+  font-family: "Rubik", sans-serif;
+  font-weight: 400;
+  text-decoration: none;
+  color: #04e762;
+  background-color: rgb(65, 65, 65);
+  font-size: 1.8rem;
+  padding: 1rem 3rem;
+  border-radius: 5rem;
   cursor: pointer;
+  transition: all 0.4s ease;
+}
+.slider .dms .nav_details .createDm_cont .createDm:hover {
+  border-radius: 5px;
 }
 .slider .dms .nav_details .nav_acc {
   display: flex;
@@ -655,6 +689,12 @@ body {
   font-size: 1.8rem;
   color: #fff;
 }
+.header_main-cont .content .messages_model-cont .message_main-cont .message_user p {
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: rgb(102, 102, 102);
+}
 .header_main-cont .content .messages_model-cont .message_main-cont .message_cont {
   font-family: "Rubik", sans-serif;
   font-weight: 400;
@@ -971,6 +1011,12 @@ body {
   font-weight: 500;
   font-size: 1.8rem;
   color: #fff;
+}
+.header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .message_user p {
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: rgb(102, 102, 102);
 }
 .header_main-cont .content .house_main-cont .house_model-cont .house-message_main-cont .message_cont {
   font-family: "Rubik", sans-serif;
@@ -1477,12 +1523,12 @@ body {
   transform: translate(-50%, -50%) scale(0);
   background-color: rgb(41, 41, 41);
   border-radius: 1rem;
-  padding: 4rem;
+  padding: 4rem 4rem 3rem 4rem;
   display: flex;
+  flex-direction: column;
+  gap: 3rem;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
-  gap: 3rem;
   visibility: hidden;
 }
 .chooseHouse_option::before {
@@ -1497,14 +1543,20 @@ body {
   z-index: -1;
   transform: translate(-50%, -50%);
 }
-.chooseHouse_option div {
+.chooseHouse_option .choose_cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+.chooseHouse_option .choose_cont div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 2rem;
 }
-.chooseHouse_option div i {
+.chooseHouse_option .choose_cont div i {
   font-size: 4rem;
   background-color: #333;
   padding: 1rem;
@@ -1512,11 +1564,18 @@ body {
   cursor: pointer;
   color: var(--primary-green);
 }
-.chooseHouse_option div p {
+.chooseHouse_option .choose_cont div p {
   font-family: "Rubik", sans-serif;
   font-size: 2rem;
   font-weight: 500;
   color: var(--primary-red);
+}
+.chooseHouse_option a {
+  text-decoration: none;
+  color: #ddd;
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  font-size: 1.6rem;
 }
 @keyframes popupPrompt {
   0% {
