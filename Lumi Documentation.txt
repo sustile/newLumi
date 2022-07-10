@@ -1,0 +1,34 @@
+Documentation on How to use Lumi 
+
+Basics : After registering Your Account You will be Redirected to The Main Page. If You Open the Side Bar, You can See Your Name and the Default Image Below. The Random Id Below Your Name is Your Unique ID with which we can Differentiate People. Clicking That ID will Copy It automatically.
+
+Types Of Messaging : There Are To Types of Messaging. DM's (Direct Messages) and Houses(Groups). Dm's Offer The ability to call the Person and Talk with them, while in Houses You Join a Voice Channel through Which You can Talk to Other People in the VC. Both The methods Offer The Ability to Mute Your Mic and Deafen(Mute Everyone in the VC or Call) and Also Sharing Your Screen.
+
+Screen Sharing : When U Join a call or a VC u can see a Message on the Top Right "{User} VC Connected". Clicking That will Open the Screen Sharing Container where u can see Others Screen if They are Sharing Their Screen.
+
+How to Start a DM : You need to Have that Specific Person in Your Friend List to Achieve This. First Send a Friend Request To That specific Person (Enter Their Unique ID) and They have to accept Your Request. Then You can Start a DM by Right Click Their Name in the "All" or "Online" tab in the "Friends" Section.
+
+Friends Section : 
+	Online Tab : You can See Your Friends Who are Online at The moment Here.
+	All Tab : You can see Your Entire List of Friends Regardless if They are Online or Offline
+	Pending : You can See Your Incoming or Outgoing Friend Requests Here
+	Add Friend : Used to Send a Friend Request to Someone
+
+Side Bar : The Side Bar is Split into 2 sections : The House Container and The Dm's Container.
+	House Container : The Space On the Left with a Dark Grayish Background is the House Container.
+					  You can See The Current Houses That You Are In. Clicking One will Open That specific House. In the same Space, Right at the Bottom You can see a "Plus" Button. This is Used to Create a new House or Join a House. Right Clicking a House will show the Options to Copy The id of The house and a Special Section "House Settings" Which is only available to the Original Creator of The House.
+
+					  	Joining a House : Click the Plus Sign and Click "Join a House". Then Enter the Unique ID of the Hous.
+
+					  	Create a House : Click the Plus Sign and Click "Create a House". Then Enter the Name of Your House.
+
+	Dm's Container : The Space on the right with a Light Grayish Background is the DM's Container. Here You can See Your Active Dm's List and at The Bottom You Get Another Container Containing A Button to Open teh Friend's Section and Under That You get Your Details. Clicking Your Image will Open a Prompt Where You can Open Your Name and Your Image.
+
+Right Click Options :
+	Right Clicking on a DM : Allows You to Copy the ID of the Person of That specific DM
+	Right Clicking on a House : Allows You to Copy The ID of the House and a Special Option 
+								"House Settings" for The Original Creator of the House.
+	Right Clicking on a User in The Friends Section (Online and All Tab Only) : Allows You to Copy 
+				the Id of That User and Start a Dm with Them.
+	Right Clicking on a Message in the DM's or House Messages : Gives You the Option to Reply to 				that Specific Message.
+

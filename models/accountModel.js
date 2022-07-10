@@ -45,6 +45,9 @@ const schema = new mongoose.Schema({
   },
   house: [String],
   dms: [String],
+  friends: [String],
+  incomingFriendRequests: [String],
+  outgoingFriendRequests: [String],
 });
 
 schema.pre("save", async function (next) {

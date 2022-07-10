@@ -67,7 +67,9 @@
         <div class="nav_details">
           <div class="createDm_cont">
             <!-- <i class="ph-chats-bold prevent createDm"></i> -->
-            <a href="#" class="prevent createDm">Start Messaging</a>
+            <a href="#" class="prevent createDm closeOverlayTrigger"
+              ><i class="ph-hand-waving"></i><span>Friends</span></a
+            >
           </div>
           <!-- <div class="nav_controls">
             <a href=""
@@ -126,11 +128,6 @@
         </div>
       </div>
       <div class="content">
-        <div class="content_main">
-          <h2 class="content_main-header">Welcome</h2>
-          <a href="" class="trigger_members-cont prevent">Members</a>
-        </div>
-
         <div class="call_btns">
           <i class="ph-phone call-user"> </i>
           <i class="ph-phone-slash call-decline"></i>
@@ -159,104 +156,40 @@
           <p>57R1X Connected</p>
         </div> -->
 
-        <div class="messages_model-cont">
-          <div class="message_main-cont">
-            <!-- <div class="message">
-              <div class="message_user">
-                <div class="img_cont">
-                  <img src="./../img/1653719291251.jpg" alt="" />
-                </div>
-                <span>Test User</span>
-                <p>5:48 am, 1st July, 2022</p>
-              </div>
-              <span class="message_cont">How You Doin?</span>
-            </div> -->
-            <!-- REPLY MESSAGE TEMPLATE -->
-            <!-- <div class="reply_message">
-              <div class="og">
-                <span class="og-reply-arrow"
-                  ><i class="ph-arrow-bend-left-down-bold"></i
-                ></span>
-                <span class="og-user"
-                  >Replying to <span class="og-user_name">Systile</span></span
-                >
-                <span class="og-colon">:</span>
-                <span class="og-message">Yo </span>
-              </div>
-              <div class="message">
+        <div class="messages-wrapper" style="display: none">
+          <div class="message-header-content_main">
+            <h2 class="message-header_content_main-header">Direct Messages</h2>
+            <span data-id="62c924707e508a6623b912f6" title="Click to Copy ID"
+              >@62c924707e508a6623b912f6</span
+            >
+            <!-- <a href="" class="trigger_members-cont prevent">Members</a> -->
+          </div>
+
+          <div class="messages_model-cont">
+            <div class="message_main-cont">
+              <!-- <div class="message">
                 <div class="message_user">
                   <div class="img_cont">
                     <img src="./../img/1653719291251.jpg" alt="" />
                   </div>
                   <span>Test User</span>
+                  <p>5:48 am, 1st July, 2022</p>
                 </div>
                 <span class="message_cont">How You Doin?</span>
-              </div>
-            </div> -->
-            <!-- <div class="message">
-              <div class="message_user">
-                <div class="img_cont">
-                  <img src="./../img/1653719291251.jpg" alt="" />
+              </div> -->
+              <!-- REPLY MESSAGE TEMPLATE -->
+              <!-- <div class="reply_message">
+                <div class="og">
+                  <span class="og-reply-arrow"
+                    ><i class="ph-arrow-bend-left-down-bold"></i
+                  ></span>
+                  <span class="og-user"
+                    >Replying to <span class="og-user_name">Systile</span></span
+                  >
+                  <span class="og-colon">:</span>
+                  <span class="og-message">Yo </span>
                 </div>
-                <span>Test User</span>
-              </div>
-              <img class="message-image_cont" src="./../img/1653719570371.jpeg"></img>
-            </div> -->
-            <!-- REPLY MESSAGE TEMPLATE -->
-
-            <!-- <div class="message">
-              <div class="message_user">
-                <div class="img_cont">
-                  <img src="./../img/1653719291251.jpg" alt="" />
-                </div>
-                <span>Test User</span>
-              </div>
-              <span class="message_cont-ping"><span> @Systile </span></span>
-            </div> -->
-          </div>
-
-          <!-- style="visibility: hidden" -->
-          <div class="message_enter" style="visibility: hidden">
-            <div
-              class="dm_replybar"
-              data-replyTo=""
-              data-replyMessage=""
-              style="visibility: hidden"
-            >
-              <span>Replying to Systile</span>
-              <i class="ph-x-bold close_dm_replybar"></i>
-            </div>
-            <form class="message_form">
-              <input
-                type="text"
-                class="message-input"
-                required
-                placeholder="Message"
-                maxlength="200"
-              />
-              <!-- <input
-                type="file"
-                id="sendImagesDm"
-                style="display: none"
-                accept="image/jpeg, image/png"
-              />
-              <label for="sendImagesDm" id="sendImagesDm_Label"
-                ><i class="ph-image"></i>
-              </label> -->
-              <!-- <input
-                type="file"
-                id="textAreaImageInput"
-                style="visibility: visible"
-              /> -->
-            </form>
-            <button class="emoji_btn"><i class="ph-smiley"></i></button>
-          </div>
-        </div>
-
-        <div class="house_main-cont" style="display: none">
-          <div class="house_model-cont">
-            <div class="house-message_main-cont">
-              <!-- <div class="message">
+                <div class="message">
                   <div class="message_user">
                     <div class="img_cont">
                       <img src="./../img/1653719291251.jpg" alt="" />
@@ -264,11 +197,34 @@
                     <span>Test User</span>
                   </div>
                   <span class="message_cont">How You Doin?</span>
-                </div> -->
+                </div>
+              </div> -->
+              <!-- <div class="message">
+                <div class="message_user">
+                  <div class="img_cont">
+                    <img src="./../img/1653719291251.jpg" alt="" />
+                  </div>
+                  <span>Test User</span>
+                </div>
+                <img class="message-image_cont" src="./../img/1653719570371.jpeg"></img>
+              </div> -->
+              <!-- REPLY MESSAGE TEMPLATE -->
+
+              <!-- <div class="message">
+                <div class="message_user">
+                  <div class="img_cont">
+                    <img src="./../img/1653719291251.jpg" alt="" />
+                  </div>
+                  <span>Test User</span>
+                </div>
+                <span class="message_cont-ping"><span> @Systile </span></span>
+              </div> -->
             </div>
-            <div class="house-message_enter" style="visibility: hidden">
+
+            <!-- style="visibility: hidden" -->
+            <div class="message_enter" style="visibility: hidden">
               <div
-                class="house_replybar"
+                class="dm_replybar"
                 data-replyTo=""
                 data-replyMessage=""
                 style="visibility: hidden"
@@ -276,43 +232,152 @@
                 <span>Replying to Systile</span>
                 <i class="ph-x-bold close_dm_replybar"></i>
               </div>
-              <form class="house-message_form">
+              <form class="message_form">
                 <input
                   type="text"
                   class="message-input"
                   required
-                  placeholder="Send a Message To this House"
+                  placeholder="Message"
                   maxlength="200"
                 />
+                <!-- <input
+                  type="file"
+                  id="sendImagesDm"
+                  style="display: none"
+                  accept="image/jpeg, image/png"
+                />
+                <label for="sendImagesDm" id="sendImagesDm_Label"
+                  ><i class="ph-image"></i>
+                </label> -->
+                <!-- <input
+                  type="file"
+                  id="textAreaImageInput"
+                  style="visibility: visible"
+                /> -->
               </form>
-              <button class="emoji_btn_house"><i class="ph-smiley"></i></button>
+              <button class="emoji_btn"><i class="ph-smiley"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="house-wrapper" style="display: none">
+          <div class="house-header-content_main">
+            <h2 class="house-header_content_main-header">House DAWG</h2>
+            <a href="" class="trigger_members-cont prevent">Members</a>
+          </div>
+
+          <div class="house_main-cont">
+            <div class="house_model-cont">
+              <div class="house-message_main-cont">
+                <!-- <div class="message">
+                    <div class="message_user">
+                      <div class="img_cont">
+                        <img src="./../img/1653719291251.jpg" alt="" />
+                      </div>
+                      <span>Test User</span>
+                    </div>
+                    <span class="message_cont">How You Doin?</span>
+                  </div> -->
+              </div>
+              <div class="house-message_enter" style="visibility: hidden">
+                <div
+                  class="house_replybar"
+                  data-replyTo=""
+                  data-replyMessage=""
+                  style="visibility: hidden"
+                >
+                  <span>Replying to Systile</span>
+                  <i class="ph-x-bold close_dm_replybar"></i>
+                </div>
+                <form class="house-message_form">
+                  <input
+                    type="text"
+                    class="message-input"
+                    required
+                    placeholder="Send a Message in This House"
+                    maxlength="200"
+                  />
+                </form>
+                <button class="emoji_btn_house">
+                  <i class="ph-smiley"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="friend-list-wrapper">
+          <div class="friend-list-header-content_main">
+            <h2 class="friend-list_content_main-header">
+              <i class="ph-hand-waving"></i><span>Friends</span>
+            </h2>
+            <div class="friendsListOptions">
+              <a href="" class="onlineFriends prevent active">Online</a>
+              <a href="" class="allFriends prevent">All</a>
+              <a href="" class="pendingRequestsFriends prevent">Pending</a>
+              <a href="" class="addFriends prevent">Add Friend</a>
+            </div>
+          </div>
+
+          <div class="friend-list-model-cont">
+            <div class="online-friends_main-cont">
+              <p>Online - 0</p>
+              <div class="online-friends_users-cont">
+                <!-- <a data-user-id="${dm.toId}" class="prevent">
+                  <div class="img_cont">
+                    <img src="./../img/1653719570371.jpeg" alt="" />
+                    <span class="user-status-indicator"></span>
+                  </div>
+                  <span class="text_main"
+                    ><span class="text_main_user">Systile</span></span
+                  >
+                </a> -->
+              </div>
+            </div>
+
+            <div class="all-friends_main-cont">
+              <p>All Friends</p>
+              <div class="all-friends_users-cont">
+                <!-- <a data-user-id="${dm.toId}" class="prevent">
+                  <div class="img_cont">
+                    <img src="./../img/1653719570371.jpeg" alt="" />
+                    <span class="user-status-indicator"></span>
+                  </div>
+                  <span class="text_main"
+                    ><span class="text_main_user">Systile</span></span
+                  >
+                </a>
+ -->
+              </div>
+            </div>
+            <div class="pending-requests_main-cont">
+              <p>Pending Requests</p>
+              <div class="pending-friends_users-cont">
+                <!-- <div class="request">
+                  <span class="request-type">Incoming Request</span>
+                  <a data-user-id="${dm.toId}" class="prevent">
+                    <div class="img_cont">
+                      <img src="./../img/1653719570371.jpeg" alt="" />
+                    </div>
+                    <span class="text_main"
+                      ><span class="text_main_user">Systile</span></span
+                    >
+                  </a>
+
+                  <div class="request-options">
+                    <i class="ph-check-bold"></i>
+                    <i class="ph-x-bold"></i>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="add-friends_main-cont">
+              <h2>Lol</h2>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- <div class="nav">
-      <div class="nav_headers">
-        <i class="ph-moon-fill"></i>
-        <h2 class="main-heading">Lumi</h2>
-      </div>
-      <div class="nav_links">
-        <div class="nav_controls">
-          <a href=""
-            ><i
-              class="ph-headphones-bold prevent deafenBtn"
-              data-active="false"
-            ></i
-          ></a>
-          <a href=""><i class="ph-microphone-bold prevent muteBtn"></i></a>
-        </div>
-        <div class="nav_acc">
-          <a href=""><i class="ph-identification-card-bold prevent"></i></a>
-          <a href=""><i class="ph-gear-six-bold prevent"></i></a>
-          <a href="/logout" class="logout">Logout</a>
-        </div>
-      </div>
-    </div> -->
 
     <div class="videoAndScreenShareCont">
       <a href="" class="close_videoAndScreenShareCont prevent">
@@ -328,6 +393,17 @@
           <video src="./../img/lol.mp4"></video>
         </div> -->
       </div>
+    </div>
+
+    <div class="sendfriendRequest_input_field">
+      <p>Enter the ID of the Person Below to Send a Request</p>
+      <form>
+        <div class="input_div">
+          <input type="text" required placeholder="ID" />
+          <button type="submit">Ok</button>
+        </div>
+        <a href="" class="prevent">Cancel</a>
+      </form>
     </div>
 
     <div class="call_prompt_call">
@@ -475,6 +551,16 @@
       >
     </div>
 
+    <div class="friends-list-contextMenu">
+      <a href="" class="openDm_friends-list prevent"
+        ><i class="ph-chat-centered-text-bold"></i
+        ><span>Start Messaging</span></a
+      >
+      <a href="" class="context_copyId_friends-list prevent"
+        ><i class="ph-copy-bold"></i><span>Copy Id</span></a
+      >
+    </div>
+
     <div class="dm-message-contextMenu">
       <a href="" class="context_message-reply prevent"
         ><i class="ph-chats-circle-bold"></i><span>Reply</span></a
@@ -509,6 +595,13 @@
     <div class="errorPopup">
       <i class="ph-circle-wavy-warning-bold"></i>
       <p class="errorPopup_text">Something Went Wrong</p>
+    </div>
+    <div class="friendsPopup">
+      <i class="ph-user-gear-bold"></i>
+      <p class="friendsPopup_text">Something Went Wrong</p>
+    </div>
+    <div class="spinner">
+      <i class="ph-moon-fill"></i>
     </div>
   </body>
   <script defer type="module" src="../js/base.js"></script>

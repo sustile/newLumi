@@ -19,7 +19,6 @@ const messageFrom = document.querySelector(".message_form");
 const messageInput = messageFrom.querySelector(".message-input");
 // const messageInput = document.querySelector(".message_enter");
 const messageMain = document.querySelector(".message_main-cont");
-const mainHeader = document.querySelector(".content_main-header");
 
 const dm_replyBar = document.querySelector(".dm_replybar");
 const house_replyBar = document.querySelector(".house_replybar");
@@ -66,6 +65,31 @@ const house_members_cont = document.querySelector(".trigger_members-cont");
 const emoji_btn_dms = document.querySelector(".emoji_btn");
 const emoji_btn_house = document.querySelector(".emoji_btn_house");
 // EMOJI BTNS
+
+//WRAPPERS AND HEADERS
+const dmHeader = document.querySelector(".message-header_content_main-header");
+const houseHeader = document.querySelector(".house-header_content_main-header");
+const friendHeader = document.querySelector(".friend-list_content_main-header");
+
+const houseWrapper = document.querySelector(".house-wrapper");
+const friendListWrapper = document.querySelector(".friend-list-wrapper");
+const DmWrapper = document.querySelector(".messages-wrapper");
+
+const spinner = document.querySelector(".spinner");
+
+async function showSpinner() {
+  spinner.style.visibility = "visible";
+  spinner.style.opacity = "1";
+  spinner.style.zIndex = "1000000";
+}
+
+async function hideSpinner() {
+  spinner.style.opacity = "0";
+  spinner.style.visibility = "none";
+  spinner.style.zIndex = "-1";
+}
+
+//WRAPPERS AND HEADERS
 
 //IMAGES SENDING BTNS
 // const sendImagesDm = document.querySelector("#sendImagesDm_Label");
@@ -121,6 +145,14 @@ const wait = async (s) => {
   });
 };
 
+//CLSOE ALL WRAPPERS
+const closeAllWarppers = () => {
+  houseWrapper.style.display = "none";
+  friendListWrapper.style.display = "none";
+  DmWrapper.style.display = "none";
+};
+//CLSOE ALL WRAPPERS
+
 const notification = async (title, message, image) => {
   Push.create(title, {
     body: message,
@@ -136,7 +168,9 @@ const notification = async (title, message, image) => {
 // POPUP ERROR
 
 const errorPopup = document.querySelector(".errorPopup");
+const friendsPopup = document.querySelector(".friendsPopup");
 const errorPopup_text = document.querySelector(".errorPopup_text");
+const friendsPopup_text = document.querySelector(".friendsPopup_text");
 
 const popupError = async (message) => {
   ongoingError = true;
@@ -145,6 +179,19 @@ const popupError = async (message) => {
     errorPopup.style.animation = "moveDown 0.5s forwards ease";
     await wait(2);
     errorPopup.style.animation = "moveUp 0.5s forwards ease";
+    await wait(1);
+    ongoingError = false;
+    res();
+  });
+};
+
+const popupFriends = async (message) => {
+  ongoingError = true;
+  return new Promise(async (res) => {
+    friendsPopup_text.textContent = message;
+    friendsPopup.style.animation = "moveDown 0.5s forwards ease";
+    await wait(2);
+    friendsPopup.style.animation = "moveUp 0.5s forwards ease";
     await wait(1);
     ongoingError = false;
     res();
@@ -164,20 +211,37 @@ const loadPrevent = () => {
 
 // DM CLICK EVENT
 
+const dmUserId = document
+  .querySelector(".message-header-content_main")
+  .querySelector("span");
+dmUserId.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+  navigator.clipboard.writeText(dmUserId.getAttribute("data-id"));
+});
+
 dmsCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
   const user = target.querySelector(".text_main_user");
-  house_main_cont.style.display = "none";
-  dm_main_cont.style.display = "flex";
+
+  closeAllWarppers();
+
+  DmWrapper.style.display = "flex";
   // resetDMbg();
   // target.style.backgroundColor = "red";
 
   if (target.getAttribute("data-dm") === activeCont) return;
 
   activeCont = target.getAttribute("data-dm");
-  mainHeader.textContent = user.textContent;
+  dmHeader.textContent = user.textContent;
+
+  slider.style.transform = "translateX(-100%)";
+  sliderOverlay.style.opacity = "0";
+  sliderOverlay.style.visibility = "hidden";
+
+  dmUserId.setAttribute("data-id", target.getAttribute("data-user-id"));
+  dmUserId.textContent = `@${target.getAttribute("data-user-id")}`;
 
   call_btn.style.animation = "popup_btn 0.3s forwards ease";
 
@@ -309,55 +373,22 @@ const loadDms = async () => {
 };
 
 createDM.addEventListener("click", async (e) => {
-  // const person2 = prompt("Id");
-  createDM_input.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
-  const form = createDM_input.querySelector("form");
+  closeAllWarppers();
+  friendListWrapper.style.display = "flex";
+  activeCont = "friendslist-online";
 
-  const cancel = form.querySelector("a");
+  slider.style.transform = "translateX(-100%)";
+  sliderOverlay.style.opacity = "0";
+  sliderOverlay.style.visibility = "hidden";
 
-  cancel.addEventListener("click", async (e) => {
-    createDM_input.style.animation =
-      "overlayProf_DownPrompt 0.3s forwards ease";
-  });
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const person2 = form.querySelector("input").value;
-
-    const dm = await (
-      await fetch("/api/addNewDm", {
-        method: "POST",
-        body: JSON.stringify({
-          person2,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-
-    if (dm.status === "fail") {
-      if (dm.message === "Duplicate Dms") {
-        if (!ongoingError) {
-          await popupError("Duplicate Dms");
-        }
-        form.querySelector("input").value = "";
-      } else {
-        if (!ongoingError) {
-          console.log(dm.message);
-          await popupError("Invalid ID");
-        }
-        form.querySelector("input").value = "";
-      }
-    } else {
-      socket.emit("update-dms", person2);
-      loadDms();
+  if (!activeCall.status) {
+    if (call_btn.style.animation.includes("popup_btn")) {
+      call_btn.style.animation = "popdown_btn 0.3s forwards ease";
     }
-
-    createDM_input.style.animation =
-      "overlayProf_DownPrompt 0.3s forwards ease";
-  });
+    if (join_house_vc.style.animation.includes("popup_btn")) {
+      join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+    }
+  }
 });
 
 socket.on("end_update-dms");
@@ -380,8 +411,15 @@ createHouse.addEventListener("click", async (e) => {
 
     createHouse_input.style.animation =
       "overlayProf_UpPrompt 0.3s forwards ease";
+
     const form = createHouse_input.querySelector("form");
     const cancel = form.querySelector("a");
+    const submitBtn = form.querySelector("button");
+
+    submitBtn.addEventListener("click", async (e) => {
+      e.stopImmediatePropagation();
+    });
+
     cancel.addEventListener("click", async (e) => {
       createHouse_input.style.animation =
         "overlayProf_DownPrompt 0.3s forwards ease";
@@ -423,8 +461,14 @@ createHouse.addEventListener("click", async (e) => {
       "overlayProf_DownPrompt 0.3s forwards ease";
 
     joinHouse_input.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
+
     const form = joinHouse_input.querySelector("form");
     const cancel = form.querySelector("a");
+    const submitBtn = form.querySelector("button");
+    submitBtn.addEventListener("click", async (e) => {
+      e.stopImmediatePropagation();
+    });
+
     cancel.addEventListener("click", async (e) => {
       joinHouse_input.style.animation =
         "overlayProf_DownPrompt 0.3s forwards ease";
@@ -443,6 +487,7 @@ createHouse.addEventListener("click", async (e) => {
           },
         })
       ).json();
+
       if (dm.status === "fail") {
         if (dm.message === "Duplicate Dms") {
           if (!ongoingError) {
@@ -968,6 +1013,8 @@ const lazyLoadMessages = async (
   page,
   checkScrollAfterLoading = false
 ) => {
+  showSpinner();
+
   const dm = await (
     await fetch("/api/lazyLoadMessages", {
       method: "POST",
@@ -980,6 +1027,10 @@ const lazyLoadMessages = async (
       },
     })
   ).json();
+
+  await wait(1);
+
+  hideSpinner();
 
   if (checkScrollAfterLoading) {
     for (let el of dm.result) {
@@ -1141,6 +1192,7 @@ const popupHouse = async (room) => {
 // IDONT GIVE A SHIT
 
 (async () => {
+  activeCont = "friendslist-online";
   await getBasicData();
   vcPeer = new Peer(user.id, {
     host: "localhost",
@@ -1159,15 +1211,16 @@ const popupHouse = async (room) => {
   loadPrevent();
   remoteConnection();
   loadVideoStreams();
-  await wait(1);
-  const closeOverlayTrigger = document.querySelectorAll(".closeOverlayTrigger");
-  closeOverlayTrigger.forEach((el) => {
-    el.addEventListener("click", () => {
-      slider.style.transform = "translateX(-100%)";
-      sliderOverlay.style.opacity = "0";
-      sliderOverlay.style.visibility = "hidden";
-    });
-  });
+  checkOnlineStandalone();
+  // await wait(1);
+  // const closeOverlayTrigger = document.querySelectorAll(".closeOverlayTrigger");
+  // closeOverlayTrigger.forEach((el) => {
+  //   el.addEventListener("click", () => {
+  //     slider.style.transform = "translateX(-100%)";
+  //     sliderOverlay.style.opacity = "0";
+  //     sliderOverlay.style.visibility = "hidden";
+  //   });
+  // });
 })();
 
 // COPY ID IF THEY CLICK ON IT (FOR THE CURRENT USING USER)
@@ -1186,13 +1239,14 @@ houseCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
-  house_main_cont.style.display = "flex";
-  dm_main_cont.style.display = "none";
+
+  closeAllWarppers();
+  houseWrapper.style.display = "flex";
 
   if (target.getAttribute("data-id") == activeCont) return;
 
   activeCont = target.getAttribute("data-id");
-  mainHeader.textContent = target.getAttribute("data-name");
+  houseHeader.textContent = target.getAttribute("data-name");
   closeReplyBarFunction();
   houseMessageInput.style.visibility = "visible";
   emoji_btn_house.style.visibility = "visible";
@@ -1205,7 +1259,15 @@ houseCont.addEventListener("click", (e) => {
   el.style.visibility = "hidden";
   el.style.opacity = "0";
 
+  slider.style.transform = "translateX(-100%)";
+  sliderOverlay.style.opacity = "0";
+  sliderOverlay.style.visibility = "hidden";
+
   house_members_cont.style.visibility = "visible";
+
+  if (join_house_vc.style.animation.includes("popdown_btn")) {
+    join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+  }
 
   if (!leave_house_vc.style.animation.includes("popup_btn")) {
     join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
@@ -1973,7 +2035,7 @@ async function remoteConnection() {
 
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
-        call_status_text.textContent = `${mainHeader.textContent} VC Connected`;
+        call_status_text.textContent = `${houseHeader.textContent} VC Connected`;
         call_status.style.animation = "popup_btn 0.3s forwards ease";
 
         leave_house_vc.style.animation = "popup_btn 0.3s forwards ease";
@@ -2022,6 +2084,10 @@ async function remoteConnection() {
         // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
         call_status.style.animation = "popdown_btn 0.3s forwards ease";
         leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+
+        if (activeCont === "friendsList") {
+          join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+        }
 
         await wait(0.2);
         vc_members_cont.innerHTML = "";
@@ -2232,7 +2298,7 @@ async function remoteConnection() {
 
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
-        call_status_text.textContent = `${mainHeader.textContent} VC Connected`;
+        call_status_text.textContent = `${dmHeader.textContent} VC Connected`;
         call_status.style.animation = "popup_btn 0.3s forwards ease";
 
         decline_btn.style.animation = "popup_btn 0.3s forwards ease";
@@ -2283,6 +2349,10 @@ async function remoteConnection() {
         // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
         call_btn.animation = "popdown_btn 0.3s forwards ease";
         call_status.style.animation = "popdown_btn 0.3s forwards ease";
+
+        if (activeCont === "friendsList") {
+          call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+        }
 
         await wait(0.2);
         vc_members_cont.innerHTML = "";
@@ -2642,21 +2712,6 @@ houseCont.addEventListener("contextmenu", (e) => {
       if (result.status === "ok") {
         socket.emit("house-data-update", house._id);
 
-        // const houseObj = houseCont.querySelectorAll("a");
-        // houseObj.forEach((cont) => {
-        //   console.log(house._id);
-        //   console.log(house);
-        //   if (cont.getAttribute("data-id") === house._id) {
-        //     const img = cont.querySelector("img");
-        //     img.src = `./../img/${image}`;
-        //     cont.setAttribute("data-name", name);
-
-        //     if (activeCont === house._id) {
-        //       mainHeader.textContent = name;
-        //     }
-        //   }
-        // });
-
         nameInput.value = "";
         house_details.style.animation =
           "overlayProf_DownPrompt 0.3s forwards ease";
@@ -2755,12 +2810,14 @@ const closeAllContextMenus = async () => {
   dm_MessageContextMenu.style.opacity = "0";
   house_MessageContextMenu.style.opacity = "0";
   house_members_usersCopyId.style.opacity = "0";
+  friendsListContextMenu.style.opacity = "0";
   // await wait(0.1);
   dmContextMenu.style.visibility = "hidden";
   houseContextMenu.style.visibility = "hidden";
   dm_MessageContextMenu.style.visibility = "hidden";
   house_MessageContextMenu.style.visibility = "hidden";
   house_members_usersCopyId.style.visibility = "hidden";
+  friendsListContextMenu.style.visibility = "hidden";
 };
 
 document.addEventListener("click", async () => {
@@ -2778,7 +2835,7 @@ socket.on("user-data-updated", (id, name, image) => {
       text.textContent = name;
 
       if (activeCont === id) {
-        mainHeader.textContent = name;
+        dmHeader.textContent = name;
       }
     }
   });
@@ -2793,14 +2850,16 @@ socket.on("house-data-updated", (id, name, image) => {
       house.setAttribute("data-name", name);
 
       if (activeCont === id) {
-        mainHeader.textContent = name;
+        houseHeader.textContent = name;
       }
     }
   });
 });
 
-socket.on("dm-update-event-client", () => {
+socket.on("dm-update-event-client", async (id, room) => {
   loadDms();
+  await wait(1);
+  setUserOnline(room);
 });
 
 socket.on("user-left-server_check-vc", (room, id) => {
@@ -3207,7 +3266,7 @@ emojiKeyboard.instantiate(emoji_btn_dms);
 emojiKeyboard.instantiate(emoji_btn_house);
 
 emojiKeyboard.callback = (emoji, closed) => {
-  if (house_main_cont.style.display === "flex") {
+  if (houseWrapper.style.display === "flex") {
     houseMessageInput.value += emoji.emoji;
   } else {
     messageInput.value += emoji.emoji;
@@ -3219,3 +3278,555 @@ function closeEmojiBoxes() {
 }
 
 // EMOJI
+
+//FRIENDS LIST
+const onlineFriendsTab = document.querySelector(".online-friends_main-cont");
+const allonlineFriendsTab = document.querySelector(".all-friends_main-cont");
+const pendingFriendsTab = document.querySelector(".pending-requests_main-cont");
+const addFriendsTab = document.querySelector(".add-friends_main-cont");
+
+const sendfriendRequestCont = document.querySelector(
+  ".sendfriendRequest_input_field"
+);
+
+const allFriendsCont = allonlineFriendsTab.querySelector(
+  ".all-friends_users-cont"
+);
+
+const onlineFriendsCont = onlineFriendsTab.querySelector(
+  ".online-friends_users-cont"
+);
+
+const closeAllFriendTabs = () => {
+  onlineFriendsTab.style.display = "none";
+
+  allonlineFriendsTab.style.display = "none";
+
+  pendingFriendsTab.style.display = "none";
+
+  const all = friendsListOptions.querySelectorAll("a");
+  all.forEach(async (el) => {
+    el.classList.remove("active");
+  });
+};
+
+const friendsListOptions = document.querySelector(".friendsListOptions");
+const pendingRequestsMainCont = pendingFriendsTab.querySelector(
+  ".pending-friends_users-cont"
+);
+
+socket.on("checkOnline-Standalone_request", (id, from) => {
+  if (id === user.id) {
+    socket.emit("checkOnline-Standalone_sendingData", id, from);
+  }
+});
+
+socket.on("checkOnline-Standalone_final", async (id, from) => {
+  if (from === user.id) {
+    if (activeCont === "friendslist-online") {
+      const p = onlineFriendsTab.querySelector("p");
+      let num = p.textContent.split(" ");
+      num = Number(num[num.length - 1]);
+      num += 1;
+      const user = await getSomeOtherUserData(id);
+      const html = `
+      <a data-user-id="${id}" class="prevent">
+                  <div class="img_cont">
+                    <img src="./../img/${user.image}" alt="" />
+                    <span class="user-status-indicator" style="background-color: #80ed99;"></span>
+                  </div>
+                  <span class="text_main"
+                    ><span class="text_main_user">${user.name}</span></span
+                  >
+                </a>
+      `;
+
+      p.textContent = `Online - ${num}`;
+
+      onlineFriendsCont.insertAdjacentHTML("afterbegin", html);
+    }
+  }
+});
+
+socket.on("goingOffline-Standalone_final", (id, from) => {
+  if (user.id === from) {
+    if (activeCont === "friendslist-online") {
+      const all = onlineFriendsCont.querySelectorAll("a");
+      all.forEach(async (user) => {
+        if (user.getAttribute("data-user-id") === id) {
+          const p = onlineFriendsTab.querySelector("p");
+          let num = p.textContent.split(" ");
+          num = Number(num[num.length - 1]);
+          num -= 1;
+          if (num < 0) num = 0;
+          p.textContent = `Online - ${num}`;
+          user.remove();
+        }
+      });
+    }
+  }
+});
+
+const checkOnlineStandalone = async () => {
+  activeCont = "friendslist-online";
+
+  const p = onlineFriendsTab.querySelector("p");
+  p.textContent = "Online - 0";
+
+  onlineFriendsCont.innerHTML = "";
+
+  onlineFriendsTab.style.display = "block";
+
+  const { friends } = await (await fetch("/api/getAllFriends")).json();
+
+  friends.forEach(async (id) => {
+    socket.emit("checkOnline-Standalone", id, user.id);
+  });
+};
+
+const loadFriendsPending = async () => {
+  pendingRequestsMainCont.innerHTML = "";
+
+  pendingFriendsTab.style.display = "block";
+
+  showSpinner();
+
+  const { incoming, outgoing } = await (
+    await fetch("/api/getAllPendingRequests")
+  ).json();
+
+  await wait(1);
+
+  hideSpinner();
+
+  incoming.forEach(async (id) => {
+    const user = await getSomeOtherUserData(id);
+
+    const html = `
+    <div class="request" data-user-id="${id}" data-type="incoming">
+                <span class="request-type">Incoming Request</span>
+                <a  class="prevent">
+                  <div class="img_cont">
+                    <img src="./../img/${user.image}" alt="" />
+                  </div>
+                  <span class="text_main"
+                    ><span class="text_main_user">${user.name}</span></span
+                  >
+                </a>
+
+                <div class="request-options">
+                  <i class="acceptRequest ph-check-bold"></i>
+                  <i class="rejectRequest ph-x-bold"></i>
+                </div>
+              </div>
+    `;
+    pendingRequestsMainCont.insertAdjacentHTML("afterbegin", html);
+  });
+
+  outgoing.forEach(async (id) => {
+    const user = await getSomeOtherUserData(id);
+    const html = `
+    <div class="request" data-user-id="${id}" data-type="outgoing">
+                <span class="request-type">Outgoing Request</span>
+                <a  class="prevent">
+                  <div class="img_cont">
+                    <img src="./../img/${user.image}" alt="" />
+                  </div>
+                  <span class="text_main"
+                    ><span class="text_main_user">${user.name}</span></span
+                  >
+                </a>
+
+                <div class="request-options">
+                  <i class="rejectRequest ph-x-bold"></i>
+                </div>
+              </div>
+    `;
+    pendingRequestsMainCont.insertAdjacentHTML("afterbegin", html);
+  });
+};
+
+friendsListOptions.addEventListener("click", async (e) => {
+  const target = e.target.closest("a");
+
+  if (!target) return;
+
+  if (target.classList.contains("onlineFriends")) {
+    if (target.classList.contains("active")) return;
+
+    closeAllFriendTabs();
+
+    target.classList.add("active");
+
+    checkOnlineStandalone();
+  } else if (target.classList.contains("allFriends")) {
+    if (target.classList.contains("active")) return;
+
+    closeAllFriendTabs();
+    target.classList.add("active");
+
+    allFriendsCont.innerHTML = "";
+
+    activeCont = "friendslist-all";
+
+    allonlineFriendsTab.style.display = "block";
+
+    showSpinner();
+
+    const { friends } = await (await fetch("/api/getAllFriends")).json();
+
+    await wait(1);
+
+    hideSpinner();
+
+    friends.forEach(async (id) => {
+      const user = await getSomeOtherUserData(id);
+      const html = `
+      <a data-user-id="${id}" class="prevent">
+                  <div class="img_cont">
+                    <img src="./../img/${user.image}" alt="" />
+                  </div>
+                  <span class="text_main"
+                    ><span class="text_main_user">${user.name}</span></span
+                  >
+                </a>
+      `;
+
+      allFriendsCont.insertAdjacentHTML("afterbegin", html);
+    });
+  } else if (target.classList.contains("pendingRequestsFriends")) {
+    if (target.classList.contains("active")) return;
+
+    closeAllFriendTabs();
+
+    target.classList.add("active");
+
+    activeCont = "friendslist-pending";
+
+    loadFriendsPending();
+  } else if (target.classList.contains("addFriends")) {
+    sendfriendRequestCont.style.animation =
+      "overlayProf_UpPrompt 0.3s forwards ease";
+
+    const cancel = sendfriendRequestCont.querySelector("a");
+    const inputField = sendfriendRequestCont.querySelector("input");
+    const form = sendfriendRequestCont.querySelector("form");
+
+    const submitBtn = sendfriendRequestCont.querySelector("button");
+
+    submitBtn.addEventListener("click", (e) => {
+      e.stopImmediatePropagation();
+    });
+
+    cancel.addEventListener("click", () => {
+      inputField.value = "";
+      sendfriendRequestCont.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const id = inputField.value;
+
+      if (id === user.id) {
+        if (!ongoingError) {
+          inputField.value = "";
+
+          await popupError("Invalid ID");
+        }
+
+        return;
+      }
+
+      const dm = await (
+        await fetch("/api/addFriends", {
+          method: "POST",
+          body: JSON.stringify({
+            id,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+
+      if (dm.status === "fail") {
+        if (dm.message === "No User was Found") {
+          inputField.value = "";
+
+          if (!ongoingError) {
+            await popupError("No User was Found");
+          }
+        }
+
+        if (dm.message === "Duplicate request") {
+          inputField.value = "";
+          if (!ongoingError) {
+            await popupError("Duplicate request");
+          }
+        } else {
+          if (!ongoingError) {
+            inputField.value = "";
+
+            console.log(dm.message);
+            await popupError("Invalid ID");
+          }
+        }
+      } else {
+        inputField.value = "";
+        sendfriendRequestCont.style.animation =
+          "overlayProf_DownPrompt 0.3s forwards ease";
+        socket.emit("sendFriendRequest-Standalone", id, user.id);
+        if (activeCont === "friendslist-pending") {
+          loadFriendsPending();
+        }
+      }
+    });
+  }
+});
+
+socket.on("receiveFriendRequest-Standalone", (id, from) => {
+  if (id === user.id) {
+    if (activeCont === "friendslist-pending") {
+      loadFriendsPending();
+    }
+  }
+});
+
+pendingRequestsMainCont.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+  const target = e.target;
+
+  if (!target) return;
+
+  if (target.classList.contains("rejectRequest")) {
+    const user = target.closest(".request");
+
+    const dm = await (
+      await fetch("/api/rejectRequest", {
+        method: "POST",
+        body: JSON.stringify({
+          id: user.getAttribute("data-user-id"),
+          type: user.getAttribute("data-type"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (dm.status === "fail") {
+      if (dm.message === "No User was Found") {
+        if (!ongoingError) {
+          await popupError("No User was Found");
+        }
+      } else {
+        if (!ongoingError) {
+          console.log(dm.message);
+          await popupError("Invalid ID");
+        }
+      }
+    } else {
+      socket.emit(
+        "sendFriendRequest-Standalone",
+        user.getAttribute("data-user-id"),
+        user.id
+      );
+      loadFriendsPending();
+    }
+  } else if (target.classList.contains("acceptRequest")) {
+    const user = target.closest(".request");
+    const name = user.querySelector(".text_main_user");
+
+    const dm = await (
+      await fetch("/api/acceptRequest", {
+        method: "POST",
+        body: JSON.stringify({
+          id: user.getAttribute("data-user-id"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (dm.status === "fail") {
+      if (dm.message === "No User was Found") {
+        if (!ongoingError) {
+          await popupError("No User was Found");
+        }
+      } else {
+        if (!ongoingError) {
+          await popupError("Invalid ID");
+        }
+      }
+    } else {
+      socket.emit(
+        "sendFriendRequest-Standalone",
+        user.getAttribute("data-user-id"),
+        user.id
+      );
+
+      loadFriendsPending();
+      if (!ongoingError) {
+        await popupFriends(`You are Now Friends with ${name.textContent}`);
+      }
+    }
+  } else {
+    return;
+  }
+});
+
+//FRIENDS LIST CONTEXT MENUS
+const friendsListContextMenu = document.querySelector(
+  ".friends-list-contextMenu"
+);
+allFriendsCont.addEventListener("contextmenu", (e) => {
+  const target = e.target.closest("a");
+
+  if (!target) return;
+  e.preventDefault();
+
+  closeAllContextMenus();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  friendsListContextMenu.style.left = `${x}px`;
+  friendsListContextMenu.style.top = `${y}px`;
+
+  friendsListContextMenu.style.visibility = "visible";
+  friendsListContextMenu.style.opacity = "1";
+
+  const copyId = friendsListContextMenu.querySelector(
+    ".context_copyId_friends-list"
+  );
+
+  const openDms = friendsListContextMenu.querySelector(".openDm_friends-list");
+
+  copyId.addEventListener("click", async (e) => {
+    e.stopImmediatePropagation();
+    navigator.clipboard.writeText(target.getAttribute("data-user-id"));
+    friendsListContextMenu.style.opacity = "0";
+    await wait(0.1);
+    friendsListContextMenu.style.visibility = "hidden";
+  });
+
+  openDms.addEventListener("click", async (e) => {
+    e.stopImmediatePropagation();
+    const dm = await (
+      await fetch("/api/addNewDm", {
+        method: "POST",
+        body: JSON.stringify({
+          person2: target.getAttribute("data-user-id"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+    if (dm.status === "fail") {
+      if (dm.message === "Duplicate Dms") {
+        closeAllContextMenus();
+        if (!ongoingError) {
+          await popupError("Duplicate Dms");
+        }
+      } else {
+        closeAllContextMenus();
+        if (!ongoingError) {
+          console.log(dm.message);
+          await popupError("Invalid ID");
+        }
+      }
+    } else {
+      closeAllContextMenus();
+      socket.emit("update-dms", target.getAttribute("data-user-id"), dm.dmId);
+      loadDms();
+      setUserOnline(dm.dmId);
+    }
+  });
+});
+
+onlineFriendsCont.addEventListener("contextmenu", (e) => {
+  const target = e.target.closest("a");
+
+  if (!target) return;
+  e.preventDefault();
+
+  closeAllContextMenus();
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = dmContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = dmContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  friendsListContextMenu.style.left = `${x}px`;
+  friendsListContextMenu.style.top = `${y}px`;
+
+  friendsListContextMenu.style.visibility = "visible";
+  friendsListContextMenu.style.opacity = "1";
+
+  const copyId = friendsListContextMenu.querySelector(
+    ".context_copyId_friends-list"
+  );
+
+  const openDms = friendsListContextMenu.querySelector(".openDm_friends-list");
+
+  copyId.addEventListener("click", async (e) => {
+    e.stopImmediatePropagation();
+    navigator.clipboard.writeText(target.getAttribute("data-user-id"));
+    friendsListContextMenu.style.opacity = "0";
+    await wait(0.1);
+    friendsListContextMenu.style.visibility = "hidden";
+  });
+
+  openDms.addEventListener("click", async (e) => {
+    e.stopImmediatePropagation();
+    const dm = await (
+      await fetch("/api/addNewDm", {
+        method: "POST",
+        body: JSON.stringify({
+          person2: target.getAttribute("data-user-id"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+    if (dm.status === "fail") {
+      if (dm.message === "Duplicate Dms") {
+        closeAllContextMenus();
+        if (!ongoingError) {
+          await popupError("Duplicate Dms");
+        }
+      } else {
+        closeAllContextMenus();
+        if (!ongoingError) {
+          console.log(dm.message);
+          await popupError("Invalid ID");
+        }
+      }
+    } else {
+      closeAllContextMenus();
+      socket.emit("update-dms", target.getAttribute("data-user-id"), dm.dmId);
+      loadDms();
+      setUserOnline(dm.dmId);
+    }
+  });
+});
+//FRIENDS LIST CONTEXT MENUS
+
+//FRIENDS LIST

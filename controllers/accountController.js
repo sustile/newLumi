@@ -308,3 +308,263 @@ exports.changeData = async (req, res) => {
     });
   }
 };
+
+exports.getAllFriends = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+    } else {
+      res.status(200).json({
+        status: "ok",
+        friends: user.friends,
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.getAllPendingRequests = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+    } else {
+      res.status(200).json({
+        status: "ok",
+        incoming: user.incomingFriendRequests,
+        outgoing: user.outgoingFriendRequests,
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.addFriends = async (req, res) => {
+  try {
+    const user = req.user;
+    const user2 = req.body.id;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+    } else {
+      const check = await account.findOne({ _id: user2 });
+
+      if (!check) {
+        res.status(404).json({
+          status: "fail",
+          message: "No User Found",
+        });
+      } else {
+        if (
+          user.friends.includes(user2) ||
+          user.incomingFriendRequests.includes(user2) ||
+          user.outgoingFriendRequests.includes(user2)
+        ) {
+          res.status(404).json({
+            status: "fail",
+            message: "Duplicate request",
+          });
+        } else {
+          let dm1 = user.outgoingFriendRequests;
+          let dm2 = check.incomingFriendRequests;
+          dm1.push(user2);
+          dm2.push(user._id);
+
+          await account.findByIdAndUpdate(user._id, {
+            outgoingFriendRequests: dm1,
+          });
+
+          await account.findByIdAndUpdate(user2, {
+            incomingFriendRequests: dm2,
+          });
+
+          res.status(200).json({
+            status: "ok",
+            message: "Successfully Sent Request",
+          });
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.rejectRequest = async (req, res) => {
+  try {
+    const user = req.user;
+    const user2 = req.body.id;
+    const type = req.body.type;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+    } else {
+      const check = await account.findOne({ _id: user2 });
+
+      if (!check) {
+        res.status(404).json({
+          status: "fail",
+          message: "No User Found",
+        });
+      } else {
+        if (type === "outgoing") {
+          if (
+            user.outgoingFriendRequests.includes(user2) &&
+            check.incomingFriendRequests.includes(user._id)
+          ) {
+            let dm1 = user.outgoingFriendRequests;
+            let dm2 = check.incomingFriendRequests;
+            const index1 = dm1.indexOf(user2);
+            const index2 = dm1.indexOf(user._id);
+            dm1.splice(index1, 1);
+            dm2.splice(index2, 1);
+
+            await account.findByIdAndUpdate(user._id, {
+              outgoingFriendRequests: dm1,
+            });
+
+            await account.findByIdAndUpdate(user2, {
+              incomingFriendRequests: dm2,
+            });
+
+            res.status(200).json({
+              status: "ok",
+              message: "Update Requests",
+            });
+          } else {
+            res.status(404).json({
+              status: "fail",
+              message: "Something Went Wrong",
+            });
+          }
+        } else if (type === "incoming") {
+          if (
+            user.incomingFriendRequests.includes(user2) &&
+            check.outgoingFriendRequests.includes(user._id)
+          ) {
+            let dm1 = user.incomingFriendRequests;
+            let dm2 = check.outgoingFriendRequests;
+            const index1 = dm1.indexOf(user2);
+            const index2 = dm1.indexOf(user._id);
+            dm1.splice(index1, 1);
+            dm2.splice(index2, 1);
+
+            await account.findByIdAndUpdate(user._id, {
+              incomingFriendRequests: dm1,
+            });
+
+            await account.findByIdAndUpdate(user2, {
+              outgoingFriendRequests: dm2,
+            });
+
+            res.status(200).json({
+              status: "ok",
+              message: "Update Requests",
+            });
+          } else {
+            res.status(404).json({
+              status: "fail",
+              message: "Something Went Wrong",
+            });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.acceptRequest = async (req, res) => {
+  try {
+    const user = req.user;
+    const user2 = req.body.id;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+    } else {
+      const check = await account.findOne({ _id: user2 });
+
+      if (!check) {
+        res.status(404).json({
+          status: "fail",
+          message: "No User Found",
+        });
+      } else {
+        if (
+          user.incomingFriendRequests.includes(user2) &&
+          check.outgoingFriendRequests.includes(user._id)
+        ) {
+          let dm1 = user.incomingFriendRequests;
+          let dm2 = check.outgoingFriendRequests;
+          const index1 = dm1.indexOf(user2);
+          const index2 = dm1.indexOf(user._id);
+          dm1.splice(index1, 1);
+          dm2.splice(index2, 1);
+
+          let friendList1 = user.friends;
+          let friendList2 = check.friends;
+          friendList1.push(user2);
+          friendList2.push(user._id);
+
+          await account.findByIdAndUpdate(user._id, {
+            incomingFriendRequests: dm1,
+            friends: friendList1,
+          });
+
+          await account.findByIdAndUpdate(user2, {
+            outgoingFriendRequests: dm2,
+            friends: friendList2,
+          });
+
+          res.status(200).json({
+            status: "ok",
+            message: "Update Requests",
+          });
+        } else {
+          res.status(404).json({
+            status: "fail",
+            message: "Something Went Wrong",
+          });
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};

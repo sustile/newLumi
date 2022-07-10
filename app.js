@@ -38,13 +38,46 @@ io.on("connection", async (socket) => {
       socket.to(room).emit("userOnline", room);
     });
 
+    userData.friends.forEach((from) => {
+      activeSockets.forEach((user) => {
+        if (user.userId === from) {
+          console.log(from);
+          socket.to(user.id).emit("checkOnline-Standalone_final", id, from);
+        }
+      });
+    });
+
     console.log(activeSockets);
   });
 
-  socket.on("update-dms", (id) => {
+  socket.on("update-dms", (id, room) => {
     activeSockets.forEach((user) => {
       if (user.userId === id) {
-        socket.to(user.id).emit("dm-update-event-client");
+        socket.to(user.id).emit("dm-update-event-client", id, room);
+      }
+    });
+  });
+
+  socket.on("checkOnline-Standalone", (id, from) => {
+    activeSockets.forEach((user) => {
+      if (user.userId === id) {
+        socket.to(user.id).emit("checkOnline-Standalone_request", id, from);
+      }
+    });
+  });
+
+  socket.on("checkOnline-Standalone_sendingData", (id, from) => {
+    activeSockets.forEach((user) => {
+      if (user.userId === from) {
+        socket.to(user.id).emit("checkOnline-Standalone_final", id, from);
+      }
+    });
+  });
+
+  socket.on("sendFriendRequest-Standalone", (id, from) => {
+    activeSockets.forEach((user) => {
+      if (user.userId === id) {
+        socket.to(user.id).emit("receiveFriendRequest-Standalone", id, from);
       }
     });
   });
@@ -61,6 +94,16 @@ io.on("connection", async (socket) => {
         });
         userData.house.forEach((room) => {
           socket.to(room).emit("user-left-server_check-vc", room, user.userId);
+        });
+
+        userData.friends.forEach((from) => {
+          activeSockets.forEach((user2) => {
+            if (user2.userId === from) {
+              socket
+                .to(user2.id)
+                .emit("goingOffline-Standalone_final", user.userId, from);
+            }
+          });
         });
       }
     });

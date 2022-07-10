@@ -87,4 +87,25 @@ router
   .route("/api/changeHouseData")
   .post(verify, uploadImage.single("image"), houseController.changeHouseData);
 
+// GET ALL FRIENDS list
+router.route("/api/getAllFriends").get(verify, accountController.getAllFriends);
+
+// GET PENDING REQUESTS list
+router
+  .route("/api/getAllPendingRequests")
+  .get(verify, accountController.getAllPendingRequests);
+
+// ADD FRIENDS
+router.route("/api/addFriends").post(verify, accountController.addFriends);
+
+// REJECT REQUESTS
+router
+  .route("/api/rejectRequest")
+  .post(verify, accountController.rejectRequest);
+
+// ACCEPT REQUEST
+router
+  .route("/api/acceptRequest")
+  .post(verify, accountController.acceptRequest);
+
 module.exports = router;
