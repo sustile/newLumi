@@ -21,10 +21,13 @@ exports.saveMessage = async (req, res) => {
       return;
     }
 
+    const x = new mongoose.Types.ObjectId().toHexString();
+
     if (user.dms.includes(body.dmId)) {
       await message.create(
         Object.assign(
           {
+            _id: x,
             userId: user._id,
             name: user.name,
             image: user.image,
@@ -33,8 +36,11 @@ exports.saveMessage = async (req, res) => {
         )
       );
 
+      // console.log(message);
+
       res.status(200).json({
         status: "ok",
+        id: x,
       });
     } else {
       res.status(400).json({

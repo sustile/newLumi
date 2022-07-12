@@ -23,6 +23,8 @@ const messageMain = document.querySelector(".message_main-cont");
 const dm_replyBar = document.querySelector(".dm_replybar");
 const house_replyBar = document.querySelector(".house_replybar");
 
+const dm_edit_bar = document.querySelector(".dm_edit_bar");
+
 const call_btn = document.querySelector(".call-user");
 const decline_btn = document.querySelector(".call-decline");
 const call_status = document.querySelector(".call_status");
@@ -219,21 +221,13 @@ dmUserId.addEventListener("click", async (e) => {
   navigator.clipboard.writeText(dmUserId.getAttribute("data-id"));
 });
 
-dmsCont.addEventListener("click", (e) => {
-  const target = e.target.closest("a");
-  if (!target) return;
-  e.preventDefault();
-  const user = target.querySelector(".text_main_user");
-
+const openADm = async function(room, target){
   closeAllWarppers();
 
   DmWrapper.style.display = "flex";
-  // resetDMbg();
-  // target.style.backgroundColor = "red";
+  const user = target.querySelector(".text_main_user");
+  activeCont = room;
 
-  if (target.getAttribute("data-dm") === activeCont) return;
-
-  activeCont = target.getAttribute("data-dm");
   dmHeader.textContent = user.textContent;
 
   slider.style.transform = "translateX(-100%)";
@@ -263,7 +257,6 @@ dmsCont.addEventListener("click", (e) => {
 
   house_members_cont.style.visibility = "hidden";
 
-  // sendImagesDm.style.visibility = "visible";
 
   // LAZY LOAD MESSAGES
 
@@ -272,6 +265,18 @@ dmsCont.addEventListener("click", (e) => {
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
   lazyLoadMessages(activeCont, currentDmPage, true);
+}
+
+dmsCont.addEventListener("click", (e) => {
+  const target = e.target.closest("a");
+  if (!target) return;
+  e.preventDefault();
+
+
+  if (target.getAttribute("data-dm") === activeCont) return;
+
+
+  openADm(target.getAttribute("data-dm"),target)
 });
 
 houseCont.addEventListener("click", (e) => {
@@ -639,7 +644,14 @@ messageFrom.addEventListener("submit", async (e) => {
     const replyMessage = dm_replyBar.getAttribute("data-replyMessage");
 
     if (isLink) {
-      saveMessage("reply-link", activeCont, message, replyTo, replyMessage);
+      const id = await saveMessage(
+        "reply-link",
+        activeCont,
+        message,
+        replyTo,
+        replyMessage
+      );
+
       displayMessage(
         "reply-link",
         message,
@@ -648,6 +660,8 @@ messageFrom.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
+        id,
+        user.id,
         true
       );
 
@@ -660,11 +674,19 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-        finalDateString
+        id,
+        user.id
       );
       closeReplyBarFunction();
     } else {
-      saveMessage("reply", activeCont, message, replyTo, replyMessage);
+      const id = await saveMessage(
+        "reply",
+        activeCont,
+        message,
+        replyTo,
+        replyMessage
+      );
+
       displayMessage(
         "reply",
         message,
@@ -673,6 +695,8 @@ messageFrom.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
+        id,
+        user.id,
         true
       );
 
@@ -685,12 +709,15 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-        finalDateString
+        id,
+        user.id
       );
       closeReplyBarFunction();
     }
   } else {
     if (isLink) {
+      const id = await saveMessage("normal-link", activeCont, message);
+
       displayMessage(
         "normal-link",
         message,
@@ -699,10 +726,10 @@ messageFrom.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
+        id,
+        user.id,
         true
       );
-
-      saveMessage("normal-link", activeCont, message);
 
       socket.emit(
         "send-message",
@@ -710,9 +737,15 @@ messageFrom.addEventListener("submit", async (e) => {
         message,
         user.name,
         activeCont,
-        user.image
+        user.image,
+        "",
+        "",
+        id,
+        user.id
       );
     } else {
+      const id = await saveMessage("normal", activeCont, message);
+
       displayMessage(
         "normal",
         message,
@@ -721,10 +754,10 @@ messageFrom.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
+        id,
+        user.id,
         true
       );
-
-      saveMessage("normal", activeCont, message);
 
       socket.emit(
         "send-message",
@@ -732,7 +765,11 @@ messageFrom.addEventListener("submit", async (e) => {
         message,
         user.name,
         activeCont,
-        user.image
+        user.image,
+        "",
+        "",
+        id,
+        user.id
       );
     }
   }
@@ -740,7 +777,17 @@ messageFrom.addEventListener("submit", async (e) => {
 
 socket.on(
   "receive-message",
-  async (type, userFrom, message, room, image, replyTo, replyMessage) => {
+  async (
+    type,
+    userFrom,
+    message,
+    room,
+    image,
+    replyTo,
+    replyMessage,
+    messageId,
+    userId
+  ) => {
     const dateSent = new Date();
     let hours =
       dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
@@ -786,6 +833,8 @@ socket.on(
         replyTo,
         replyMessage,
         finalDateString,
+        messageId,
+        userId,
         true
       );
     } else {
@@ -828,6 +877,8 @@ const displayMessage = async (
   replyTo,
   replyMessage,
   time,
+  messageId,
+  userId,
   scrollCheck = false,
   printType = "beforeend"
 ) => {
@@ -845,7 +896,7 @@ const displayMessage = async (
   message = finalMsg.join(" ");
 
   if (type === "reply") {
-    html = `<div class="reply_message">
+    html = `<div class="reply_message" data-message-id="${messageId}" data-user-id="${userId}">
     <div class="og">
       <span class="og-reply-arrow"
         ><i class="ph-arrow-bend-left-down-bold"></i
@@ -868,7 +919,7 @@ const displayMessage = async (
   </div>
   </div>`;
   } else if (type === "normal") {
-    html = `<div class="message">
+    html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
     <div class="img_cont">
       <img src="./../img/${image}" alt="" />
@@ -879,7 +930,7 @@ const displayMessage = async (
   <span class="message_cont">${message}</span>
 </div>`;
   } else if (type === "reply-link") {
-    html = `<div class="reply_message">
+    html = `<div class="reply_message"  data-message-id="${messageId}" data-user-id="${userId}">
     <div class="og">
       <span class="og-reply-arrow"
         ><i class="ph-arrow-bend-left-down-bold"></i
@@ -902,7 +953,7 @@ const displayMessage = async (
   </div>
   </div>`;
   } else if (type === "normal-link") {
-    html = `<div class="message">
+    html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
         <img src="./../img/${image}" alt="" />
@@ -913,7 +964,7 @@ const displayMessage = async (
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>`;
   } else if (type === "normal-image") {
-    html = `<div class="message">
+    html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
         <img src="./../img/${image}" alt="" />
@@ -960,37 +1011,44 @@ messageMain.addEventListener("scroll", async () => {
 // CHECK IF USER HAS REACH THE TOP
 
 const saveMessage = async (type, dmId, message, replyTo, replyMessage) => {
-  if (type === "reply" || type === "reply-link") {
-    const dm = await (
-      await fetch("/api/saveMessage", {
-        method: "POST",
-        body: JSON.stringify({
-          type,
-          dmId,
-          message,
-          replyTo,
-          replyMessage,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-  } else if (type === "normal" || type === "normal-link") {
-    const dm = await (
-      await fetch("/api/saveMessage", {
-        method: "POST",
-        body: JSON.stringify({
-          type,
-          dmId,
-          message,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-  }
+  return new Promise(async (res) => {
+    if (type === "reply" || type === "reply-link") {
+      const dm = await (
+        await fetch("/api/saveMessage", {
+          method: "POST",
+          body: JSON.stringify({
+            type,
+            dmId,
+            message,
+            replyTo,
+            replyMessage,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+
+      console.log(dm.id);
+      res(dm.id);
+    } else if (type === "normal" || type === "normal-link") {
+      const dm = await (
+        await fetch("/api/saveMessage", {
+          method: "POST",
+          body: JSON.stringify({
+            type,
+            dmId,
+            message,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+
+      res(dm.id);
+    }
+  });
 };
 
 const monthLoadList = [
@@ -1072,6 +1130,8 @@ const lazyLoadMessages = async (
           el.replyTo,
           el.replyMessage,
           finalDateString,
+          el._id,
+          el.userId,
           true,
           "afterbegin"
         );
@@ -1084,6 +1144,8 @@ const lazyLoadMessages = async (
           "",
           "",
           finalDateString,
+          el._id,
+          el.userId,
           true,
           "afterbegin"
         );
@@ -1127,6 +1189,8 @@ const lazyLoadMessages = async (
           el.replyTo,
           el.replyMessage,
           finalDateString,
+          el._id,
+          el.userId,
           false,
           "afterbegin"
         );
@@ -1139,6 +1203,8 @@ const lazyLoadMessages = async (
           "",
           "",
           finalDateString,
+          el._id,
+          el.userId,
           false,
           "afterbegin"
         );
@@ -2414,6 +2480,10 @@ const dm_MessageContextMenu_reply = dm_MessageContextMenu.querySelector(
   ".context_message-reply"
 );
 
+const dm_MessageContextMenu_editMessage = dm_MessageContextMenu.querySelector(
+  ".context_message-editMessage"
+);
+
 const house_MessageContextMenu = document.querySelector(
   ".house-message-contextMenu"
 );
@@ -2493,6 +2563,12 @@ const closeHouseReplyBarFunction = async () => {
   house_replyBar.style.visibility = "hidden";
 };
 
+const closeDmEditBarFunction = async () => {
+  dm_edit_bar.setAttribute("data-editMessage", "");
+  dm_edit_bar.setAttribute("data-messageId", "");
+  dm_edit_bar.style.visibility = "hidden";
+};
+
 houseMessageCont.addEventListener("contextmenu", async (e) => {
   const target = e.target.closest(".message");
   if (!target) return;
@@ -2547,6 +2623,13 @@ messageMain.addEventListener("contextmenu", async (e) => {
 
   closeAllContextMenus();
 
+  // CHECK IF THAT MESSAGE BELONGS TO USER
+  if (target.getAttribute("data-user-id") !== user.id) {
+    dm_MessageContextMenu_editMessage.style.display = "none";
+  } else {
+    dm_MessageContextMenu_editMessage.style.display = "flex";
+  }
+
   let x = e.pageX,
     y = e.pageY,
     winWidth = window.innerWidth,
@@ -2568,6 +2651,11 @@ messageMain.addEventListener("contextmenu", async (e) => {
     closeReplyBarFunction();
   });
 
+  const close_dm_editbar = dm_edit_bar.querySelector(".close_dm_editbar");
+  close_dm_editbar.addEventListener("click", () => {
+    closeDmEditBarFunction();
+  });
+
   dm_MessageContextMenu_reply.addEventListener("click", async () => {
     // console.log(target);
     const userCont = target.querySelector(".message_user");
@@ -2576,11 +2664,33 @@ messageMain.addEventListener("contextmenu", async (e) => {
     // console.log(userCont);
     const user = userCont.querySelector("span");
 
+    closeDmEditBarFunction();
+
     const spanText = dm_replyBar.querySelector("span");
     spanText.textContent = `Replying to ${user.textContent}`;
     dm_replyBar.setAttribute("data-replyTo", user.textContent);
     dm_replyBar.setAttribute("data-replyMessage", message.textContent);
     dm_replyBar.style.visibility = "visible";
+
+    dm_MessageContextMenu.style.opacity = "0";
+    await wait(0.1);
+    dm_MessageContextMenu.style.visibility = "hidden";
+  });
+
+  dm_MessageContextMenu_editMessage.addEventListener("click", async () => {
+    const messageId = target.getAttribute("data-id");
+
+    let message = target.querySelector(".message_cont");
+
+    closeReplyBarFunction();
+
+    dm_edit_bar.setAttribute("data-editMessage", message.textContent);
+    dm_edit_bar.setAttribute(
+      "data-messageId",
+      target.getAttribute("data-message-id")
+    );
+
+    dm_edit_bar.style.visibility = "visible";
 
     dm_MessageContextMenu.style.opacity = "0";
     await wait(0.1);
@@ -3669,6 +3779,9 @@ pendingRequestsMainCont.addEventListener("click", async (e) => {
       );
 
       loadFriendsPending();
+
+
+
       if (!ongoingError) {
         await popupFriends(`You are Now Friends with ${name.textContent}`);
       }
@@ -3736,9 +3849,11 @@ allFriendsCont.addEventListener("contextmenu", (e) => {
     if (dm.status === "fail") {
       if (dm.message === "Duplicate Dms") {
         closeAllContextMenus();
-        if (!ongoingError) {
-          await popupError("Duplicate Dms");
-        }
+          dmsCont.querySelectorAll("a").forEach((dm) => {
+            if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
+              openADm(dm.getAttribute("data-dm"),dm)
+            }
+          });
       } else {
         closeAllContextMenus();
         if (!ongoingError) {
@@ -3750,7 +3865,14 @@ allFriendsCont.addEventListener("contextmenu", (e) => {
       closeAllContextMenus();
       socket.emit("update-dms", target.getAttribute("data-user-id"), dm.dmId);
       loadDms();
+      await wait(2)
       setUserOnline(dm.dmId);
+
+      dmsCont.querySelectorAll("a").forEach((dm) => {
+        if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
+          openADm(dm.getAttribute("data-dm"),dm)
+        }
+      });
     }
   });
 });
@@ -3796,22 +3918,24 @@ onlineFriendsCont.addEventListener("contextmenu", (e) => {
   openDms.addEventListener("click", async (e) => {
     e.stopImmediatePropagation();
     const dm = await (
-      await fetch("/api/addNewDm", {
-        method: "POST",
-        body: JSON.stringify({
-          person2: target.getAttribute("data-user-id"),
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+        await fetch("/api/addNewDm", {
+          method: "POST",
+          body: JSON.stringify({
+            person2: target.getAttribute("data-user-id"),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
     ).json();
     if (dm.status === "fail") {
       if (dm.message === "Duplicate Dms") {
         closeAllContextMenus();
-        if (!ongoingError) {
-          await popupError("Duplicate Dms");
-        }
+        dmsCont.querySelectorAll("a").forEach((dm) => {
+          if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
+            openADm(dm.getAttribute("data-dm"),dm)
+          }
+        });
       } else {
         closeAllContextMenus();
         if (!ongoingError) {
@@ -3823,7 +3947,14 @@ onlineFriendsCont.addEventListener("contextmenu", (e) => {
       closeAllContextMenus();
       socket.emit("update-dms", target.getAttribute("data-user-id"), dm.dmId);
       loadDms();
+      await wait(2)
       setUserOnline(dm.dmId);
+
+      dmsCont.querySelectorAll("a").forEach((dm) => {
+        if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
+          openADm(dm.getAttribute("data-dm"),dm)
+        }
+      });
     }
   });
 });

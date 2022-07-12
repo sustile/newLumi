@@ -859,7 +859,8 @@ body {
   transform: translateY(-20%);
   z-index: 5;
 }
-.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar {
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar,
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_edit_bar {
   width: 95%;
   background-color: var(--primary-green);
   border-radius: 10rem;
@@ -871,16 +872,23 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar span {
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar span,
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_edit_bar span {
   font-family: "Rubik", sans-serif;
   font-weight: 500;
   font-size: 1.4rem;
   color: #333;
 }
-.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar .close_dm_replybar {
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar .close_dm_replybar,
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar .close_dm_editbar,
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_edit_bar .close_dm_replybar,
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_edit_bar .close_dm_editbar {
   font-size: 2rem;
   color: #333;
   cursor: pointer;
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .message_enter .dm_replybar {
+  transform: translateY(118%);
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_enter form {
   display: flex;
