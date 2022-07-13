@@ -56,6 +56,49 @@ exports.saveMessage = async (req, res) => {
   }
 };
 
+exports.editMessage = async (req, res) => {
+  try {
+    const body = req.body;
+    const user = req.user;
+
+
+    if (!body) {
+      res.status(400).json({
+        status: "fail",
+        message: "No Values Provided",
+      });
+      return;
+    }
+
+
+    if (user.dms.includes(body.dmId)) {
+
+      await message.findByIdAndUpdate({
+        _id : body.messageId
+      }, {
+        message : body.message,
+        type : body.type
+      })
+
+
+      res.status(200).json({
+        status: "ok",
+      });
+    } else {
+      res.status(400).json({
+        status: "fail",
+        message: "User Doesn't Have Access to this DM",
+      });
+    }
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: "Something Went Wrong",
+    });
+  }
+};
+
+
 exports.lazyLoadMessages = async (req, res) => {
   try {
     const body = req.body;

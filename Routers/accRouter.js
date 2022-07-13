@@ -59,6 +59,9 @@ router
 // ADD A NEW MESSAGE FOR THAT DM
 router.route("/api/saveMessage").post(verify, messageController.saveMessage);
 
+// EDIT A DM MESSAGE
+router.route("/api/editMessage").post(verify, messageController.editMessage);
+
 // LAZY LOAD MESSAGES
 router
   .route("/api/lazyLoadMessages")
@@ -71,6 +74,11 @@ router.route("/api/joinhouse").post(verify, houseController.joinHouse);
 router
   .route("/api/saveHouseMessage")
   .post(verify, houseMessageController.saveHouseMessage);
+
+//EDIT HOUSE MESSAGE
+router
+    .route("/api/editHouseMessage")
+    .post(verify, houseMessageController.editHouseMessage);
 
 // LAZY LOAD HOUSE MESSAGES
 router

@@ -1075,9 +1075,6 @@ body {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            // position: fixed;
-            // top: 0;
-            // transform: translateY(-150%);
 
             span {
               font-family: "Rubik", sans-serif;
@@ -1506,7 +1503,7 @@ body {
             transform: translateY(-20%);
             z-index: 5;
 
-            .house_replybar {
+            .house_replybar,.house_edit_bar {
               width: 95%;
               background-color: var(--primary-green);
               border-radius: 10rem;
@@ -1525,11 +1522,15 @@ body {
                 color: #333;
               }
 
-              .close_dm_replybar {
+              .close_dm_replybar,.close_house_editbar {
                 font-size: 2rem;
                 color: #333;
                 cursor: pointer;
               }
+            }
+
+            .house_replybar {
+              transform: translateY(118%);
             }
 
             form {

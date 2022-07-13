@@ -25,6 +25,9 @@ const house_replyBar = document.querySelector(".house_replybar");
 
 const dm_edit_bar = document.querySelector(".dm_edit_bar");
 
+const house_edit_bar = document.querySelector(".house_edit_bar");
+
+
 const call_btn = document.querySelector(".call-user");
 const decline_btn = document.querySelector(".call-decline");
 const call_status = document.querySelector(".call_status");
@@ -222,6 +225,8 @@ dmUserId.addEventListener("click", async (e) => {
 });
 
 const openADm = async function(room, target){
+  closeDmEditBarFunction()
+  closeHouseEditBarFunction()
   closeAllWarppers();
 
   DmWrapper.style.display = "flex";
@@ -276,6 +281,8 @@ dmsCont.addEventListener("click", (e) => {
   if (target.getAttribute("data-dm") === activeCont) return;
 
 
+  closeDmEditBarFunction()
+  closeHouseEditBarFunction()
   openADm(target.getAttribute("data-dm"),target)
 });
 
@@ -714,7 +721,70 @@ messageFrom.addEventListener("submit", async (e) => {
       );
       closeReplyBarFunction();
     }
-  } else {
+  }
+  else if(dm_edit_bar.style.visibility === "visible"){
+    if (isLink) {
+      const id = dm_edit_bar.getAttribute("data-messageId")
+      await saveMessage("normal-link_edited", activeCont, message, "", "", id);
+
+      displayMessage(
+          "normal-link_edited",
+          message,
+          user.name,
+          user.image,
+          "",
+          "",
+          finalDateString,
+          id,
+          user.id,
+          true
+      );
+
+      socket.emit(
+          "send-message",
+          "normal-link_edited",
+          message,
+          user.name,
+          activeCont,
+          user.image,
+          "",
+          "",
+          id,
+          user.id
+      );
+    } else {
+      const id = dm_edit_bar.getAttribute("data-messageId")
+      await saveMessage("normal_edited", activeCont, message, "", "", id);
+
+      displayMessage(
+          "normal_edited",
+          message,
+          user.name,
+          user.image,
+          "",
+          "",
+          finalDateString,
+          id,
+          user.id,
+          true
+      );
+
+      socket.emit(
+          "send-message",
+          "normal_edited",
+          message,
+          user.name,
+          activeCont,
+          user.image,
+          "",
+          "",
+          id,
+          user.id
+      );
+    }
+    closeDmEditBarFunction();
+  }
+  else {
     if (isLink) {
       const id = await saveMessage("normal-link", activeCont, message);
 
@@ -986,6 +1056,83 @@ const displayMessage = async (
     messageMain.insertAdjacentElement(printType, element);
     return;
   }
+  else if (type === "normal-link_edited") {
+    let check = false
+
+    messageMain.querySelectorAll("div").forEach(el => {
+      if(el.getAttribute("data-message-id") === messageId){
+        el.innerHTML = `
+    <div class="message_user">
+      <div class="img_cont">
+        <img src="./../img/${image}" alt="" />
+      </div>
+      <span>${name}</span>
+      <p>${time}</p>
+      <p>[Edited Message]</p>
+    </div>
+    <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
+`
+        check = true
+      }
+    })
+
+    if(!check){
+      html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
+    <div class="message_user">
+      <div class="img_cont">
+        <img src="./../img/${image}" alt="" />
+      </div>
+      <span>${name}</span>
+      <p>${time}</p>
+      <p>[Edited Message]</p>
+    </div>
+    <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
+  </div>`;
+    }
+    else{
+      return
+
+    }
+  }
+  else if (type === "normal_edited") {
+    let check = false
+    messageMain.querySelectorAll("div").forEach(el => {
+      if(el.getAttribute("data-message-id") === messageId){
+        el.innerHTML = `
+  <div class="message_user">
+    <div class="img_cont">
+      <img src="./../img/${image}" alt="" />
+    </div>
+    <span>${name}</span>
+    <p>${time}</p>
+    <p>[Edited Message]</p>
+  </div>
+  <span class="message_cont">${message}</span>
+`
+        check = true
+      }
+    })
+
+
+    if(!check){
+      html = `
+      <div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
+  <div class="message_user">
+    <div class="img_cont">
+      <img src="./../img/${image}" alt="" />
+    </div>
+    <span>${name}</span>
+    <p>${time}</p>
+    <p>[Edited Message]</p>
+  </div>
+  <span class="message_cont">${message}</span>
+</div>
+      `
+    }
+    else{
+      return
+    }
+  }
 
   messageMain.insertAdjacentHTML(printType, html);
 
@@ -1010,7 +1157,7 @@ messageMain.addEventListener("scroll", async () => {
 
 // CHECK IF USER HAS REACH THE TOP
 
-const saveMessage = async (type, dmId, message, replyTo, replyMessage) => {
+const saveMessage = async (type, dmId, message, replyTo, replyMessage,messageId) => {
   return new Promise(async (res) => {
     if (type === "reply" || type === "reply-link") {
       const dm = await (
@@ -1029,7 +1176,6 @@ const saveMessage = async (type, dmId, message, replyTo, replyMessage) => {
         })
       ).json();
 
-      console.log(dm.id);
       res(dm.id);
     } else if (type === "normal" || type === "normal-link") {
       const dm = await (
@@ -1044,6 +1190,24 @@ const saveMessage = async (type, dmId, message, replyTo, replyMessage) => {
             "Content-Type": "application/json",
           },
         })
+      ).json();
+
+      res(dm.id);
+    }
+    else if(type === "normal-link_edited" || type === "normal_edited"){
+      const dm = await (
+          await fetch("/api/editMessage", {
+            method: "POST",
+            body: JSON.stringify({
+              type,
+              dmId,
+              message,
+              messageId,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
       ).json();
 
       res(dm.id);
@@ -1135,7 +1299,7 @@ const lazyLoadMessages = async (
           true,
           "afterbegin"
         );
-      } else if (el.type === "normal" || el.type === "normal-link") {
+      } else if (el.type === "normal" || el.type === "normal-link" || el.type ==="normal_edited" ||el.type ==="normal-link_edited") {
         displayMessage(
           el.type,
           el.message,
@@ -1306,6 +1470,8 @@ houseCont.addEventListener("click", (e) => {
   if (!target) return;
   e.preventDefault();
 
+  closeDmEditBarFunction()
+  closeHouseEditBarFunction()
   closeAllWarppers();
   houseWrapper.style.display = "flex";
 
@@ -1396,6 +1562,8 @@ const displayHouseMessage = async (
   replyTo,
   replyMessage,
   time,
+  messageId,
+  userId,
   scrollCheck = false,
   printType = "beforeend"
 ) => {
@@ -1411,7 +1579,7 @@ const displayHouseMessage = async (
   // console.log(time);
 
   if (type === "reply") {
-    html = `<div class="reply_message">
+    html = `<div class="reply_message" data-message-id="${messageId}" data-user-id="${userId}">
     <div class="og">
       <span class="og-reply-arrow"
         ><i class="ph-arrow-bend-left-down-bold"></i
@@ -1434,7 +1602,7 @@ const displayHouseMessage = async (
   </div>
   </div>`;
   } else if (type === "normal") {
-    html = `<div class="message">
+    html = `<div class="message" data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
     <div class="img_cont">
       <img src="./../img/${image}" alt="" />
@@ -1445,7 +1613,7 @@ const displayHouseMessage = async (
   <span class="message_cont">${message}</span>
 </div>`;
   } else if (type === "reply-link") {
-    html = `<div class="reply_message">
+    html = `<div class="reply_message" data-message-id="${messageId}" data-user-id="${userId}">
     <div class="og">
       <span class="og-reply-arrow"
         ><i class="ph-arrow-bend-left-down-bold"></i
@@ -1468,7 +1636,7 @@ const displayHouseMessage = async (
   </div>
   </div>`;
   } else if (type === "normal-link") {
-    html = `<div class="message">
+    html = `<div class="message" data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
         <img src="./../img/${image}" alt="" />
@@ -1478,6 +1646,83 @@ const displayHouseMessage = async (
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>`;
+  }
+  else if (type === "normal-link_edited"){
+    let check = false
+
+    houseMessageCont.querySelectorAll("div").forEach(el => {
+      if(el.getAttribute("data-message-id") === messageId){
+        el.innerHTML = `
+    <div class="message_user">
+      <div class="img_cont">
+        <img src="./../img/${image}" alt="" />
+      </div>
+      <span>${name}</span>
+      <p>${time}</p>
+      <p>[Edited Message]</p>
+    </div>
+    <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
+`
+        check = true
+      }
+    })
+
+    if(!check){
+      html = `<div class="message" data-message-id="${messageId}" data-user-id="${userId}">
+    <div class="message_user">
+      <div class="img_cont">
+        <img src="./../img/${image}" alt="" />
+      </div>
+      <span>${name}</span>
+      <p>${time}</p>
+      <p>[Edited Message]</p>
+    </div>
+    <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
+  </div>`;
+    }
+    else{
+      return
+
+    }
+  }
+  else if (type === "normal_edited"){
+    let check = false
+    houseMessageCont.querySelectorAll("div").forEach(el => {
+      if(el.getAttribute("data-message-id") === messageId){
+        el.innerHTML = `
+  <div class="message_user">
+    <div class="img_cont">
+      <img src="./../img/${image}" alt="" />
+    </div>
+    <span>${name}</span>
+    <p>${time}</p>
+    <p>[Edited Message]</p>
+  </div>
+  <span class="message_cont">${message}</span>
+`
+        check = true
+      }
+    })
+
+
+    if(!check){
+      html = `
+      <div class="message" data-message-id="${messageId}" data-user-id="${userId}">
+  <div class="message_user">
+    <div class="img_cont">
+      <img src="./../img/${image}" alt="" />
+    </div>
+    <span>${name}</span>
+    <p>${time}</p>
+    <p>[Edited Message]</p>
+  </div>
+  <span class="message_cont">${message}</span>
+</div>
+      `
+    }
+    else{
+      return
+    }
   }
 
   houseMessageCont.insertAdjacentHTML(printType, html);
@@ -1531,7 +1776,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
     const replyMessage = house_replyBar.getAttribute("data-replyMessage");
 
     if (isLink) {
-      saveHouseMessage(
+      const id = await saveHouseMessage(
         "reply-link",
         activeCont,
         message,
@@ -1546,6 +1791,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
+        id,
+        user.id,
         true
       );
 
@@ -1558,11 +1805,12 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-        finalDateString
+          id,
+          user.id,
       );
       closeHouseReplyBarFunction();
     } else {
-      saveHouseMessage("reply", activeCont, message, replyTo, replyMessage);
+      const id = await saveHouseMessage("reply", activeCont, message, replyTo, replyMessage);
       displayHouseMessage(
         "reply",
         message,
@@ -1571,6 +1819,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
+          id,
+          user.id,
         true
       );
 
@@ -1582,34 +1832,111 @@ houseMessageForm.addEventListener("submit", async (e) => {
         activeCont,
         user.image,
         replyTo,
-        replyMessage
+        replyMessage,
+          id,
+          user.id
       );
       closeHouseReplyBarFunction();
     }
-  } else {
+  }
+  else if(house_edit_bar.style.visibility === "visible") {
     if (isLink) {
+      const id = house_edit_bar.getAttribute("data-messageId")
+      await saveHouseMessage("normal-link_edited", activeCont, message,"","", id);
+
       displayHouseMessage(
-        "normal-link",
-        message,
-        user.name,
-        user.image,
-        "",
-        "",
-        finalDateString,
-        true
+          "normal-link_edited",
+          message,
+          user.name,
+          user.image,
+          "",
+          "",
+          finalDateString,
+          id,
+          user.id,
+          true
       );
 
-      saveHouseMessage("normal-link", activeCont, message);
 
       socket.emit(
-        "send-house-message",
-        "normal-link",
-        message,
-        user.name,
-        activeCont,
-        user.image
+          "send-house-message",
+          "normal-link_edited",
+          message,
+          user.name,
+          activeCont,
+          user.image,
+          "",
+          "",
+          id,
+          user.id
       );
     } else {
+      const id = house_edit_bar.getAttribute("data-messageId")
+      await saveHouseMessage("normal_edited", activeCont, message,"","", id);
+
+      displayHouseMessage(
+          "normal_edited",
+          message,
+          user.name,
+          user.image,
+          "",
+          "",
+          finalDateString,
+          id,
+          user.id,
+          true
+      );
+
+
+      socket.emit(
+          "send-house-message",
+          "normal_edited",
+          message,
+          user.name,
+          activeCont,
+          user.image,
+          "",
+          "",
+          id,
+          user.id
+      );
+    }
+    closeHouseEditBarFunction()
+
+  }
+  else {
+    if (isLink) {
+      const id = await saveHouseMessage("normal-link", activeCont, message);
+
+      displayHouseMessage(
+        "normal-link",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        finalDateString,
+          id,
+          user.id,
+        true
+      );
+
+
+      socket.emit(
+        "send-house-message",
+        "normal-link",
+        message,
+        user.name,
+        activeCont,
+        user.image,
+          "",
+          "",
+          id,
+          user.id
+      );
+    } else {
+      const id = await saveHouseMessage("normal", activeCont, message);
+
       displayHouseMessage(
         "normal",
         message,
@@ -1618,10 +1945,11 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
+          id,
+          user.id,
         true
       );
 
-      saveHouseMessage("normal", activeCont, message);
 
       socket.emit(
         "send-house-message",
@@ -1629,7 +1957,11 @@ houseMessageForm.addEventListener("submit", async (e) => {
         message,
         user.name,
         activeCont,
-        user.image
+        user.image,
+          "",
+          "",
+          id,
+          user.id
       );
     }
   }
@@ -1645,39 +1977,64 @@ const saveHouseMessage = async (
   houseId,
   message,
   replyTo,
-  replyMessage
+  replyMessage,
+  messageId
 ) => {
-  if (type === "reply" || type === "reply-link") {
-    const dm = await (
-      await fetch("/api/saveHouseMessage", {
-        method: "POST",
-        body: JSON.stringify({
-          type,
-          houseId,
-          message,
-          replyTo,
-          replyMessage,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-  } else if (type === "normal" || type === "normal-link") {
-    const dm = await (
-      await fetch("/api/saveHouseMessage", {
-        method: "POST",
-        body: JSON.stringify({
-          type,
-          houseId,
-          message,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-  }
+  return new Promise(async (res) => {
+    if (type === "reply" || type === "reply-link") {
+      const dm = await (
+          await fetch("/api/saveHouseMessage", {
+            method: "POST",
+            body: JSON.stringify({
+              type,
+              houseId,
+              message,
+              replyTo,
+              replyMessage,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+      ).json();
+
+      res(dm.id)
+    } else if (type === "normal" || type === "normal-link") {
+      const dm = await (
+          await fetch("/api/saveHouseMessage", {
+            method: "POST",
+            body: JSON.stringify({
+              type,
+              houseId,
+              message,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+      ).json();
+
+      res(dm.id)
+    }
+    else if(type === "normal-link_edited" || type === "normal_edited"){
+      const dm = await (
+          await fetch("/api/editHouseMessage", {
+            method: "POST",
+            body: JSON.stringify({
+              type,
+              houseId,
+              message,
+              messageId,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+      ).json();
+
+      res(dm.id);
+    }
+  })
 };
 
 // CHECK IF USER HAS REACH THE TOP
@@ -1739,7 +2096,7 @@ const lazyLoadHouseMessages = async (
         monthLoadList[dateSent.getMonth()]
       }, ${dateSent.getFullYear()}`;
 
-      if (el.type === "reply" || el.type === "reply-link") {
+      if (el.type === "reply" || el.type === "reply-link" ) {
         displayHouseMessage(
           el.type,
           el.message,
@@ -1748,10 +2105,12 @@ const lazyLoadHouseMessages = async (
           el.replyTo,
           el.replyMessage,
           finalDateString,
+            el._id,
+            el.userId,
           true,
           "afterbegin"
         );
-      } else if (el.type === "normal" || el.type === "normal-link") {
+      } else if (el.type === "normal" || el.type === "normal-link" || el.type ==="normal_edited" ||el.type ==="normal-link_edited") {
         displayHouseMessage(
           el.type,
           el.message,
@@ -1760,6 +2119,8 @@ const lazyLoadHouseMessages = async (
           "",
           "",
           finalDateString,
+            el._id,
+            el.userId,
           true,
           "afterbegin"
         );
@@ -1803,6 +2164,8 @@ const lazyLoadHouseMessages = async (
           el.replyTo,
           el.replyMessage,
           finalDateString,
+            id,
+            user.id,
           false,
           "afterbegin"
         );
@@ -1815,6 +2178,8 @@ const lazyLoadHouseMessages = async (
           "",
           "",
           finalDateString,
+            id,
+            user.id,
           false,
           "afterbegin"
         );
@@ -1825,7 +2190,7 @@ const lazyLoadHouseMessages = async (
 
 socket.on(
   "receive-house-message",
-  async (type, userFrom, message, room, image, replyTo, replyMessage) => {
+  async (type, userFrom, message, room, image, replyTo, replyMessage,messageId, userId) => {
     const dateSent = new Date();
     let hours =
       dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
@@ -1873,6 +2238,8 @@ socket.on(
         replyTo,
         replyMessage,
         finalDateString,
+          messageId,
+          userId,
         true
       );
 
@@ -2491,6 +2858,9 @@ const house_MessageContextMenu_reply = house_MessageContextMenu.querySelector(
   ".context_message-reply"
 );
 
+const house_messageContextMenu_editMessage = house_MessageContextMenu.querySelector(".context_house-editMessage")
+
+
 const house_members_usersCopyId = document.querySelector(
   ".house_member-list-copy-id"
 );
@@ -2569,12 +2939,24 @@ const closeDmEditBarFunction = async () => {
   dm_edit_bar.style.visibility = "hidden";
 };
 
+const closeHouseEditBarFunction = async () => {
+  house_edit_bar.setAttribute("data-editMessage", "");
+  house_edit_bar.setAttribute("data-messageId", "");
+  house_edit_bar.style.visibility = "hidden";
+};
+
 houseMessageCont.addEventListener("contextmenu", async (e) => {
   const target = e.target.closest(".message");
   if (!target) return;
   e.preventDefault();
 
   closeAllContextMenus();
+
+  if (target.getAttribute("data-user-id") !== user.id) {
+    house_messageContextMenu_editMessage.style.display = "none";
+  } else {
+    house_messageContextMenu_editMessage.style.display = "flex";
+  }
 
   let x = e.pageX,
     y = e.pageY,
@@ -2597,6 +2979,11 @@ houseMessageCont.addEventListener("contextmenu", async (e) => {
     closeHouseReplyBarFunction();
   });
 
+  const close_house_editbar = house_edit_bar.querySelector(".close_house_editbar");
+  close_house_editbar.addEventListener("click", () => {
+    closeHouseEditBarFunction();
+  });
+
   house_MessageContextMenu_reply.addEventListener("click", async () => {
     // console.log(target);
     const userCont = target.querySelector(".message_user");
@@ -2614,6 +3001,29 @@ houseMessageCont.addEventListener("contextmenu", async (e) => {
     await wait(0.1);
     house_MessageContextMenu.style.visibility = "hidden";
   });
+
+  house_messageContextMenu_editMessage.addEventListener("click", async () => {
+    const messageId = target.getAttribute("data-id");
+
+    let message = target.querySelector(".message_cont");
+
+    if(!message) message = target.querySelector("a")
+
+    closeHouseReplyBarFunction();
+
+
+    house_edit_bar.setAttribute("data-editMessage", message.textContent);
+    house_edit_bar.setAttribute(
+        "data-messageId",
+        target.getAttribute("data-message-id")
+    );
+
+    house_edit_bar.style.visibility = "visible";
+
+    house_MessageContextMenu.style.opacity = "0";
+    await wait(0.1);
+    house_MessageContextMenu.style.visibility = "hidden";
+  })
 });
 
 messageMain.addEventListener("contextmenu", async (e) => {
@@ -2682,7 +3092,10 @@ messageMain.addEventListener("contextmenu", async (e) => {
 
     let message = target.querySelector(".message_cont");
 
+    if(!message) message = target.querySelector("a")
+
     closeReplyBarFunction();
+
 
     dm_edit_bar.setAttribute("data-editMessage", message.textContent);
     dm_edit_bar.setAttribute(
