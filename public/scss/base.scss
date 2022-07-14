@@ -1,9 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Rubik:wght@300;400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
 :root {
-  --primary-bg: #161b22;
-  --primary-green: #04e762;
-  --primary-red: #dc0073;
+  --primary-bg: #111;
+  --primary-green: #00ce7c;
+  --primary-red: #f44c7f;
+  --secondary-bg : #1a1a1a;
+  --primary-messsage-cont: #1c1c1c;
 }
 
 ::-webkit-scrollbar {
@@ -31,7 +35,7 @@ html {
 }
 
 body {
-  font-family: " Rubik", sans-serif;
+  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
   background-color: var(--primary-bg);
   // max-height: 100vh;
   // max-width: 100vw;
@@ -39,6 +43,8 @@ body {
   // width: 100vw;
   // padding: 2rem;
   // overflow: hidden;
+  font-variant: no-common-ligatures !important;
+  font-weight: 500 !important;
 }
 
 .drag {
@@ -99,7 +105,8 @@ body {
 
   .houses {
     // width: 14rem;
-    background-color: #333;
+    //background-color: #333;
+    background-color: var(--primary-bg);
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -186,7 +193,7 @@ body {
       align-items: center;
       gap: 1rem;
       .main-heading {
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 2rem;
         font-weight: 400;
         color: var(--primary-green);
@@ -200,7 +207,8 @@ body {
   }
   .dms {
     // padding: 1.5rem 1rem;
-    background-color: rgb(65, 65, 65);
+    //background-color: rgb(65, 65, 65);
+    background-color: var(--secondary-bg);
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -216,7 +224,7 @@ body {
       gap: 0.5rem;
       // width: 25rem;
       overflow-y: auto;
-      height: 75vh;
+      height: 82vh;
       justify-content: flex-start;
       // margin-top: 1rem;
       // background-color: red;
@@ -251,7 +259,7 @@ body {
             // background-color: var(--primary-green);
             background-color: rgb(102, 102, 102);
             padding: 0.5rem;
-            border: 3px solid rgb(65, 65, 65);
+            border: 3px solid var(--secondary-bg);
             border-radius: 10rem;
             transition: all 0.2s ease;
             position: absolute;
@@ -269,7 +277,7 @@ body {
           &_user {
             color: #ddd;
             font-size: 1.8rem;
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 500;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -306,8 +314,8 @@ body {
           color: #161b22;
           background-image: linear-gradient(
             70deg,
-            #161b22 0%,
-            #161b22 50%,
+            var(--primary-red) 0%,
+            var(--primary-red) 50%,
             transparent 50%
           );
           background-size: 0%;
@@ -328,8 +336,12 @@ body {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      width: 100%;
-      background-color: rgb(41, 41, 41);
+      width: 90%;
+      margin: 0 auto;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      background-color: var(--primary-bg);
+      border: 3px solid var(--primary-green);
       padding: 2rem 0rem;
       // margin-top: 1rem;
 
@@ -342,8 +354,9 @@ body {
         justify-content: center;
         align-items: center;
         .createDm {
+          width: 90%;
           text-decoration: none;
-          background-color: rgb(51, 51, 51);
+          background-color: var(--secondary-bg);
           padding: 0.5rem 3rem;
           // border-radius: 50%;
           border-radius: 5px;
@@ -395,7 +408,7 @@ body {
 
           span {
             font-size: 1.8rem;
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
           }
         }
       }
@@ -432,7 +445,7 @@ body {
 
           span {
             width: 15rem;
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             color: #ddd;
             font-size: 1.8rem;
             font-weight: 500;
@@ -470,7 +483,8 @@ body {
   .side-bar {
     width: 5vw;
     height: 100vh;
-    background-color: rgb(41, 41, 41);
+    background-color: var(--primary-bg);
+    //background-color: rgb(41, 41, 41);
     position: relative;
 
     .nav_headers {
@@ -484,7 +498,7 @@ body {
       // transform: rotateX(90deg);
       gap: 1rem;
       .main-heading {
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 3rem;
         font-weight: 400;
         color: var(--primary-green);
@@ -509,7 +523,7 @@ body {
       }
 
       .dev {
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         color: #ddd;
         font-weight: 500;
         font-size: 1.2rem;
@@ -548,7 +562,7 @@ body {
           border: 0;
           position: relative;
 
-          background-color: #333;
+          background-color: var(--secondary-bg);
           // color: var(--primary-red);
           padding: 1rem;
           border-radius: 5px;
@@ -615,7 +629,7 @@ body {
         padding: 1rem 3rem;
         // padding-left: 3rem;
         color: #ddd;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         font-size: 2.5rem;
       }
@@ -652,7 +666,7 @@ body {
         cursor: pointer;
         right: 3rem;
         top: 6rem;
-        background-color: #161b22;
+        background-color: var(--primary-bg);
         padding: 1.5rem;
         border-radius: 50%;
         z-index: 10;
@@ -671,7 +685,7 @@ body {
         cursor: pointer;
         right: 3rem;
         top: 6rem;
-        background-color: #161b22;
+        background-color: var(--primary-bg);
         padding: 1.5rem;
         border-radius: 50%;
         z-index: 15;
@@ -725,7 +739,7 @@ body {
       p {
         color: var(--primary-green);
         font-size: 2rem;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         text-align: right;
         text-overflow: ellipsis;
@@ -816,7 +830,7 @@ body {
         margin-top: 1.5rem;
         color: var(--primary-green);
         font-size: 1.8rem;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         display: flex;
         justify-content: flex-start;
@@ -854,7 +868,7 @@ body {
       display: flex;
       flex-direction: column;
       .message-header-content_main {
-        background-color: rgb(41, 41, 41);
+        background-color: var(--primary-bg);
         -webkit-user-select: none;
         user-select: none;
         -webkit-app-region: drag;
@@ -862,7 +876,7 @@ body {
         justify-content: flex-start;
         // gap: 1rem;
         align-items: baseline;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
 
         h2 {
           padding: 1rem 3rem;
@@ -894,6 +908,7 @@ body {
         // max-height: 92vh;
         max-height: 100%;
         overflow: auto;
+        background-color:var(--primary-messsage-cont);
 
         .message_main-cont {
           // max-height: 88.5vh;
@@ -922,8 +937,8 @@ body {
               align-items: center;
 
               .img_cont {
-                width: 4rem;
-                height: 4rem;
+                width: 3.5rem;
+                height: 3.5rem;
                 img {
                   width: 100%;
                   height: 100%;
@@ -933,31 +948,31 @@ body {
                 }
               }
               span {
-                font-family: "Rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
-                font-size: 1.8rem;
-                color: #fff;
+                font-size: 1.6rem;
+                color: var(--primary-red);
               }
 
               p {
-                font-family: "Rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
-                font-size: 1.4rem;
+                font-size: 1.2rem;
                 color: rgb(102, 102, 102);
               }
             }
             &_cont {
-              font-family: "Rubik", sans-serif;
+              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 400;
-              font-size: 1.6rem;
+              font-size: 1.4rem;
               color: #ddd;
-              padding: 0 5.6rem;
+              padding: 0 5.1rem;
               line-height: 1.5;
               overflow-wrap: break-word;
             }
 
             .ping-cont {
-              background-color: rgb(65, 65, 65);
+              background-color: var(--secondary-bg);
               padding: 1px 5px;
               border-radius: 2px;
               color: #d8315b;
@@ -965,11 +980,12 @@ body {
             }
 
             &_cont-link {
-              font-family: "Rubik", sans-serif;
+              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 400;
-              font-size: 1.6rem;
-              color: #d8315b;
-              padding: 0 5.6rem;
+              font-weight: 400;
+              font-size: 1.4rem;
+              color: #9578d3;
+              padding: 0 5.1rem;
               // background-color: aqua;
               line-height: 1.5;
               overflow-wrap: break-word;
@@ -996,7 +1012,7 @@ body {
             padding: 0.5rem 0rem;
 
             .og {
-              font-family: "rubik", sans-serif;
+              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
               display: flex;
               justify-content: flex-start;
               align-items: flex-start;
@@ -1011,7 +1027,7 @@ body {
               }
               &-user {
                 color: #ddd;
-                font-size: 1.8rem;
+                font-size: 1.4rem;
                 font-weight: 400;
                 display: flex;
                 gap: 1rem;
@@ -1020,27 +1036,28 @@ body {
 
                 &_name {
                   font-weight: 500;
-                  color: var(--primary-green);
-                  font-size: 1.4rem;
-                  background-color: rgb(65, 65, 65);
+                  color: var(--primary-red);
+                  font-size: 1.3rem;
+                  background-color: var(--secondary-bg);
                   padding: 0.5rem;
                   border-radius: 5px;
                 }
               }
 
               &-colon {
-                font-family: "rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 color: #ddd;
-                font-size: 1.8rem;
+                font-size: 1.3rem;
                 font-weight: 500;
+                align-self: center;
               }
               &-message {
-                background-color: rgb(65, 65, 65);
+                background-color: var(--secondary-bg);
                 padding: 0.5rem;
                 border-radius: 5px;
                 display: block;
                 color: #ddd;
-                font-size: 1.4rem;
+                font-size: 1.3rem;
                 font-weight: 500;
                 max-width: 70%;
                 text-overflow: ellipsis;
@@ -1077,7 +1094,7 @@ body {
             align-items: center;
 
             span {
-              font-family: "Rubik", sans-serif;
+              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 500;
               font-size: 1.4rem;
               color: #333;
@@ -1107,11 +1124,11 @@ body {
 
             .message-input {
               // display: flex;
-              background-color: rgb(65, 65, 65);
+              background-color: var(--secondary-bg);
               padding: 1.2rem 3rem;
               width: 95%;
-              font-size: 1.8rem;
-              font-family: "Rubik", sans-serif;
+              font-size: 1.5rem;
+              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 500;
               color: #ddd;
               border: 0;
@@ -1119,6 +1136,7 @@ body {
               border-radius: 10rem;
               z-index: 5;
               position: relative;
+              border: 3px solid var(--primary-green);
             }
 
             // label {
@@ -1134,7 +1152,7 @@ body {
 
             //   i {
             //     color: #fff;
-            //     font-family: "Rubik", sans-serif;
+            //     font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             //     font-weight: 500;
             //     font-size: 3rem;
             //   }
@@ -1152,7 +1170,7 @@ body {
             //   color: #ddd;
             //   border: 0;
             //   outline: 0;
-            //   font-family: "rubik", sans-serif;
+            //   font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             //   visibility: hidden;
             //   z-index: 5;
             // }
@@ -1267,7 +1285,7 @@ body {
       p {
         color: var(--primary-green);
         font-size: 2rem;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         text-align: right;
         text-overflow: ellipsis;
@@ -1313,7 +1331,7 @@ body {
       display: flex;
       flex-direction: column;
       .house-header-content_main {
-        background-color: rgb(41, 41, 41);
+        background-color: var(--primary-bg);
         -webkit-user-select: none;
         user-select: none;
         -webkit-app-region: drag;
@@ -1324,7 +1342,7 @@ body {
           padding: 1rem 3rem;
           // padding-left: 3rem;
           color: #ddd;
-          font-family: "Rubik", sans-serif;
+          font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
           font-weight: 400;
           font-size: 2.5rem;
         }
@@ -1356,6 +1374,7 @@ body {
             gap: 1rem;
             padding-bottom: 10rem;
             // padding: 1rem 1rem;
+            background-color:var(--primary-messsage-cont);
 
             .message {
               display: flex;
@@ -1372,8 +1391,8 @@ body {
                 align-items: center;
 
                 .img_cont {
-                  width: 4rem;
-                  height: 4rem;
+                  width: 3.5rem;
+                  height: 3.5rem;
                   img {
                     width: 100%;
                     height: 100%;
@@ -1383,25 +1402,25 @@ body {
                   }
                 }
                 span {
-                  font-family: "Rubik", sans-serif;
+                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
-                  font-size: 1.8rem;
-                  color: #fff;
+                  font-size: 1.6rem;
+                  color: var(--primary-red);
                 }
                 p {
-                  font-family: "Rubik", sans-serif;
+                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
-                  font-size: 1.4rem;
+                  font-size: 1.2rem;
                   color: rgb(102, 102, 102);
                 }
               }
               &_cont {
                 // width: 50%;
-                font-family: "Rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 400;
-                font-size: 1.6rem;
+                font-size: 1.4rem;
                 color: #ddd;
-                padding: 0 5.6rem;
+                padding: 0 5.1rem;
                 // background-color: aqua;
                 line-height: 1.5;
                 overflow-wrap: break-word;
@@ -1409,18 +1428,18 @@ body {
               }
 
               .ping-cont {
-                background-color: rgb(65, 65, 65);
+                background-color: var(--secondary-bg);
                 padding: 1px 5px;
                 border-radius: 2px;
                 color: #d8315b;
                 font-weight: 500;
               }
               &_cont-link {
-                font-family: "Rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 400;
-                font-size: 1.6rem;
-                color: #d8315b;
-                padding: 0 5.6rem;
+                font-size: 1.4rem;
+                color: #9578d3;
+                padding: 0 5.1rem;
                 // background-color: aqua;
                 line-height: 1.5;
                 overflow-wrap: break-word;
@@ -1436,7 +1455,7 @@ body {
               padding: 0.5rem 0rem;
               border-radius: 5px;
               .og {
-                font-family: "rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 display: flex;
                 justify-content: flex-start;
                 align-items: flex-start;
@@ -1451,7 +1470,7 @@ body {
                 }
                 &-user {
                   color: #ddd;
-                  font-size: 1.8rem;
+                  font-size: 1.4rem;
                   font-weight: 400;
                   display: flex;
                   gap: 1rem;
@@ -1460,27 +1479,28 @@ body {
 
                   &_name {
                     font-weight: 500;
-                    color: var(--primary-green);
-                    font-size: 1.4rem;
-                    background-color: rgb(65, 65, 65);
+                    color: var(--primary-red);
+                    font-size: 1.3rem;
+                    background-color: var(--secondary-bg);
                     padding: 0.5rem;
                     border-radius: 5px;
                   }
                 }
 
                 &-colon {
-                  font-family: "rubik", sans-serif;
+                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   color: #ddd;
-                  font-size: 1.8rem;
+                  font-size: 1.3rem;
                   font-weight: 500;
+                  align-self: center;
                 }
                 &-message {
-                  background-color: rgb(65, 65, 65);
+                  background-color: var(--secondary-bg);
                   padding: 0.5rem;
                   border-radius: 5px;
                   display: block;
                   color: #ddd;
-                  font-size: 1.4rem;
+                  font-size: 1.3rem;
                   font-weight: 500;
                   max-width: 70%;
                   text-overflow: ellipsis;
@@ -1516,7 +1536,7 @@ body {
               align-items: center;
 
               span {
-                font-family: "Rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
                 font-size: 1.4rem;
                 color: #333;
@@ -1544,11 +1564,11 @@ body {
               background-color: transparent;
               // position: relative;
               .message-input {
-                background-color: rgb(65, 65, 65);
+                background-color: var(--secondary-bg);
                 padding: 1.2rem 3rem;
                 width: 95%;
-                font-size: 1.8rem;
-                font-family: "Rubik", sans-serif;
+                font-size: 1.5rem;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
                 color: #ddd;
                 border: 0;
@@ -1557,6 +1577,7 @@ body {
                 z-index: 5;
                 position: relative;
                 // margin: 0 auto;
+                border: 3px solid var(--primary-green);
               }
             }
             .emoji_btn_house {
@@ -1594,7 +1615,7 @@ body {
       flex-direction: column;
 
       .friend-list-header-content_main {
-        background-color: rgb(41, 41, 41);
+        background-color: var(--primary-bg);
         -webkit-user-select: none;
         user-select: none;
         -webkit-app-region: drag;
@@ -1619,7 +1640,7 @@ body {
 
           span {
             color: #ddd;
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 400;
             font-size: 2.5rem;
           }
@@ -1638,7 +1659,7 @@ body {
           a {
             text-decoration: none;
             color: #ddd;
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.6rem;
             // background-color: rgb(51, 51, 51);
             transition: all 0.3s ease;
@@ -1667,11 +1688,12 @@ body {
         // max-height: 92vh;
         overflow: auto;
         // background-color: rgb(32, 32, 32);
+        background-color:var(--primary-messsage-cont);
 
         .online-friends_main-cont {
           padding: 3rem 4rem;
           p {
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.8rem;
             color: rgb(85, 85, 85);
             font-weight: 500;
@@ -1745,7 +1767,7 @@ body {
                 &_user {
                   color: #ddd;
                   font-size: 1.8rem;
-                  font-family: "Rubik", sans-serif;
+                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
                   text-overflow: ellipsis;
                   overflow: hidden;
@@ -1760,7 +1782,7 @@ body {
           display: none;
           padding: 3rem 4rem;
           p {
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.8rem;
             color: rgb(85, 85, 85);
             font-weight: 500;
@@ -1833,7 +1855,7 @@ body {
                 &_user {
                   color: #ddd;
                   font-size: 1.8rem;
-                  font-family: "Rubik", sans-serif;
+                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
                   text-overflow: ellipsis;
                   overflow: hidden;
@@ -1848,7 +1870,7 @@ body {
           display: none;
           padding: 3rem 4rem;
           p {
-            font-family: "Rubik", sans-serif;
+            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.8rem;
             color: rgb(85, 85, 85);
             font-weight: 500;
@@ -1879,7 +1901,7 @@ body {
               border-radius: 5px;
 
               .request-type {
-                font-family: "Rubik", sans-serif;
+                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 400;
                 color: #ddd;
                 font-size: 1.5rem;
@@ -1951,7 +1973,7 @@ body {
                   &_user {
                     color: #ddd;
                     font-size: 1.8rem;
-                    font-family: "Rubik", sans-serif;
+                    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
                     font-weight: 500;
                     text-overflow: ellipsis;
                     overflow: hidden;
@@ -1995,7 +2017,7 @@ body {
       border-radius: 50%;
     }
     span {
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-size: 2rem;
       font-weight: 500;
       color: #333;
@@ -2038,7 +2060,7 @@ body {
   }
 
   p {
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: #ddd;
     font-size: 2.5rem;
   }
@@ -2067,7 +2089,7 @@ body {
   }
 
   span {
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: #ddd;
     font-weight: 500;
     font-size: 1.5rem;
@@ -2143,7 +2165,7 @@ body {
   }
 
   p {
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
@@ -2167,7 +2189,7 @@ body {
         width: 80%;
         border: 0;
         outline: 0;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         padding: 0.8rem 2rem;
         border-radius: 1rem;
         font-size: 1.8rem;
@@ -2179,7 +2201,7 @@ body {
       button {
         border: 0;
         outline: 0;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.8rem;
         font-weight: 500;
         color: #333;
@@ -2194,7 +2216,7 @@ body {
     a {
       text-decoration: none;
       color: #ddd;
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       font-size: 1.6rem;
     }
@@ -2265,7 +2287,7 @@ body {
   }
 
   p {
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
@@ -2289,7 +2311,7 @@ body {
         width: 80%;
         border: 0;
         outline: 0;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         padding: 0.8rem 2rem;
         border-radius: 1rem;
         font-size: 1.8rem;
@@ -2301,7 +2323,7 @@ body {
       button {
         border: 0;
         outline: 0;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.8rem;
         font-weight: 500;
         color: #333;
@@ -2316,7 +2338,7 @@ body {
     a {
       text-decoration: none;
       color: #ddd;
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       font-size: 1.6rem;
     }
@@ -2408,7 +2430,7 @@ body {
         color: var(--primary-green);
       }
       p {
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 2rem;
         font-weight: 500;
         color: var(--primary-red);
@@ -2418,7 +2440,7 @@ body {
   a {
     text-decoration: none;
     color: #ddd;
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-weight: 500;
     font-size: 1.6rem;
   }
@@ -2488,7 +2510,7 @@ body {
   }
 
   p {
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
@@ -2512,7 +2534,7 @@ body {
         width: 80%;
         border: 0;
         outline: 0;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         padding: 0.8rem 2rem;
         border-radius: 1rem;
         font-size: 1.8rem;
@@ -2524,7 +2546,7 @@ body {
       button {
         border: 0;
         outline: 0;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.8rem;
         font-weight: 500;
         color: #333;
@@ -2539,7 +2561,7 @@ body {
     a {
       text-decoration: none;
       color: #ddd;
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       font-size: 1.6rem;
     }
@@ -2607,7 +2629,7 @@ body {
   }
 
   h2 {
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-size: 3.5rem;
     font-weight: 400;
     color: var(--primary-red);
@@ -2661,7 +2683,7 @@ body {
       outline: 0;
       border-radius: 5px;
       font-size: 1.8rem;
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       color: #ddd;
       background-color: #333;
@@ -2698,7 +2720,7 @@ body {
         outline: 0;
         padding: 1rem 3rem;
         border-radius: 5px;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.7rem;
         font-weight: 600;
         margin-top: 5rem;
@@ -2720,7 +2742,7 @@ body {
       background-color: var(--primary-red);
       padding: 1rem 3rem;
       border-radius: 10rem;
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       color: #ddd;
       display: flex;
@@ -2768,7 +2790,7 @@ body {
 .trigger_members-cont {
   text-decoration: none;
   color: #ddd;
-  font-family: "Rubik", sans-serif;
+  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-size: 2rem;
   font-weight: 400;
   height: 100%;
@@ -2819,7 +2841,7 @@ body {
       margin-top: 1.5rem;
       color: var(--primary-green);
       font-size: 1.8rem;
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 400;
       display: flex;
       justify-content: center;
@@ -2881,20 +2903,21 @@ body {
     text-decoration: none;
     color: #ddd;
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 1rem;
     width: 100%;
     padding: 1rem;
     border-radius: 5px;
 
     i {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
     }
 
     span {
-      font-family: "Rubik", sans-serif;
-      font-size: 1.6rem;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-size: 1.4rem;
       font-weight: 500;
     }
   }
@@ -2969,7 +2992,7 @@ body {
   }
 
   p {
-    font-family: "Rubik", sans-serif;
+    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-size: 2rem;
     font-weight: 500;
     color: #333;
@@ -3067,7 +3090,7 @@ body {
 
     span {
       position: absolute;
-      font-family: "Rubik", sans-serif;
+      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       color: #ddd;
       top: 0;
@@ -3120,7 +3143,7 @@ body {
 
       span {
         position: absolute;
-        font-family: "Rubik", sans-serif;
+        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 500;
         color: #ddd;
         top: 0;

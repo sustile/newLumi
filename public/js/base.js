@@ -4048,6 +4048,7 @@ friendsListOptions.addEventListener("click", async (e) => {
     });
 
     form.addEventListener("submit", async (e) => {
+      e.stopImmediatePropagation()
       e.preventDefault();
 
       const id = inputField.value;

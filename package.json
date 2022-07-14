@@ -28,5 +28,8 @@
     "push.js": "^1.0.12",
     "sass": "^1.52.1",
     "socket.io": "^4.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }
