@@ -27,7 +27,6 @@ const dm_edit_bar = document.querySelector(".dm_edit_bar");
 
 const house_edit_bar = document.querySelector(".house_edit_bar");
 
-
 const call_btn = document.querySelector(".call-user");
 const decline_btn = document.querySelector(".call-decline");
 const call_status = document.querySelector(".call_status");
@@ -224,9 +223,9 @@ dmUserId.addEventListener("click", async (e) => {
   navigator.clipboard.writeText(dmUserId.getAttribute("data-id"));
 });
 
-const openADm = async function(room, target){
-  closeDmEditBarFunction()
-  closeHouseEditBarFunction()
+const openADm = async function (room, target) {
+  closeDmEditBarFunction();
+  closeHouseEditBarFunction();
   closeAllWarppers();
 
   DmWrapper.style.display = "flex";
@@ -262,28 +261,25 @@ const openADm = async function(room, target){
 
   house_members_cont.style.visibility = "hidden";
 
-
   // LAZY LOAD MESSAGES
 
   currentDmPage = 1;
 
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
-  lazyLoadMessages(activeCont, currentDmPage, true);
-}
+  lazyLoadMessages(activeCont, currentDmPage);
+};
 
 dmsCont.addEventListener("click", (e) => {
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
 
-
   if (target.getAttribute("data-dm") === activeCont) return;
 
-
-  closeDmEditBarFunction()
-  closeHouseEditBarFunction()
-  openADm(target.getAttribute("data-dm"),target)
+  closeDmEditBarFunction();
+  closeHouseEditBarFunction();
+  openADm(target.getAttribute("data-dm"), target);
 });
 
 houseCont.addEventListener("click", (e) => {
@@ -721,70 +717,68 @@ messageFrom.addEventListener("submit", async (e) => {
       );
       closeReplyBarFunction();
     }
-  }
-  else if(dm_edit_bar.style.visibility === "visible"){
+  } else if (dm_edit_bar.style.visibility === "visible") {
     if (isLink) {
-      const id = dm_edit_bar.getAttribute("data-messageId")
+      const id = dm_edit_bar.getAttribute("data-messageId");
       await saveMessage("normal-link_edited", activeCont, message, "", "", id);
 
       displayMessage(
-          "normal-link_edited",
-          message,
-          user.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-          id,
-          user.id,
-          true
+        "normal-link_edited",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        finalDateString,
+        id,
+        user.id,
+        true
       );
 
       socket.emit(
-          "send-message",
-          "normal-link_edited",
-          message,
-          user.name,
-          activeCont,
-          user.image,
-          "",
-          "",
-          id,
-          user.id
+        "send-message",
+        "normal-link_edited",
+        message,
+        user.name,
+        activeCont,
+        user.image,
+        "",
+        "",
+        id,
+        user.id
       );
     } else {
-      const id = dm_edit_bar.getAttribute("data-messageId")
+      const id = dm_edit_bar.getAttribute("data-messageId");
       await saveMessage("normal_edited", activeCont, message, "", "", id);
 
       displayMessage(
-          "normal_edited",
-          message,
-          user.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-          id,
-          user.id,
-          true
+        "normal_edited",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        finalDateString,
+        id,
+        user.id,
+        true
       );
 
       socket.emit(
-          "send-message",
-          "normal_edited",
-          message,
-          user.name,
-          activeCont,
-          user.image,
-          "",
-          "",
-          id,
-          user.id
+        "send-message",
+        "normal_edited",
+        message,
+        user.name,
+        activeCont,
+        user.image,
+        "",
+        "",
+        id,
+        user.id
       );
     }
     closeDmEditBarFunction();
-  }
-  else {
+  } else {
     if (isLink) {
       const id = await saveMessage("normal-link", activeCont, message);
 
@@ -1055,12 +1049,11 @@ const displayMessage = async (
 
     messageMain.insertAdjacentElement(printType, element);
     return;
-  }
-  else if (type === "normal-link_edited") {
-    let check = false
+  } else if (type === "normal-link_edited") {
+    let check = false;
 
-    messageMain.querySelectorAll("div").forEach(el => {
-      if(el.getAttribute("data-message-id") === messageId){
+    messageMain.querySelectorAll("div").forEach((el) => {
+      if (el.getAttribute("data-message-id") === messageId) {
         el.innerHTML = `
     <div class="message_user">
       <div class="img_cont">
@@ -1071,12 +1064,12 @@ const displayMessage = async (
       <p>[Edited Message]</p>
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
-`
-        check = true
+`;
+        check = true;
       }
-    })
+    });
 
-    if(!check){
+    if (!check) {
       html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
@@ -1088,16 +1081,13 @@ const displayMessage = async (
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>`;
+    } else {
+      return;
     }
-    else{
-      return
-
-    }
-  }
-  else if (type === "normal_edited") {
-    let check = false
-    messageMain.querySelectorAll("div").forEach(el => {
-      if(el.getAttribute("data-message-id") === messageId){
+  } else if (type === "normal_edited") {
+    let check = false;
+    messageMain.querySelectorAll("div").forEach((el) => {
+      if (el.getAttribute("data-message-id") === messageId) {
         el.innerHTML = `
   <div class="message_user">
     <div class="img_cont">
@@ -1108,13 +1098,12 @@ const displayMessage = async (
     <p>[Edited Message]</p>
   </div>
   <span class="message_cont">${message}</span>
-`
-        check = true
+`;
+        check = true;
       }
-    })
+    });
 
-
-    if(!check){
+    if (!check) {
       html = `
       <div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
@@ -1127,10 +1116,9 @@ const displayMessage = async (
   </div>
   <span class="message_cont">${message}</span>
 </div>
-      `
-    }
-    else{
-      return
+      `;
+    } else {
+      return;
     }
   }
 
@@ -1150,14 +1138,21 @@ messageMain.addEventListener("scroll", async () => {
     await wait(1);
     if (messageMain.scrollTop === 0) {
       currentDmPage = currentDmPage + 1;
-      lazyLoadMessages(activeCont, currentDmPage);
+      lazyLoadMessages(activeCont, currentDmPage, true);
     }
   }
 });
 
 // CHECK IF USER HAS REACH THE TOP
 
-const saveMessage = async (type, dmId, message, replyTo, replyMessage,messageId) => {
+const saveMessage = async (
+  type,
+  dmId,
+  message,
+  replyTo,
+  replyMessage,
+  messageId
+) => {
   return new Promise(async (res) => {
     if (type === "reply" || type === "reply-link") {
       const dm = await (
@@ -1193,21 +1188,20 @@ const saveMessage = async (type, dmId, message, replyTo, replyMessage,messageId)
       ).json();
 
       res(dm.id);
-    }
-    else if(type === "normal-link_edited" || type === "normal_edited"){
+    } else if (type === "normal-link_edited" || type === "normal_edited") {
       const dm = await (
-          await fetch("/api/editMessage", {
-            method: "POST",
-            body: JSON.stringify({
-              type,
-              dmId,
-              message,
-              messageId,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
+        await fetch("/api/editMessage", {
+          method: "POST",
+          body: JSON.stringify({
+            type,
+            dmId,
+            message,
+            messageId,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
       ).json();
 
       res(dm.id);
@@ -1230,11 +1224,7 @@ const monthLoadList = [
   "December",
 ];
 
-const lazyLoadMessages = async (
-  dmId,
-  page,
-  checkScrollAfterLoading = false
-) => {
+const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
   showSpinner();
 
   const dm = await (
@@ -1250,130 +1240,56 @@ const lazyLoadMessages = async (
     })
   ).json();
 
+  const finalArray = [];
+
+  for (let el of dm.result) {
+    const user = await getSomeOtherUserData(el.userId);
+
+    const dateSent = new Date(el.createdAt);
+    let hours =
+      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
+    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+    let day = dateSent.getDate();
+    if (day[-1] === "1") {
+      day = `${dateSent.getDate()}st`;
+    } else if (day[-1] === "2") {
+      day = `${dateSent.getDate()}nd`;
+    } else if (day[-1] === "3") {
+      day = `${dateSent.getDate()}rd`;
+    } else if (day == "11" || day == "12" || day == "13") {
+      day = `${dateSent.getDate()}th`;
+    } else {
+      day = `${dateSent.getDate()}th`;
+    }
+    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
+      2,
+      "0"
+    )} ${pmAm}, ${day} ${
+      monthLoadList[dateSent.getMonth()]
+    }, ${dateSent.getFullYear()}`;
+
+    finalArray.push([
+      el.type,
+      el.message,
+      el.name,
+      user.image,
+      el.replyTo,
+      el.replyMessage,
+      finalDateString,
+      el._id,
+      el.userId,
+      !checkScroll,
+      "afterbegin",
+    ]);
+  }
+
   await wait(1);
 
   hideSpinner();
 
-  if (checkScrollAfterLoading) {
-    for (let el of dm.result) {
-      const user = await getSomeOtherUserData(el.userId);
-
-      const dateSent = new Date(el.createdAt);
-      let hours =
-        dateSent.getHours() > 12
-          ? dateSent.getHours() - 12
-          : dateSent.getHours();
-      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-      let day = dateSent.getDate();
-      if (day[-1] === "1") {
-        day = `${dateSent.getDate()}st`;
-      } else if (day[-1] === "2") {
-        day = `${dateSent.getDate()}nd`;
-      } else if (day[-1] === "3") {
-        day = `${dateSent.getDate()}rd`;
-      } else if (day == "11" || day == "12" || day == "13") {
-        day = `${dateSent.getDate()}th`;
-      } else {
-        day = `${dateSent.getDate()}th`;
-      }
-      const finalDateString = `${hours}:${String(
-        dateSent.getMinutes()
-      ).padStart(2, "0")} ${pmAm}, ${day} ${
-        monthLoadList[dateSent.getMonth()]
-      }, ${dateSent.getFullYear()}`;
-
-      // console.log(finalDateString);
-
-      if (el.type === "reply" || el.type === "reply-link") {
-        displayMessage(
-          el.type,
-          el.message,
-          el.name,
-          user.image,
-          el.replyTo,
-          el.replyMessage,
-          finalDateString,
-          el._id,
-          el.userId,
-          true,
-          "afterbegin"
-        );
-      } else if (el.type === "normal" || el.type === "normal-link" || el.type ==="normal_edited" ||el.type ==="normal-link_edited") {
-        displayMessage(
-          el.type,
-          el.message,
-          el.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-          el._id,
-          el.userId,
-          true,
-          "afterbegin"
-        );
-      }
-    }
-  } else {
-    for (let el of dm.result) {
-      const user = await getSomeOtherUserData(el.userId);
-
-      const dateSent = new Date(el.createdAt);
-      let hours =
-        dateSent.getHours() > 12
-          ? dateSent.getHours() - 12
-          : dateSent.getHours();
-      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-      let day = dateSent.getDate();
-      if (day[-1] === "1") {
-        day = `${dateSent.getDate()}st`;
-      } else if (day[-1] === "2") {
-        day = `${dateSent.getDate()}nd`;
-      } else if (day[-1] === "3") {
-        day = `${dateSent.getDate()}rd`;
-      } else if (day == "11" || day == "12" || day == "13") {
-        day = `${dateSent.getDate()}th`;
-      } else {
-        day = `${dateSent.getDate()}th`;
-      }
-      const finalDateString = `${hours}:${String(
-        String(dateSent.getMinutes()).padStart(2, "0")
-      ).padStart(2, "0")} ${pmAm}, ${day} ${
-        monthLoadList[dateSent.getMonth()]
-      }, ${dateSent.getFullYear()}`;
-
-      if (el.type === "reply") {
-        displayMessage(
-          "reply",
-          el.message,
-          el.name,
-          user.image,
-          el.replyTo,
-          el.replyMessage,
-          finalDateString,
-          el._id,
-          el.userId,
-          false,
-          "afterbegin"
-        );
-      } else if (el.type === "normal") {
-        displayMessage(
-          "normal",
-          el.message,
-          el.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-          el._id,
-          el.userId,
-          false,
-          "afterbegin"
-        );
-      }
-    }
+  for (let el of finalArray) {
+    displayMessage(...el);
   }
 };
 
@@ -1470,8 +1386,8 @@ houseCont.addEventListener("click", (e) => {
   if (!target) return;
   e.preventDefault();
 
-  closeDmEditBarFunction()
-  closeHouseEditBarFunction()
+  closeDmEditBarFunction();
+  closeHouseEditBarFunction();
   closeAllWarppers();
   houseWrapper.style.display = "flex";
 
@@ -1516,7 +1432,7 @@ houseCont.addEventListener("click", (e) => {
   currentDmPage = 1;
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
-  lazyLoadHouseMessages(activeCont, currentDmPage, true);
+  lazyLoadHouseMessages(activeCont, currentDmPage);
   // checkVcStatus();
 });
 
@@ -1646,12 +1562,11 @@ const displayHouseMessage = async (
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>`;
-  }
-  else if (type === "normal-link_edited"){
-    let check = false
+  } else if (type === "normal-link_edited") {
+    let check = false;
 
-    houseMessageCont.querySelectorAll("div").forEach(el => {
-      if(el.getAttribute("data-message-id") === messageId){
+    houseMessageCont.querySelectorAll("div").forEach((el) => {
+      if (el.getAttribute("data-message-id") === messageId) {
         el.innerHTML = `
     <div class="message_user">
       <div class="img_cont">
@@ -1662,12 +1577,12 @@ const displayHouseMessage = async (
       <p>[Edited Message]</p>
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
-`
-        check = true
+`;
+        check = true;
       }
-    })
+    });
 
-    if(!check){
+    if (!check) {
       html = `<div class="message" data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
@@ -1679,16 +1594,13 @@ const displayHouseMessage = async (
     </div>
     <a href="${message}" target="_blank" class="message_cont-link">${message}</a>
   </div>`;
+    } else {
+      return;
     }
-    else{
-      return
-
-    }
-  }
-  else if (type === "normal_edited"){
-    let check = false
-    houseMessageCont.querySelectorAll("div").forEach(el => {
-      if(el.getAttribute("data-message-id") === messageId){
+  } else if (type === "normal_edited") {
+    let check = false;
+    houseMessageCont.querySelectorAll("div").forEach((el) => {
+      if (el.getAttribute("data-message-id") === messageId) {
         el.innerHTML = `
   <div class="message_user">
     <div class="img_cont">
@@ -1699,13 +1611,12 @@ const displayHouseMessage = async (
     <p>[Edited Message]</p>
   </div>
   <span class="message_cont">${message}</span>
-`
-        check = true
+`;
+        check = true;
       }
-    })
+    });
 
-
-    if(!check){
+    if (!check) {
       html = `
       <div class="message" data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
@@ -1718,10 +1629,9 @@ const displayHouseMessage = async (
   </div>
   <span class="message_cont">${message}</span>
 </div>
-      `
-    }
-    else{
-      return
+      `;
+    } else {
+      return;
     }
   }
 
@@ -1805,12 +1715,18 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-          id,
-          user.id,
+        id,
+        user.id
       );
       closeHouseReplyBarFunction();
     } else {
-      const id = await saveHouseMessage("reply", activeCont, message, replyTo, replyMessage);
+      const id = await saveHouseMessage(
+        "reply",
+        activeCont,
+        message,
+        replyTo,
+        replyMessage
+      );
       displayHouseMessage(
         "reply",
         message,
@@ -1819,8 +1735,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
-          id,
-          user.id,
+        id,
+        user.id,
         true
       );
 
@@ -1833,78 +1749,80 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-          id,
-          user.id
+        id,
+        user.id
       );
       closeHouseReplyBarFunction();
     }
-  }
-  else if(house_edit_bar.style.visibility === "visible") {
+  } else if (house_edit_bar.style.visibility === "visible") {
     if (isLink) {
-      const id = house_edit_bar.getAttribute("data-messageId")
-      await saveHouseMessage("normal-link_edited", activeCont, message,"","", id);
-
-      displayHouseMessage(
-          "normal-link_edited",
-          message,
-          user.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-          id,
-          user.id,
-          true
+      const id = house_edit_bar.getAttribute("data-messageId");
+      await saveHouseMessage(
+        "normal-link_edited",
+        activeCont,
+        message,
+        "",
+        "",
+        id
       );
 
+      displayHouseMessage(
+        "normal-link_edited",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        finalDateString,
+        id,
+        user.id,
+        true
+      );
 
       socket.emit(
-          "send-house-message",
-          "normal-link_edited",
-          message,
-          user.name,
-          activeCont,
-          user.image,
-          "",
-          "",
-          id,
-          user.id
+        "send-house-message",
+        "normal-link_edited",
+        message,
+        user.name,
+        activeCont,
+        user.image,
+        "",
+        "",
+        id,
+        user.id
       );
     } else {
-      const id = house_edit_bar.getAttribute("data-messageId")
-      await saveHouseMessage("normal_edited", activeCont, message,"","", id);
+      const id = house_edit_bar.getAttribute("data-messageId");
+      await saveHouseMessage("normal_edited", activeCont, message, "", "", id);
 
       displayHouseMessage(
-          "normal_edited",
-          message,
-          user.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-          id,
-          user.id,
-          true
+        "normal_edited",
+        message,
+        user.name,
+        user.image,
+        "",
+        "",
+        finalDateString,
+        id,
+        user.id,
+        true
       );
-
 
       socket.emit(
-          "send-house-message",
-          "normal_edited",
-          message,
-          user.name,
-          activeCont,
-          user.image,
-          "",
-          "",
-          id,
-          user.id
+        "send-house-message",
+        "normal_edited",
+        message,
+        user.name,
+        activeCont,
+        user.image,
+        "",
+        "",
+        id,
+        user.id
       );
     }
-    closeHouseEditBarFunction()
-
-  }
-  else {
+    closeHouseEditBarFunction();
+  } else {
     if (isLink) {
       const id = await saveHouseMessage("normal-link", activeCont, message);
 
@@ -1916,11 +1834,10 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-          id,
-          user.id,
+        id,
+        user.id,
         true
       );
-
 
       socket.emit(
         "send-house-message",
@@ -1929,10 +1846,10 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.name,
         activeCont,
         user.image,
-          "",
-          "",
-          id,
-          user.id
+        "",
+        "",
+        id,
+        user.id
       );
     } else {
       const id = await saveHouseMessage("normal", activeCont, message);
@@ -1945,11 +1862,10 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-          id,
-          user.id,
+        id,
+        user.id,
         true
       );
-
 
       socket.emit(
         "send-house-message",
@@ -1958,10 +1874,10 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.name,
         activeCont,
         user.image,
-          "",
-          "",
-          id,
-          user.id
+        "",
+        "",
+        id,
+        user.id
       );
     }
   }
@@ -1983,77 +1899,74 @@ const saveHouseMessage = async (
   return new Promise(async (res) => {
     if (type === "reply" || type === "reply-link") {
       const dm = await (
-          await fetch("/api/saveHouseMessage", {
-            method: "POST",
-            body: JSON.stringify({
-              type,
-              houseId,
-              message,
-              replyTo,
-              replyMessage,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
+        await fetch("/api/saveHouseMessage", {
+          method: "POST",
+          body: JSON.stringify({
+            type,
+            houseId,
+            message,
+            replyTo,
+            replyMessage,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
       ).json();
 
-      res(dm.id)
+      res(dm.id);
     } else if (type === "normal" || type === "normal-link") {
       const dm = await (
-          await fetch("/api/saveHouseMessage", {
-            method: "POST",
-            body: JSON.stringify({
-              type,
-              houseId,
-              message,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
+        await fetch("/api/saveHouseMessage", {
+          method: "POST",
+          body: JSON.stringify({
+            type,
+            houseId,
+            message,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
       ).json();
 
-      res(dm.id)
-    }
-    else if(type === "normal-link_edited" || type === "normal_edited"){
+      res(dm.id);
+    } else if (type === "normal-link_edited" || type === "normal_edited") {
       const dm = await (
-          await fetch("/api/editHouseMessage", {
-            method: "POST",
-            body: JSON.stringify({
-              type,
-              houseId,
-              message,
-              messageId,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
+        await fetch("/api/editHouseMessage", {
+          method: "POST",
+          body: JSON.stringify({
+            type,
+            houseId,
+            message,
+            messageId,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
       ).json();
 
       res(dm.id);
     }
-  })
+  });
 };
 
 // CHECK IF USER HAS REACH THE TOP
 house_scroll.addEventListener("scroll", async () => {
-  if (house_main_cont.scrollTop === 0) {
+  if (house_scroll.scrollTop === 0) {
     await wait(1);
-    if (house_main_cont.scrollTop === 0) {
+    if (house_scroll.scrollTop === 0) {
       currentDmPage = currentDmPage + 1;
-      lazyLoadHouseMessages(activeCont, currentDmPage);
+      lazyLoadHouseMessages(activeCont, currentDmPage, true);
     }
   }
 });
 // CHECK IF USER HAS REACH THE TOP
 
-const lazyLoadHouseMessages = async (
-  houseId,
-  page,
-  checkScrollAfterLoading = false
-) => {
+const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
+  showSpinner();
+
   const dm = await (
     await fetch("/api/lazyLoadHouseMessages", {
       method: "POST",
@@ -2067,130 +1980,72 @@ const lazyLoadHouseMessages = async (
     })
   ).json();
 
-  if (checkScrollAfterLoading) {
-    for (let el of dm.result) {
-      const user = await getSomeOtherUserData(el.userId);
+  const finalArray = [];
 
-      const dateSent = new Date(el.createdAt);
-      let hours =
-        dateSent.getHours() > 12
-          ? dateSent.getHours() - 12
-          : dateSent.getHours();
-      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+  for (let el of dm.result) {
+    const user = await getSomeOtherUserData(el.userId);
 
-      let day = dateSent.getDate();
-      if (day[-1] === "1") {
-        day = `${dateSent.getDate()}st`;
-      } else if (day[-1] === "2") {
-        day = `${dateSent.getDate()}nd`;
-      } else if (day[-1] === "3") {
-        day = `${dateSent.getDate()}rd`;
-      } else if (day == "11" || day == "12" || day == "13") {
-        day = `${dateSent.getDate()}th`;
-      } else {
-        day = `${dateSent.getDate()}th`;
-      }
-      const finalDateString = `${hours}:${String(
-        dateSent.getMinutes()
-      ).padStart(2, "0")} ${pmAm}, ${day} ${
-        monthLoadList[dateSent.getMonth()]
-      }, ${dateSent.getFullYear()}`;
+    const dateSent = new Date(el.createdAt);
+    let hours =
+      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
+    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
 
-      if (el.type === "reply" || el.type === "reply-link" ) {
-        displayHouseMessage(
-          el.type,
-          el.message,
-          el.name,
-          user.image,
-          el.replyTo,
-          el.replyMessage,
-          finalDateString,
-            el._id,
-            el.userId,
-          true,
-          "afterbegin"
-        );
-      } else if (el.type === "normal" || el.type === "normal-link" || el.type ==="normal_edited" ||el.type ==="normal-link_edited") {
-        displayHouseMessage(
-          el.type,
-          el.message,
-          el.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-            el._id,
-            el.userId,
-          true,
-          "afterbegin"
-        );
-      }
+    let day = dateSent.getDate();
+    if (day[-1] === "1") {
+      day = `${dateSent.getDate()}st`;
+    } else if (day[-1] === "2") {
+      day = `${dateSent.getDate()}nd`;
+    } else if (day[-1] === "3") {
+      day = `${dateSent.getDate()}rd`;
+    } else if (day == "11" || day == "12" || day == "13") {
+      day = `${dateSent.getDate()}th`;
+    } else {
+      day = `${dateSent.getDate()}th`;
     }
-  } else {
-    for (let el of dm.result) {
-      const user = await getSomeOtherUserData(el.userId);
+    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
+      2,
+      "0"
+    )} ${pmAm}, ${day} ${
+      monthLoadList[dateSent.getMonth()]
+    }, ${dateSent.getFullYear()}`;
 
-      const dateSent = new Date(el.createdAt);
-      let hours =
-        dateSent.getHours() > 12
-          ? dateSent.getHours() - 12
-          : dateSent.getHours();
-      let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+    finalArray.push([
+      el.type,
+      el.message,
+      el.name,
+      user.image,
+      el.replyTo,
+      el.replyMessage,
+      finalDateString,
+      el._id,
+      el.userId,
+      !checkScroll,
+      "afterbegin",
+    ]);
+  }
 
-      let day = dateSent.getDate();
-      if (day[-1] === "1") {
-        day = `${dateSent.getDate()}st`;
-      } else if (day[-1] === "2") {
-        day = `${dateSent.getDate()}nd`;
-      } else if (day[-1] === "3") {
-        day = `${dateSent.getDate()}rd`;
-      } else if (day == "11" || day == "12" || day == "13") {
-        day = `${dateSent.getDate()}th`;
-      } else {
-        day = `${dateSent.getDate()}th`;
-      }
-      const finalDateString = `${hours}:${String(
-        dateSent.getMinutes()
-      ).padStart(2, "0")} ${pmAm}, ${day} ${
-        monthLoadList[dateSent.getMonth()]
-      }, ${dateSent.getFullYear()}`;
+  await wait(1);
 
-      if (el.type === "reply") {
-        displayHouseMessage(
-          "reply",
-          el.message,
-          el.name,
-          user.image,
-          el.replyTo,
-          el.replyMessage,
-          finalDateString,
-            id,
-            user.id,
-          false,
-          "afterbegin"
-        );
-      } else if (el.type === "normal") {
-        displayHouseMessage(
-          "normal",
-          el.message,
-          el.name,
-          user.image,
-          "",
-          "",
-          finalDateString,
-            id,
-            user.id,
-          false,
-          "afterbegin"
-        );
-      }
-    }
+  hideSpinner();
+
+  for (let el of finalArray) {
+    displayHouseMessage(...el);
   }
 };
 
 socket.on(
   "receive-house-message",
-  async (type, userFrom, message, room, image, replyTo, replyMessage,messageId, userId) => {
+  async (
+    type,
+    userFrom,
+    message,
+    room,
+    image,
+    replyTo,
+    replyMessage,
+    messageId,
+    userId
+  ) => {
     const dateSent = new Date();
     let hours =
       dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
@@ -2238,8 +2093,8 @@ socket.on(
         replyTo,
         replyMessage,
         finalDateString,
-          messageId,
-          userId,
+        messageId,
+        userId,
         true
       );
 
@@ -2858,8 +2713,8 @@ const house_MessageContextMenu_reply = house_MessageContextMenu.querySelector(
   ".context_message-reply"
 );
 
-const house_messageContextMenu_editMessage = house_MessageContextMenu.querySelector(".context_house-editMessage")
-
+const house_messageContextMenu_editMessage =
+  house_MessageContextMenu.querySelector(".context_house-editMessage");
 
 const house_members_usersCopyId = document.querySelector(
   ".house_member-list-copy-id"
@@ -2979,7 +2834,9 @@ houseMessageCont.addEventListener("contextmenu", async (e) => {
     closeHouseReplyBarFunction();
   });
 
-  const close_house_editbar = house_edit_bar.querySelector(".close_house_editbar");
+  const close_house_editbar = house_edit_bar.querySelector(
+    ".close_house_editbar"
+  );
   close_house_editbar.addEventListener("click", () => {
     closeHouseEditBarFunction();
   });
@@ -3007,15 +2864,14 @@ houseMessageCont.addEventListener("contextmenu", async (e) => {
 
     let message = target.querySelector(".message_cont");
 
-    if(!message) message = target.querySelector("a")
+    if (!message) message = target.querySelector("a");
 
     closeHouseReplyBarFunction();
 
-
     house_edit_bar.setAttribute("data-editMessage", message.textContent);
     house_edit_bar.setAttribute(
-        "data-messageId",
-        target.getAttribute("data-message-id")
+      "data-messageId",
+      target.getAttribute("data-message-id")
     );
 
     house_edit_bar.style.visibility = "visible";
@@ -3023,7 +2879,7 @@ houseMessageCont.addEventListener("contextmenu", async (e) => {
     house_MessageContextMenu.style.opacity = "0";
     await wait(0.1);
     house_MessageContextMenu.style.visibility = "hidden";
-  })
+  });
 });
 
 messageMain.addEventListener("contextmenu", async (e) => {
@@ -3092,10 +2948,9 @@ messageMain.addEventListener("contextmenu", async (e) => {
 
     let message = target.querySelector(".message_cont");
 
-    if(!message) message = target.querySelector("a")
+    if (!message) message = target.querySelector("a");
 
     closeReplyBarFunction();
-
 
     dm_edit_bar.setAttribute("data-editMessage", message.textContent);
     dm_edit_bar.setAttribute(
@@ -4048,7 +3903,7 @@ friendsListOptions.addEventListener("click", async (e) => {
     });
 
     form.addEventListener("submit", async (e) => {
-      e.stopImmediatePropagation()
+      e.stopImmediatePropagation();
       e.preventDefault();
 
       const id = inputField.value;
@@ -4194,8 +4049,6 @@ pendingRequestsMainCont.addEventListener("click", async (e) => {
 
       loadFriendsPending();
 
-
-
       if (!ongoingError) {
         await popupFriends(`You are Now Friends with ${name.textContent}`);
       }
@@ -4263,11 +4116,14 @@ allFriendsCont.addEventListener("contextmenu", (e) => {
     if (dm.status === "fail") {
       if (dm.message === "Duplicate Dms") {
         closeAllContextMenus();
-          dmsCont.querySelectorAll("a").forEach((dm) => {
-            if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
-              openADm(dm.getAttribute("data-dm"),dm)
-            }
-          });
+        dmsCont.querySelectorAll("a").forEach((dm) => {
+          if (
+            dm.getAttribute("data-user-id") ===
+            target.getAttribute("data-user-id")
+          ) {
+            openADm(dm.getAttribute("data-dm"), dm);
+          }
+        });
       } else {
         closeAllContextMenus();
         if (!ongoingError) {
@@ -4279,12 +4135,15 @@ allFriendsCont.addEventListener("contextmenu", (e) => {
       closeAllContextMenus();
       socket.emit("update-dms", target.getAttribute("data-user-id"), dm.dmId);
       loadDms();
-      await wait(2)
+      await wait(2);
       setUserOnline(dm.dmId);
 
       dmsCont.querySelectorAll("a").forEach((dm) => {
-        if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
-          openADm(dm.getAttribute("data-dm"),dm)
+        if (
+          dm.getAttribute("data-user-id") ===
+          target.getAttribute("data-user-id")
+        ) {
+          openADm(dm.getAttribute("data-dm"), dm);
         }
       });
     }
@@ -4332,22 +4191,25 @@ onlineFriendsCont.addEventListener("contextmenu", (e) => {
   openDms.addEventListener("click", async (e) => {
     e.stopImmediatePropagation();
     const dm = await (
-        await fetch("/api/addNewDm", {
-          method: "POST",
-          body: JSON.stringify({
-            person2: target.getAttribute("data-user-id"),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+      await fetch("/api/addNewDm", {
+        method: "POST",
+        body: JSON.stringify({
+          person2: target.getAttribute("data-user-id"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
     ).json();
     if (dm.status === "fail") {
       if (dm.message === "Duplicate Dms") {
         closeAllContextMenus();
         dmsCont.querySelectorAll("a").forEach((dm) => {
-          if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
-            openADm(dm.getAttribute("data-dm"),dm)
+          if (
+            dm.getAttribute("data-user-id") ===
+            target.getAttribute("data-user-id")
+          ) {
+            openADm(dm.getAttribute("data-dm"), dm);
           }
         });
       } else {
@@ -4361,12 +4223,15 @@ onlineFriendsCont.addEventListener("contextmenu", (e) => {
       closeAllContextMenus();
       socket.emit("update-dms", target.getAttribute("data-user-id"), dm.dmId);
       loadDms();
-      await wait(2)
+      await wait(2);
       setUserOnline(dm.dmId);
 
       dmsCont.querySelectorAll("a").forEach((dm) => {
-        if (dm.getAttribute("data-user-id") === target.getAttribute("data-user-id")) {
-          openADm(dm.getAttribute("data-dm"),dm)
+        if (
+          dm.getAttribute("data-user-id") ===
+          target.getAttribute("data-user-id")
+        ) {
+          openADm(dm.getAttribute("data-dm"), dm);
         }
       });
     }

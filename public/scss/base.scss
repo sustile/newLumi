@@ -1,12 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Rubik:wght@300;400;500;600;700;800&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
 
 :root {
   --primary-bg: #111;
   --primary-green: #00ce7c;
   --primary-red: #f44c7f;
-  --secondary-bg : #1a1a1a;
+  --secondary-bg: #1a1a1a;
   --primary-messsage-cont: #1c1c1c;
 }
 
@@ -35,7 +35,7 @@ html {
 }
 
 body {
-  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   background-color: var(--primary-bg);
   // max-height: 100vh;
   // max-width: 100vw;
@@ -172,6 +172,7 @@ body {
 
     .createHouse {
       text-decoration: none;
+      position: relative;
 
       i {
         color: #d8315b;
@@ -193,7 +194,7 @@ body {
       align-items: center;
       gap: 1rem;
       .main-heading {
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 2rem;
         font-weight: 400;
         color: var(--primary-green);
@@ -277,7 +278,7 @@ body {
           &_user {
             color: #ddd;
             font-size: 1.8rem;
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 500;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -408,7 +409,7 @@ body {
 
           span {
             font-size: 1.8rem;
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
           }
         }
       }
@@ -427,6 +428,7 @@ body {
         .img_cont {
           width: 5rem;
           height: 5rem;
+          position: relative;
           img {
             width: 100%;
             height: 100%;
@@ -445,7 +447,7 @@ body {
 
           span {
             width: 15rem;
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             color: #ddd;
             font-size: 1.8rem;
             font-weight: 500;
@@ -464,6 +466,7 @@ body {
             overflow: hidden;
             white-space: pre;
             cursor: pointer;
+            position: relative;
           }
         }
       }
@@ -498,7 +501,7 @@ body {
       // transform: rotateX(90deg);
       gap: 1rem;
       .main-heading {
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 3rem;
         font-weight: 400;
         color: var(--primary-green);
@@ -523,7 +526,7 @@ body {
       }
 
       .dev {
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         color: #ddd;
         font-weight: 500;
         font-size: 1.2rem;
@@ -555,6 +558,7 @@ body {
       z-index: 5;
       a {
         text-decoration: none;
+        position: relative;
 
         i {
           color: var(--primary-green);
@@ -629,7 +633,7 @@ body {
         padding: 1rem 3rem;
         // padding-left: 3rem;
         color: #ddd;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         font-size: 2.5rem;
       }
@@ -739,7 +743,7 @@ body {
       p {
         color: var(--primary-green);
         font-size: 2rem;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         text-align: right;
         text-overflow: ellipsis;
@@ -830,7 +834,7 @@ body {
         margin-top: 1.5rem;
         color: var(--primary-green);
         font-size: 1.8rem;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         display: flex;
         justify-content: flex-start;
@@ -876,7 +880,7 @@ body {
         justify-content: flex-start;
         // gap: 1rem;
         align-items: baseline;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
 
         h2 {
           padding: 1rem 3rem;
@@ -908,7 +912,7 @@ body {
         // max-height: 92vh;
         max-height: 100%;
         overflow: auto;
-        background-color:var(--primary-messsage-cont);
+        background-color: var(--primary-messsage-cont);
 
         .message_main-cont {
           // max-height: 88.5vh;
@@ -948,21 +952,21 @@ body {
                 }
               }
               span {
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
                 font-size: 1.6rem;
                 color: var(--primary-red);
               }
 
               p {
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
                 font-size: 1.2rem;
                 color: rgb(102, 102, 102);
               }
             }
             &_cont {
-              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+              font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 400;
               font-size: 1.4rem;
               color: #ddd;
@@ -980,7 +984,7 @@ body {
             }
 
             &_cont-link {
-              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+              font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 400;
               font-weight: 400;
               font-size: 1.4rem;
@@ -1012,7 +1016,7 @@ body {
             padding: 0.5rem 0rem;
 
             .og {
-              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+              font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
               display: flex;
               justify-content: flex-start;
               align-items: flex-start;
@@ -1045,7 +1049,7 @@ body {
               }
 
               &-colon {
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 color: #ddd;
                 font-size: 1.3rem;
                 font-weight: 500;
@@ -1094,7 +1098,7 @@ body {
             align-items: center;
 
             span {
-              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+              font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 500;
               font-size: 1.4rem;
               color: #333;
@@ -1128,7 +1132,7 @@ body {
               padding: 1.2rem 3rem;
               width: 95%;
               font-size: 1.5rem;
-              font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+              font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
               font-weight: 500;
               color: #ddd;
               border: 0;
@@ -1285,7 +1289,7 @@ body {
       p {
         color: var(--primary-green);
         font-size: 2rem;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 400;
         text-align: right;
         text-overflow: ellipsis;
@@ -1342,7 +1346,7 @@ body {
           padding: 1rem 3rem;
           // padding-left: 3rem;
           color: #ddd;
-          font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+          font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
           font-weight: 400;
           font-size: 2.5rem;
         }
@@ -1360,8 +1364,8 @@ body {
           height: 100%;
           flex-direction: column;
           justify-content: space-between;
-          max-height: 100%;
           overflow: auto;
+          background-color: var(--primary-messsage-cont);
           // background-color: red;
 
           .house-message_main-cont {
@@ -1374,7 +1378,7 @@ body {
             gap: 1rem;
             padding-bottom: 10rem;
             // padding: 1rem 1rem;
-            background-color:var(--primary-messsage-cont);
+            background-color: var(--primary-messsage-cont);
 
             .message {
               display: flex;
@@ -1402,13 +1406,13 @@ body {
                   }
                 }
                 span {
-                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
                   font-size: 1.6rem;
                   color: var(--primary-red);
                 }
                 p {
-                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
                   font-size: 1.2rem;
                   color: rgb(102, 102, 102);
@@ -1416,7 +1420,7 @@ body {
               }
               &_cont {
                 // width: 50%;
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 400;
                 font-size: 1.4rem;
                 color: #ddd;
@@ -1435,7 +1439,7 @@ body {
                 font-weight: 500;
               }
               &_cont-link {
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 400;
                 font-size: 1.4rem;
                 color: #9578d3;
@@ -1455,7 +1459,7 @@ body {
               padding: 0.5rem 0rem;
               border-radius: 5px;
               .og {
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 display: flex;
                 justify-content: flex-start;
                 align-items: flex-start;
@@ -1488,7 +1492,7 @@ body {
                 }
 
                 &-colon {
-                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   color: #ddd;
                   font-size: 1.3rem;
                   font-weight: 500;
@@ -1523,7 +1527,8 @@ body {
             transform: translateY(-20%);
             z-index: 5;
 
-            .house_replybar,.house_edit_bar {
+            .house_replybar,
+            .house_edit_bar {
               width: 95%;
               background-color: var(--primary-green);
               border-radius: 10rem;
@@ -1536,13 +1541,14 @@ body {
               align-items: center;
 
               span {
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
                 font-size: 1.4rem;
                 color: #333;
               }
 
-              .close_dm_replybar,.close_house_editbar {
+              .close_dm_replybar,
+              .close_house_editbar {
                 font-size: 2rem;
                 color: #333;
                 cursor: pointer;
@@ -1568,7 +1574,7 @@ body {
                 padding: 1.2rem 3rem;
                 width: 95%;
                 font-size: 1.5rem;
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 500;
                 color: #ddd;
                 border: 0;
@@ -1640,7 +1646,7 @@ body {
 
           span {
             color: #ddd;
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 400;
             font-size: 2.5rem;
           }
@@ -1659,12 +1665,13 @@ body {
           a {
             text-decoration: none;
             color: #ddd;
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.6rem;
             // background-color: rgb(51, 51, 51);
             transition: all 0.3s ease;
             padding: 0.5rem 1rem;
             border-radius: 5px;
+            position: relative;
 
             &:last-of-type {
               background-color: #04e762;
@@ -1688,12 +1695,12 @@ body {
         // max-height: 92vh;
         overflow: auto;
         // background-color: rgb(32, 32, 32);
-        background-color:var(--primary-messsage-cont);
+        background-color: var(--primary-messsage-cont);
 
         .online-friends_main-cont {
           padding: 3rem 4rem;
           p {
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.8rem;
             color: rgb(85, 85, 85);
             font-weight: 500;
@@ -1767,7 +1774,7 @@ body {
                 &_user {
                   color: #ddd;
                   font-size: 1.8rem;
-                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
                   text-overflow: ellipsis;
                   overflow: hidden;
@@ -1782,7 +1789,7 @@ body {
           display: none;
           padding: 3rem 4rem;
           p {
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.8rem;
             color: rgb(85, 85, 85);
             font-weight: 500;
@@ -1855,7 +1862,7 @@ body {
                 &_user {
                   color: #ddd;
                   font-size: 1.8rem;
-                  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                   font-weight: 500;
                   text-overflow: ellipsis;
                   overflow: hidden;
@@ -1870,7 +1877,7 @@ body {
           display: none;
           padding: 3rem 4rem;
           p {
-            font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-size: 1.8rem;
             color: rgb(85, 85, 85);
             font-weight: 500;
@@ -1901,7 +1908,7 @@ body {
               border-radius: 5px;
 
               .request-type {
-                font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                 font-weight: 400;
                 color: #ddd;
                 font-size: 1.5rem;
@@ -1973,7 +1980,7 @@ body {
                   &_user {
                     color: #ddd;
                     font-size: 1.8rem;
-                    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
                     font-weight: 500;
                     text-overflow: ellipsis;
                     overflow: hidden;
@@ -2017,7 +2024,7 @@ body {
       border-radius: 50%;
     }
     span {
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-size: 2rem;
       font-weight: 500;
       color: #333;
@@ -2060,7 +2067,7 @@ body {
   }
 
   p {
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: #ddd;
     font-size: 2.5rem;
   }
@@ -2089,7 +2096,7 @@ body {
   }
 
   span {
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: #ddd;
     font-weight: 500;
     font-size: 1.5rem;
@@ -2165,7 +2172,7 @@ body {
   }
 
   p {
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
@@ -2189,7 +2196,7 @@ body {
         width: 80%;
         border: 0;
         outline: 0;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         padding: 0.8rem 2rem;
         border-radius: 1rem;
         font-size: 1.8rem;
@@ -2201,7 +2208,7 @@ body {
       button {
         border: 0;
         outline: 0;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.8rem;
         font-weight: 500;
         color: #333;
@@ -2216,7 +2223,7 @@ body {
     a {
       text-decoration: none;
       color: #ddd;
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       font-size: 1.6rem;
     }
@@ -2287,7 +2294,7 @@ body {
   }
 
   p {
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
@@ -2311,7 +2318,7 @@ body {
         width: 80%;
         border: 0;
         outline: 0;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         padding: 0.8rem 2rem;
         border-radius: 1rem;
         font-size: 1.8rem;
@@ -2323,7 +2330,7 @@ body {
       button {
         border: 0;
         outline: 0;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.8rem;
         font-weight: 500;
         color: #333;
@@ -2338,7 +2345,7 @@ body {
     a {
       text-decoration: none;
       color: #ddd;
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       font-size: 1.6rem;
     }
@@ -2430,7 +2437,7 @@ body {
         color: var(--primary-green);
       }
       p {
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 2rem;
         font-weight: 500;
         color: var(--primary-red);
@@ -2440,7 +2447,7 @@ body {
   a {
     text-decoration: none;
     color: #ddd;
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-weight: 500;
     font-size: 1.6rem;
   }
@@ -2510,7 +2517,7 @@ body {
   }
 
   p {
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     color: var(--primary-red);
     font-weight: bolder;
     font-size: 1.7rem;
@@ -2534,7 +2541,7 @@ body {
         width: 80%;
         border: 0;
         outline: 0;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         padding: 0.8rem 2rem;
         border-radius: 1rem;
         font-size: 1.8rem;
@@ -2546,7 +2553,7 @@ body {
       button {
         border: 0;
         outline: 0;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.8rem;
         font-weight: 500;
         color: #333;
@@ -2561,7 +2568,7 @@ body {
     a {
       text-decoration: none;
       color: #ddd;
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       font-size: 1.6rem;
     }
@@ -2629,7 +2636,7 @@ body {
   }
 
   h2 {
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-size: 3.5rem;
     font-weight: 400;
     color: var(--primary-red);
@@ -2683,7 +2690,7 @@ body {
       outline: 0;
       border-radius: 5px;
       font-size: 1.8rem;
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       color: #ddd;
       background-color: #333;
@@ -2720,7 +2727,7 @@ body {
         outline: 0;
         padding: 1rem 3rem;
         border-radius: 5px;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.7rem;
         font-weight: 600;
         margin-top: 5rem;
@@ -2742,7 +2749,7 @@ body {
       background-color: var(--primary-red);
       padding: 1rem 3rem;
       border-radius: 10rem;
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       color: #ddd;
       display: flex;
@@ -2790,7 +2797,7 @@ body {
 .trigger_members-cont {
   text-decoration: none;
   color: #ddd;
-  font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-size: 2rem;
   font-weight: 400;
   height: 100%;
@@ -2841,7 +2848,7 @@ body {
       margin-top: 1.5rem;
       color: var(--primary-green);
       font-size: 1.8rem;
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 400;
       display: flex;
       justify-content: center;
@@ -2916,7 +2923,7 @@ body {
     }
 
     span {
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-size: 1.4rem;
       font-weight: 500;
     }
@@ -2992,7 +2999,7 @@ body {
   }
 
   p {
-    font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-size: 2rem;
     font-weight: 500;
     color: #333;
@@ -3090,7 +3097,7 @@ body {
 
     span {
       position: absolute;
-      font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       color: #ddd;
       top: 0;
@@ -3143,7 +3150,7 @@ body {
 
       span {
         position: absolute;
-        font-family : "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-weight: 500;
         color: #ddd;
         top: 0;
@@ -3208,3 +3215,240 @@ body {
     transform: translate(-50%, -50%);
   }
 }
+
+// TOOLTIPS
+.bottom-arrow-tooltip-copyId-overflow {
+  &::before,
+  &::after {
+    position: fixed;
+
+    z-index: 10;
+    transform: scale(0);
+    transition: all 0.2s ease;
+    // left: 50%;
+    // top: -0.5rem;
+    // transform: translate(-50%, -100%);
+  }
+
+  &::before {
+    content: attr(data-tooltip);
+    color: #ddd;
+    margin-left: 3rem;
+    margin-top: -4rem;
+    background-color: var(--primary-red);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    transform-origin: bottom center;
+    width: max-content;
+  }
+
+  &::after {
+    content: "";
+    border: 10px solid transparent;
+    border-top-color: var(--primary-red);
+    margin-left: -9.5rem;
+    margin-top: -1rem;
+    transform-origin: top center;
+  }
+
+  &:hover::before {
+    transform: scale(1);
+  }
+  &:hover::after {
+    transform: scale(1);
+  }
+}
+
+.bottom-arrow-tooltip {
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: 10;
+    transition: all 0.2s ease;
+    left: 50%;
+    top: -0.5rem;
+    transform: translate(-50%, -100%) scale(0);
+  }
+
+  &::before {
+    content: attr(data-tooltip);
+    color: #ddd;
+    background-color: var(--primary-red);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    transform-origin: bottom center;
+    width: max-content;
+  }
+
+  &::after {
+    content: "";
+    border: 10px solid transparent;
+    border-top-color: var(--primary-red);
+    transform-origin: top center;
+  }
+
+  &:hover::before {
+    transform: translate(-50%, -100%) scale(1);
+  }
+  &:hover::after {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.left-arrow-tooltip {
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: 10;
+    transition: all 0.2s ease;
+    right: 0;
+    top: 50%;
+    transform: translate(110%, -50%) scale(0);
+  }
+
+  &::before {
+    content: attr(data-tooltip);
+    color: #ddd;
+    background-color: var(--primary-red);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    transform-origin: left center;
+    width: max-content;
+  }
+
+  &::after {
+    content: "";
+    border: 10px solid transparent;
+    border-right-color: var(--primary-red);
+    transform-origin: right center;
+    // right: -0.5rem;
+  }
+
+  &:hover::before {
+    transform: translate(110%, -50%) scale(1);
+  }
+  &:hover::after {
+    transform: translate(110%, -50%) scale(1);
+  }
+}
+
+.left-arrow-tooltip_deafen {
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: 10;
+    transition: all 0.2s ease;
+    right: 0;
+    top: 50%;
+    transform: translate(110%, -50%) scale(0);
+  }
+
+  &::before {
+    content: attr(data-tooltip);
+    color: #ddd;
+    background-color: var(--primary-red);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    transform-origin: left center;
+    width: max-content;
+    transform: translate(126%, -50%) scale(0);
+  }
+
+  &::after {
+    content: "";
+    border: 10px solid transparent;
+    border-right-color: var(--primary-red);
+    transform-origin: right center;
+    // right: -0.5rem;
+  }
+
+  &:hover::before {
+    transform: translate(126%, -50%) scale(1);
+  }
+  &:hover::after {
+    transform: translate(110%, -50%) scale(1);
+  }
+}
+
+.left-arrow-tooltip_mute {
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: 10;
+    transition: all 0.2s ease;
+    right: 0;
+    top: 50%;
+    transform: translate(110%, -50%) scale(0);
+  }
+
+  &::before {
+    content: attr(data-tooltip);
+    color: #ddd;
+    background-color: var(--primary-red);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    transform-origin: left center;
+    width: max-content;
+    transform: translate(135%, -50%) scale(0);
+  }
+
+  &::after {
+    content: "";
+    border: 10px solid transparent;
+    border-right-color: var(--primary-red);
+    transform-origin: right center;
+    // right: -0.5rem;
+  }
+
+  &:hover::before {
+    transform: translate(135%, -50%) scale(1);
+  }
+  &:hover::after {
+    transform: translate(110%, -50%) scale(1);
+  }
+}
+
+.top-arrow-tooltip {
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: 10;
+    transition: all 0.2s ease;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 150%) scale(0);
+  }
+
+  &::before {
+    content: attr(data-tooltip);
+    color: #ddd;
+    background-color: var(--primary-red);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    transform-origin: top center;
+    width: max-content;
+  }
+
+  &::after {
+    content: "";
+    border: 10px solid transparent;
+    border-bottom-color: var(--primary-red);
+    transform-origin: top center;
+    bottom: -1.5rem;
+  }
+
+  &:hover::before {
+    transform: translate(-50%, 150%) scale(1);
+  }
+  &:hover::after {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+// TOOLTIPS

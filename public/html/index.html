@@ -46,7 +46,12 @@
             ><img src="./../img/default.png" alt="" /> <span> </span
           ></a> -->
         </div>
-        <a href="" class="createHouse prevent"><i class="ph-plus-bold"></i></a>
+        <a
+          href=""
+          class="createHouse prevent left-arrow-tooltip"
+          data-tooltip="Create or Join a House"
+          ><i class="ph-plus-bold"></i
+        ></a>
         <!-- <div class="nav_headers">
           <i class="ph-moon-fill"></i>
           <h2 class="main-heading">Lumi</h2>
@@ -84,7 +89,10 @@
           <div class="nav_acc">
             <!-- <a href=""><i class="ph-identification-card-bold prevent"></i></a> -->
             <!-- <a href="/logout" class="logout">Logout</a> -->
-            <div class="img_cont">
+            <div
+              class="img_cont bottom-arrow-tooltip"
+              data-tooltip="Change Account Details"
+            >
               <img
                 src="./../img/1653832165884.png"
                 alt=""
@@ -93,7 +101,10 @@
             </div>
             <div>
               <span class="user-data_name">Systile</span>
-              <a href="" title="Copy ID" class="user-data_id prevent"
+              <a
+                href=""
+                data-tooltip="Copy ID"
+                class="user-data_id prevent bottom-arrow-tooltip-copyId-overflow"
                 >ASUDSDASDAHSD1349329</a
               >
             </div>
@@ -106,17 +117,22 @@
       <div class="side-bar">
         <i class="ph-list-bold slider_btns"></i>
         <div class="nav_controls">
-          <a href="" class="screenShareBtnCont"
+          <a
+            href=""
+            class="screenShareBtnCont left-arrow-tooltip"
+            data-tooltip="Share Your Screen"
             ><i
               class="ph-monitor-play prevent screenShareBtn"
               data-active="false"
             ></i
           ></a>
-          <a href=""
+          <a href="" class="left-arrow-tooltip_deafen" data-tooltip="Deafen"
             ><i class="ph-headphones prevent deafenBtn" data-active="false"></i
           ></a>
           <!-- <a href=""><i class="ph-monitor-play-bold prevent"></i></a> -->
-          <a href=""><i class="ph-microphone prevent muteBtn"></i></a>
+          <a href="" class="left-arrow-tooltip_mute" data-tooltip="Mute"
+            ><i class="ph-microphone prevent muteBtn"></i
+          ></a>
         </div>
 
         <div class="nav_headers">
@@ -303,10 +319,10 @@
                 </div>
 
                 <div
-                        class="house_edit_bar"
-                        data-editMessage=""
-                        data-messageId=""
-                        style="visibility: hidden"
+                  class="house_edit_bar"
+                  data-editMessage=""
+                  data-messageId=""
+                  style="visibility: hidden"
                 >
                   <span>Editing Message</span>
                   <i class="ph-x-bold close_house_editbar"></i>
@@ -335,10 +351,30 @@
               <i class="ph-hand-waving"></i><span>Friends</span>
             </h2>
             <div class="friendsListOptions">
-              <a href="" class="onlineFriends prevent active">Online</a>
-              <a href="" class="allFriends prevent">All</a>
-              <a href="" class="pendingRequestsFriends prevent">Pending</a>
-              <a href="" class="addFriends prevent">Add Friend</a>
+              <a
+                href=""
+                class="onlineFriends prevent active top-arrow-tooltip"
+                data-tooltip="All Online Friends"
+                >Online</a
+              >
+              <a
+                href=""
+                class="allFriends prevent top-arrow-tooltip"
+                data-tooltip="All Friends"
+                >All</a
+              >
+              <a
+                href=""
+                data-tooltip="Pending Requests"
+                class="pendingRequestsFriends prevent top-arrow-tooltip"
+                >Pending</a
+              >
+              <a
+                href=""
+                data-tooltip="Add a Friend"
+                class="addFriends prevent top-arrow-tooltip"
+                >Add Friend</a
+              >
             </div>
           </div>
 
@@ -598,7 +634,7 @@
         ><i class="ph-chats-circle-bold"></i><span>Reply</span></a
       >
       <a href="" class="context_house-editMessage prevent"
-      ><i class="ph-pencil-bold"></i><span>Edit Message</span></a
+        ><i class="ph-pencil-bold"></i><span>Edit Message</span></a
       >
     </div>
 
