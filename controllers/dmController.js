@@ -20,10 +20,7 @@ exports.addDms = async (req, res) => {
     const details = req.body;
 
     if (user.dms.includes(details.dm)) {
-      let dm = await dms.find({ id: details.dm });
-      dm = dm[0];
-
-      //   console.log(dm);
+      let dm = await dms.findOne({ id: details.dm });
 
       const body = {
         from: user.id,
@@ -47,6 +44,48 @@ exports.addDms = async (req, res) => {
       res.status(200).json({
         status: "ok",
         message: "Successfully Added",
+      });
+    } else {
+      res.status(404).json({
+        status: "fail",
+        message: "User Doesn't Have Access to this DM",
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.getDMUsers = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      res.redirect("/login");
+    }
+
+    const details = req.body;
+
+    if (user.dms.includes(details.dm)) {
+      let dm = await dms.findOne({ _id: details.dm });
+      const users = [];
+      const totalUsers = [dm.person1, dm.person2];
+
+      for (let id of totalUsers) {
+        const user = await account.findOne({ _id: id });
+        users.push({
+          id,
+          name: user.name,
+          image: user.image,
+        });
+      }
+
+      res.status(200).json({
+        status: "ok",
+        users,
       });
     } else {
       res.status(404).json({

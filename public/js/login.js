@@ -6,6 +6,8 @@ const form = document.querySelector(".login-form");
 const errorPopup = document.querySelector(".errorPopup");
 const errorPopup_text = document.querySelector(".errorPopup_text");
 
+const heading = document.querySelector(".heading");
+
 let ongoingError = false;
 
 const wait = async (s) => {
@@ -62,3 +64,63 @@ const popupError = async (message) => {
     res();
   });
 };
+
+(async function () {
+  while (true) {
+    const delay = 0.3;
+    heading.textContent = "";
+    await wait(1);
+    heading.textContent = "L";
+    await wait(delay);
+    heading.textContent = "Lo";
+    await wait(delay);
+    heading.textContent = "Log";
+    await wait(delay);
+    heading.textContent = "Log ";
+    await wait(delay);
+    heading.textContent = "Log I";
+    await wait(delay);
+    heading.textContent = "Log In";
+    await wait(delay);
+    heading.textContent = "Log Int";
+    await wait(delay);
+    heading.textContent = "Log Into";
+    await wait(delay);
+    heading.textContent = "Log Into ";
+    await wait(delay);
+    heading.textContent = "Log Into L";
+    await wait(delay);
+    heading.textContent = "Log Into Lu";
+    await wait(delay);
+    heading.textContent = "Log Into Lum";
+    await wait(delay);
+    heading.textContent = "Log Into Lumi";
+    await wait(3);
+
+    heading.textContent = "Log Into Lum";
+    await wait(delay - 0.1);
+    heading.textContent = "Log Into Lu";
+    await wait(delay - 0.1);
+    heading.textContent = "Log Into L";
+    await wait(delay - 0.1);
+    heading.textContent = "Log Into ";
+    await wait(delay - 0.1);
+    heading.textContent = "Log Into";
+    await wait(delay - 0.1);
+    heading.textContent = "Log Int";
+    await wait(delay - 0.1);
+    heading.textContent = "Log In";
+    await wait(delay - 0.1);
+    heading.textContent = "Log I";
+    await wait(delay - 0.1);
+    heading.textContent = "Log ";
+    await wait(delay - 0.1);
+    heading.textContent = "Log";
+    await wait(delay - 0.1);
+    heading.textContent = "Lo";
+    await wait(delay - 0.1);
+    heading.textContent = "L";
+    await wait(delay - 0.1);
+    heading.textContent = "";
+  }
+})();

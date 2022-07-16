@@ -10,6 +10,8 @@ const submitbtn = document.querySelector(".submitBtn");
 const errorPopup = document.querySelector(".errorPopup");
 const errorPopup_text = document.querySelector(".errorPopup_text");
 
+const heading = document.querySelector(".heading");
+
 let ongoingError = false;
 
 const wait = async (s) => {
@@ -41,34 +43,6 @@ const formSubmit = async () => {
     }
     return;
   }
-
-  // if (!image) {
-  //   // console.log("Please Upload an Image ");
-  //   if (!ongoingError) {
-  //     await popupError("Please Upload an Image");
-  //   }
-
-  //   return;
-  // }
-
-  // CHECK FILE TYPE
-
-  // if (!["image/jpeg", "image/gif", "image/png"].includes(image.type)) {
-  //   // console.log("Only images are allowed.");
-  //   if (!ongoingError) {
-  //     await popupError("Only images are allowed");
-  //   }
-  //   return;
-  // }
-
-  // check file size (< 10MB)
-  // if (image.size > 10 * 1024 * 1024) {
-  //   // console.log("File must be less than 2MB.");
-  //   if (!ongoingError) {
-  //     await popupError("File must be less than 2MB");
-  //   }
-  //   return;
-  // }
 
   const fd = new FormData();
   fd.append("email", email);
@@ -129,3 +103,63 @@ const popupError = async (message) => {
     res();
   });
 };
+
+(async function () {
+  while (true) {
+    const delay = 0.3;
+    heading.textContent = "";
+    await wait(1);
+    heading.textContent = "J";
+    await wait(delay);
+    heading.textContent = "Jo";
+    await wait(delay);
+    heading.textContent = "Joi";
+    await wait(delay);
+    heading.textContent = "Join";
+    await wait(delay);
+    heading.textContent = "Join ";
+    await wait(delay);
+    heading.textContent = "Join L";
+    await wait(delay);
+    heading.textContent = "Join Lu";
+    await wait(delay);
+    heading.textContent = "Join Lum";
+    await wait(delay);
+    heading.textContent = "Join Lumi";
+    await wait(delay);
+    heading.textContent = "Join Lumi ";
+    await wait(delay);
+    heading.textContent = "Join Lumi N";
+    await wait(delay);
+    heading.textContent = "Join Lumi No";
+    await wait(delay);
+    heading.textContent = "Join Lumi Now";
+    await wait(3);
+
+    heading.textContent = "Join Lumi No";
+    await wait(delay - 0.1);
+    heading.textContent = "Join Lumi N";
+    await wait(delay - 0.1);
+    heading.textContent = "Join Lumi ";
+    await wait(delay - 0.1);
+    heading.textContent = "Join Lumi";
+    await wait(delay - 0.1);
+    heading.textContent = "Join Lum";
+    await wait(delay - 0.1);
+    heading.textContent = "Join Lu";
+    await wait(delay - 0.1);
+    heading.textContent = "Join L";
+    await wait(delay - 0.1);
+    heading.textContent = "Join ";
+    await wait(delay - 0.1);
+    heading.textContent = "Join";
+    await wait(delay - 0.1);
+    heading.textContent = "Joi";
+    await wait(delay - 0.1);
+    heading.textContent = "Jo";
+    await wait(delay - 0.1);
+    heading.textContent = "J";
+    await wait(delay - 0.1);
+    heading.textContent = "";
+  }
+})();

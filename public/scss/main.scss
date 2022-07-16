@@ -1,9 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Rubik:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+
 :root {
-  --primary-bg: #161b22;
-  --primary-green: #04e762;
-  --primary-red: #dc0073;
+  --primary-bg: #111;
+  --primary-green: #00ce7c;
+  --primary-red: #f44c7f;
+  --secondary-bg: #1a1a1a;
+  --primary-messsage-cont: #1c1c1c;
 }
 
 ::-webkit-scrollbar {
@@ -31,7 +35,7 @@ html {
 }
 
 body {
-  font-family: "Rubik", sans-serif;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   background: url("./../img/Cloudy.svg");
   background-size: cover;
   height: 100vh;
@@ -43,7 +47,7 @@ body {
     display: inline-block;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     position: absolute;
     top: 0;
     left: 0;
@@ -71,24 +75,64 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #333;
+  background-color: rgb(26, 26, 26, 0.7);
+  border: 4px solid var(--primary-green);
   display: flex;
   flex-direction: column;
   gap: 8rem;
-  padding: 10rem 6rem;
+  padding: 10rem 1rem;
   border-radius: 1rem;
+  min-width: 40vw;
 
-  .heading {
-    font-family: "Rubik", sans-serif;
-    font-weight: 900;
-    font-size: 7rem;
-    text-align: center;
-    color: #ddd;
-    text-shadow: 0.5rem 0.5rem var(--primary-red);
-    transition: all 0.3s;
+  .heading_main-cont {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    &:hover {
-      text-shadow: 0.8rem 1rem var(--primary-red);
+    .heading {
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+      font-weight: 300;
+      font-size: 7rem;
+      text-align: center;
+      color: #ddd;
+      transition: all 0.3s;
+      position: relative;
+      width: max-content;
+      height: 8rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--primary-red);
+
+      &::before {
+        content: "";
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        right: -1.5rem;
+        height: 100%;
+        width: 5px;
+        background-color: #fff;
+        z-index: -1;
+        border-radius: 5px;
+        animation: blinkingCursor 0.9s infinite ease;
+        transition: all 0.1s ease;
+      }
+
+      @keyframes blinkingCursor {
+        0% {
+          opacity: 0;
+        }
+
+        50% {
+          opacity: 1;
+        }
+
+        100% {
+          opacity: 0;
+        }
+      }
     }
   }
 
@@ -99,7 +143,7 @@ body {
     justify-content: center;
     margin: 0 auto;
     gap: 1.7rem;
-    width: 60%;
+    width: 100%;
 
     .main_cont {
       display: flex;
@@ -120,7 +164,7 @@ body {
       input {
         border: 0;
         outline: 0;
-        font-family: "Rubik", sans-serif;
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         border-radius: 1rem;
         padding: 1rem 2rem;
         text-align: center;
@@ -146,7 +190,7 @@ body {
       }
 
       label {
-        font-family: "Rubik", sans-serif;
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         font-size: 1.8rem;
         font-weight: 500;
         text-align: center;
@@ -194,7 +238,7 @@ body {
     }
 
     button {
-      font-family: "Rubik", sans-serif;
+      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       background-color: #04e762;
       font-weight: 500;
       padding: 1.2rem 5rem;
@@ -245,7 +289,7 @@ body {
   }
 
   p {
-    font-family: "Rubik", sans-serif;
+    font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-size: 2.2rem;
     font-weight: 500;
     color: #ddd;
@@ -268,6 +312,21 @@ body {
 
     100% {
       transform: translate(-50%, -100%);
+    }
+  }
+}
+
+.register-form {
+  .allInputs {
+    display: flex;
+    flex-direction: row !important;
+    gap: 4rem !important;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 1.7rem;
+      width: 43%;
     }
   }
 }

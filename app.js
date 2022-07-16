@@ -180,7 +180,17 @@ io.on("connection", async (socket) => {
 
   socket.on(
     "send-house-message",
-    (type, message, user, room, image, replyTo, replyMessage, messageId, userId) => {
+    (
+      type,
+      message,
+      user,
+      room,
+      image,
+      replyTo,
+      replyMessage,
+      messageId,
+      userId
+    ) => {
       socket
         .to(room)
         .emit(
@@ -192,8 +202,8 @@ io.on("connection", async (socket) => {
           image,
           replyTo,
           replyMessage,
-            messageId,
-            userId
+          messageId,
+          userId
         );
 
       // socket.to(room).emit("receive-house-message", user, message, room, image);

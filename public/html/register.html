@@ -18,57 +18,46 @@
   <body>
     <div class="drag"></div>
     <div class="register-cont">
-      <h2 class="heading">Join the Bandwagon</h2>
+      <div class="heading_main-cont">
+        <h2 class="heading"></h2>
+      </div>
       <form class="register-form">
         <div class="main_cont">
           <div class="allInputs">
-            <input type="email" required id="email" placeholder="Email" />
-            <label for="email">Email</label>
-            <input
-              type="text"
-              required
-              id="name"
-              placeholder="Your Lumi Name"
-              maxlength="16"
-            />
-            <label for="name">Your Lumi Name</label>
-            <input
-              type="password"
-              required
-              id="password"
-              placeholder="Password"
-              minlength="6"
-              maxlength="16"
-            />
-            <label for="password">Password</label>
-            <input
-              type="password"
-              required
-              id="confirmPassword"
-              placeholder="Confirm Password"
-              minlength="6"
-              maxlength="16"
-            />
-            <label for="confirmPassword">Confirm Password</label>
-            <!-- <input
-              type="file"
-              id="image"
-              accept="image/jpeg, image/png, image/gif"
-              required
-            /> -->
+            <div>
+              <input type="email" required id="email" placeholder="Email" />
+              <label for="email">Email</label>
+              <input
+                type="text"
+                required
+                id="name"
+                placeholder="Your Lumi Name"
+                maxlength="16"
+              />
+              <label for="name">Your Lumi Name</label>
+            </div>
+            <div>
+              <input
+                type="password"
+                required
+                id="password"
+                placeholder="Password"
+                minlength="6"
+                maxlength="16"
+              />
+              <label for="password">Password</label>
+              <input
+                type="password"
+                required
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                minlength="6"
+                maxlength="16"
+              />
+              <label for="confirmPassword">Confirm Password</label>
+            </div>
           </div>
-          <!-- <div class="imageChange_cont">
-            <label for="image" id="imageLabel">Choose an Image</label>
-            <img src="./../img/testImg.png" alt="" class="image_main" />
-            <input
-              type="file"
-              id="image"
-              accept="image/jpeg, image/png, image/gif"
-              style="display: none"
-            />
-          </div> -->
         </div>
-        <!-- <label for="image" id="imageLabel">Choose an Image</label> -->
         <button type="submit" class="submitBtn">Submit</button>
         <a href="/login">Already Have an Account? Login Here</a>
       </form>

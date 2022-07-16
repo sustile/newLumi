@@ -77,8 +77,8 @@ router
 
 //EDIT HOUSE MESSAGE
 router
-    .route("/api/editHouseMessage")
-    .post(verify, houseMessageController.editHouseMessage);
+  .route("/api/editHouseMessage")
+  .post(verify, houseMessageController.editHouseMessage);
 
 // LAZY LOAD HOUSE MESSAGES
 router
@@ -116,4 +116,11 @@ router
   .route("/api/acceptRequest")
   .post(verify, accountController.acceptRequest);
 
+// GET ALL THE USERS IN A DM
+router.route("/api/getDMUsers").post(verify, dmController.getDMUsers);
+
+// GET DETAILED DETAILS OF ALL MEMBERS IN A HOUSE
+router
+  .route("/api/getHouseDetailed")
+  .post(verify, houseController.getHouseDetailed);
 module.exports = router;

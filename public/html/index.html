@@ -26,7 +26,7 @@
     <script defer src="./../modules/push.js/push.js"></script>
 
     <script src="./../js/jquery.min.js"></script>
-    <!-- <script src="/path/to/cdn/fuse.min.js"></script> -->
+
     <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
 
     <script src="./../js/emoji_keyboard.js"></script>
@@ -103,7 +103,7 @@
               <span class="user-data_name">Systile</span>
               <a
                 href=""
-                data-tooltip="Copy ID"
+                data-tooltip="Click to Copy ID"
                 class="user-data_id prevent bottom-arrow-tooltip-copyId-overflow"
                 >ASUDSDASDAHSD1349329</a
               >
@@ -175,7 +175,10 @@
         <div class="messages-wrapper" style="display: none">
           <div class="message-header-content_main">
             <h2 class="message-header_content_main-header">Direct Messages</h2>
-            <span data-id="62c924707e508a6623b912f6" title="Click to Copy ID"
+            <span
+              data-id="62c924707e508a6623b912f6"
+              data-tooltip="Click to Copy Id"
+              class="top-arrow-tooltip"
               >@62c924707e508a6623b912f6</span
             >
             <!-- <a href="" class="trigger_members-cont prevent">Members</a> -->
@@ -239,6 +242,19 @@
             </div>
 
             <!-- style="visibility: hidden" -->
+            <div class="fuzzySearchCont-dm">
+              <h2>Members</h2>
+              <i class="ph-x-bold close_dm_fuzzySearch"></i>
+              <div class="fuzzySearchCont-dm_main-cont">
+                <!-- <div class="user" data-id ="">
+                  <div class="img_cont">
+                    <img src="./../img/1653719291251.jpg" alt="" />
+                  </div>
+                  <span>Test User</span>
+                  <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                </div> -->
+              </div>
+            </div>
             <div class="message_enter" style="visibility: hidden">
               <div
                 class="dm_replybar"
@@ -268,20 +284,6 @@
                   placeholder="Message"
                   maxlength="200"
                 />
-                <!-- <input
-                  type="file"
-                  id="sendImagesDm"
-                  style="display: none"
-                  accept="image/jpeg, image/png"
-                />
-                <label for="sendImagesDm" id="sendImagesDm_Label"
-                  ><i class="ph-image"></i>
-                </label> -->
-                <!-- <input
-                  type="file"
-                  id="textAreaImageInput"
-                  style="visibility: visible"
-                /> -->
               </form>
               <button class="emoji_btn"><i class="ph-smiley"></i></button>
             </div>
@@ -306,6 +308,68 @@
                     </div>
                     <span class="message_cont">How You Doin?</span>
                   </div> -->
+              </div>
+              <div class="fuzzySearchCont-house">
+                <h2>Members</h2>
+                <i class="ph-x-bold close_house_fuzzySearch"></i>
+                <div class="fuzzySearchCont-house_main-cont">
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                  <div class="user" data-id="">
+                    <div class="img_cont">
+                      <img src="./../img/1653719291251.jpg" alt="" />
+                    </div>
+                    <span>Test User</span>
+                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
+                  </div>
+                </div>
               </div>
               <div class="house-message_enter" style="visibility: hidden">
                 <div
@@ -607,6 +671,12 @@
     <div class="house_member-list-copy-id">
       <a href="" class="context_copyId_house_member_list prevent"
         ><i class="ph-copy-bold"></i><span>Copy Id</span></a
+      >
+    </div>
+
+    <div class="mainVideo-contextMenu">
+      <a href="" class="context_requestControl prevent"
+        ><i class="ph-copy-bold"></i><span>Request Control</span></a
       >
     </div>
 

@@ -248,6 +248,7 @@ const openADm = async function (room, target) {
   }
 
   messageMain.innerHTML = "";
+  messageInput.value = "";
   messageInput.style.visibility = "visible";
   emoji_btn_dms.style.visibility = "visible";
 
@@ -268,6 +269,9 @@ const openADm = async function (room, target) {
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
   lazyLoadMessages(activeCont, currentDmPage);
+
+  closeFuzzySearchHouse();
+  closeFuzzySearchDm();
 };
 
 dmsCont.addEventListener("click", (e) => {
@@ -279,6 +283,7 @@ dmsCont.addEventListener("click", (e) => {
 
   closeDmEditBarFunction();
   closeHouseEditBarFunction();
+
   openADm(target.getAttribute("data-dm"), target);
 });
 
@@ -1289,7 +1294,7 @@ const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
   hideSpinner();
 
   for (let el of finalArray) {
-    displayMessage(...el);
+    await displayMessage(...el);
   }
 };
 
@@ -1358,6 +1363,7 @@ const popupHouse = async (room) => {
   remoteConnection();
   loadVideoStreams();
   checkOnlineStandalone();
+  // videoRequestControl();
   // await wait(1);
   // const closeOverlayTrigger = document.querySelectorAll(".closeOverlayTrigger");
   // closeOverlayTrigger.forEach((el) => {
@@ -1425,6 +1431,7 @@ houseCont.addEventListener("click", (e) => {
     }
   }
 
+  houseMessageInput.value = "";
   houseMessageCont.innerHTML = "";
 
   // checkCallAndCloseVcCont();
@@ -1433,6 +1440,8 @@ houseCont.addEventListener("click", (e) => {
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
   lazyLoadHouseMessages(activeCont, currentDmPage);
+  closeFuzzySearchHouse();
+  closeFuzzySearchDm();
   // checkVcStatus();
 });
 
@@ -2029,7 +2038,7 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
   hideSpinner();
 
   for (let el of finalArray) {
-    displayHouseMessage(...el);
+    await displayHouseMessage(...el);
   }
 };
 
@@ -2645,6 +2654,11 @@ async function remoteConnection() {
         await wait(0.2);
         vc_members_cont.innerHTML = "";
       });
+    })
+    .catch(async (err) => {
+      if (!ongoingError) {
+        await popupError("Mic not Found");
+      }
     });
 
   const addVideoStream = (video, stream) => {
@@ -3189,6 +3203,7 @@ const closeAllContextMenus = async () => {
   house_MessageContextMenu.style.opacity = "0";
   house_members_usersCopyId.style.opacity = "0";
   friendsListContextMenu.style.opacity = "0";
+  mainVideo_context.style.opacity = "0";
   // await wait(0.1);
   dmContextMenu.style.visibility = "hidden";
   houseContextMenu.style.visibility = "hidden";
@@ -3196,6 +3211,7 @@ const closeAllContextMenus = async () => {
   house_MessageContextMenu.style.visibility = "hidden";
   house_members_usersCopyId.style.visibility = "hidden";
   friendsListContextMenu.style.visibility = "hidden";
+  mainVideo_context.style.visibility = "hidden";
 };
 
 document.addEventListener("click", async () => {
@@ -4240,3 +4256,375 @@ onlineFriendsCont.addEventListener("contextmenu", (e) => {
 //FRIENDS LIST CONTEXT MENUS
 
 //FRIENDS LIST
+
+// VIDEO REQUEST CONTROL
+
+let videoRequestControlPeer;
+
+const mainVideo_context = document.querySelector(".mainVideo-contextMenu");
+const mainVideo_context_Video = videoSharing_MainCont.querySelector("video");
+async function videoRequestControl() {
+  mainVideo_context_Video.addEventListener("contextmenu", async (e) => {
+    e.preventDefault();
+
+    if (mainVideo_context_Video.getAttribute("data-user-id") === user.id)
+      return;
+
+    closeAllContextMenus();
+
+    let x = e.pageX,
+      y = e.pageY,
+      winWidth = window.innerWidth,
+      cmwidth = dmContextMenu.offsetWidth,
+      winHeight = window.innerHeight,
+      cmHeight = dmContextMenu.offsetHeight;
+
+    x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+    y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+    mainVideo_context.style.left = `${x}px`;
+    mainVideo_context.style.top = `${y}px`;
+
+    mainVideo_context.style.visibility = "visible";
+    mainVideo_context.style.opacity = "1";
+
+    const requestControlBtn = mainVideo_context.querySelector(
+      ".context_requestControl"
+    );
+
+    requestControlBtn.addEventListener("click", async (e) => {
+      e.stopImmediatePropagation();
+      closeAllContextMenus();
+
+      videoRequestControlPeer = videoStreamPeer.connect(
+        mainVideo_context_Video.getAttribute("data-user-id")
+      );
+
+      videoRequestControlPeer.on("open", () => {
+        mainVideo_context_Video.addEventListener("click", (e) => {
+          videoRequestControlPeer.send("mouseclick");
+        });
+
+        mainVideo_context_Video.addEventListener("mousemove", (e) => {
+          // const posX = this.offset().left;
+          // const posY = this.offset().left;
+
+          // console.log(posX, posY);
+
+          const x = e.pageX;
+          const Y = e.pageY;
+
+          const obj = {
+            x,
+            y,
+          };
+
+          videoRequestControlPeer.send(obj);
+        });
+
+        mainVideo_context_Video.addEventListener("keyup", (e) => {
+          videoRequestControlPeer.send({
+            key: e.key,
+          });
+        });
+      });
+    });
+  });
+
+  videoStreamPeer.on("connection", (conn) => {
+    videoRequestControlPeer = conn;
+
+    videoRequestControlPeer.on("open", () => {
+      videoRequestControlPeer.on("data", (data) => {
+        console.log(data);
+      });
+    });
+  });
+}
+
+// VIDEO REQUEST CONTROL
+
+//FUZZY SEARCH
+const fuzzySearchCont_dm = document.querySelector(".fuzzySearchCont-dm");
+const fuzzySearchCont_dm_main = fuzzySearchCont_dm.querySelector(
+  ".fuzzySearchCont-dm_main-cont"
+);
+const closeDMFuzzy = fuzzySearchCont_dm.querySelector(".close_dm_fuzzySearch");
+
+const fuzzySearchCont_house = document.querySelector(".fuzzySearchCont-house");
+const fuzzySearchCont_house_main = fuzzySearchCont_house.querySelector(
+  ".fuzzySearchCont-house_main-cont"
+);
+
+const closeHouseFuzzy = fuzzySearchCont_house.querySelector(
+  ".close_house_fuzzySearch"
+);
+
+let currentAtIndex;
+let dm;
+
+closeDMFuzzy.addEventListener("click", () => {
+  closeFuzzySearchDm();
+});
+
+closeHouseFuzzy.addEventListener("click", () => {
+  closeFuzzySearchHouse();
+});
+
+fuzzySearchCont_dm_main.addEventListener("click", (e) => {
+  const target = e.target.closest(".user");
+
+  if (!target) return;
+
+  messageInput.value =
+    messageInput.value.slice(0, currentAtIndex + 1) +
+    target.getAttribute("data-id");
+
+  closeFuzzySearchDm();
+});
+
+fuzzySearchCont_house_main.addEventListener("click", (e) => {
+  const target = e.target.closest(".user");
+
+  if (!target) return;
+
+  houseMessageInput.value =
+    houseMessageInput.value.slice(0, currentAtIndex + 1) +
+    target.getAttribute("data-id");
+
+  closeFuzzySearchHouse();
+});
+
+messageInput.addEventListener("input", async (e) => {
+  if (e.data === "@") {
+    currentAtIndex = messageInput.value.length - 1;
+    dm = await (
+      await fetch("/api/getDMUsers", {
+        method: "POST",
+        body: JSON.stringify({
+          dm: activeCont,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    dm = dm.users;
+
+    fuzzySearchCont_dm_main.innerHTML = "";
+
+    dm.forEach((user) => {
+      const html = `
+      <div class="user" data-id ="${user.id}">
+      <div class="img_cont">
+        <img src="./../img/${user.image}" alt="" />
+      </div>
+      <span>${user.name}</span>
+      <p>@${user.id}</p>
+    </div>`;
+
+      fuzzySearchCont_dm_main.insertAdjacentHTML("afterbegin", html);
+    });
+
+    fuzzySearchCont_dm.style.visibility = "visible";
+    fuzzySearchCont_dm.style.opacity = "1";
+  } else if (
+    messageInput.value === "" ||
+    messageInput.value.length - 1 < currentAtIndex
+  ) {
+    closeFuzzySearchDm();
+  } else if (messageInput.value[messageInput.value.length - 1] === "@") {
+    currentAtIndex = messageInput.value.length - 1;
+    dm = await (
+      await fetch("/api/getDMUsers", {
+        method: "POST",
+        body: JSON.stringify({
+          dm: activeCont,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    dm = dm.users;
+
+    fuzzySearchCont_dm_main.innerHTML = "";
+
+    dm.forEach((user) => {
+      const html = `
+      <div class="user" data-id ="${user.id}">
+      <div class="img_cont">
+        <img src="./../img/${user.image}" alt="" />
+      </div>
+      <span>${user.name}</span>
+      <p>@${user.id}</p>
+    </div>`;
+
+      fuzzySearchCont_dm_main.insertAdjacentHTML("afterbegin", html);
+    });
+
+    fuzzySearchCont_dm.style.visibility = "visible";
+    fuzzySearchCont_dm.style.opacity = "1";
+  } else if (currentAtIndex || currentAtIndex === 0) {
+    const currentUser = messageInput.value.slice(
+      currentAtIndex + 1,
+      messageInput.value.length
+    );
+
+    const options = {
+      keys: ["name", "id"],
+    };
+
+    const fuse = new Fuse(dm, options);
+
+    const newResults = fuse.search(currentUser);
+
+    if (newResults.length === 0) {
+      closeFuzzySearchDm();
+      return;
+    }
+
+    fuzzySearchCont_dm_main.innerHTML = "";
+
+    newResults.forEach((user) => {
+      const html = `
+      <div class="user" data-id ="${user.item.id}">
+      <div class="img_cont">
+        <img src="./../img/${user.item.image}" alt="" />
+      </div>
+      <span>${user.item.name}</span>
+      <p>@${user.item.id}</p>
+    </div>`;
+
+      fuzzySearchCont_dm_main.insertAdjacentHTML("afterbegin", html);
+    });
+  }
+});
+
+houseMessageInput.addEventListener("input", async (e) => {
+  if (e.data === "@") {
+    currentAtIndex = houseMessageInput.value.length - 1;
+    dm = await (
+      await fetch("/api/getHouseDetailed", {
+        method: "POST",
+        body: JSON.stringify({
+          id: activeCont,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    dm = dm.users;
+
+    fuzzySearchCont_house_main.innerHTML = "";
+
+    dm.forEach((user) => {
+      const html = `
+      <div class="user" data-id ="${user.id}">
+      <div class="img_cont">
+        <img src="./../img/${user.image}" alt="" />
+      </div>
+      <span>${user.name}</span>
+      <p>@${user.id}</p>
+    </div>`;
+
+      fuzzySearchCont_house_main.insertAdjacentHTML("afterbegin", html);
+    });
+
+    fuzzySearchCont_house.style.visibility = "visible";
+    fuzzySearchCont_house.style.opacity = "1";
+  } else if (
+    houseMessageInput.value === "" ||
+    houseMessageInput.value.length - 1 < currentAtIndex
+  ) {
+    closeFuzzySearchHouse();
+  } else if (
+    houseMessageInput.value[houseMessageInput.value.length - 1] === "@"
+  ) {
+    currentAtIndex = houseMessageInput.value.length - 1;
+    dm = await (
+      await fetch("/api/getHouseDetailed", {
+        method: "POST",
+        body: JSON.stringify({
+          id: activeCont,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    dm = dm.users;
+
+    fuzzySearchCont_house_main.innerHTML = "";
+
+    dm.forEach((user) => {
+      const html = `
+      <div class="user" data-id ="${user.id}">
+      <div class="img_cont">
+        <img src="./../img/${user.image}" alt="" />
+      </div>
+      <span>${user.name}</span>
+      <p>@${user.id}</p>
+    </div>`;
+
+      fuzzySearchCont_house_main.insertAdjacentHTML("afterbegin", html);
+    });
+
+    fuzzySearchCont_house.style.visibility = "visible";
+    fuzzySearchCont_house.style.opacity = "1";
+  } else if (currentAtIndex || currentAtIndex === 0) {
+    const currentUser = houseMessageInput.value.slice(
+      currentAtIndex + 1,
+      houseMessageInput.value.length
+    );
+
+    const options = {
+      keys: ["name", "id"],
+    };
+
+    const fuse = new Fuse(dm, options);
+
+    const newResults = fuse.search(currentUser);
+
+    if (newResults.length === 0) {
+      closeFuzzySearchHouse();
+      return;
+    }
+
+    fuzzySearchCont_house_main.innerHTML = "";
+
+    newResults.forEach((user) => {
+      const html = `
+      <div class="user" data-id ="${user.item.id}">
+      <div class="img_cont">
+        <img src="./../img/${user.item.image}" alt="" />
+      </div>
+      <span>${user.item.name}</span>
+      <p>@${user.item.id}</p>
+    </div>`;
+
+      fuzzySearchCont_house_main.insertAdjacentHTML("afterbegin", html);
+    });
+  }
+});
+
+async function closeFuzzySearchDm() {
+  dm = undefined;
+  currentAtIndex = undefined;
+  fuzzySearchCont_dm.style.opacity = "0";
+  fuzzySearchCont_dm.style.visibility = "hidden";
+}
+
+async function closeFuzzySearchHouse() {
+  dm = undefined;
+  currentAtIndex = undefined;
+  fuzzySearchCont_house.style.opacity = "0";
+  fuzzySearchCont_house.style.visibility = "hidden";
+}
+
+//FUZZY SEARCH

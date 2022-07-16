@@ -714,6 +714,7 @@ body {
   font-size: 1.5rem;
   font-weight: 500;
   cursor: pointer;
+  position: relative;
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont {
   width: 100%;
@@ -866,6 +867,76 @@ body {
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_main-cont .reply_message:hover {
   background-color: rgb(65, 65, 65);
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm {
+  background-color: var(--primary-bg);
+  width: 95%;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -32%);
+  z-index: 5;
+  height: 25rem;
+  border-radius: 5px;
+  padding: 2rem 3rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm h2 {
+  color: #ddd;
+  margin-bottom: 1.5rem;
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm i {
+  color: var(--primary-red);
+  font-size: 2rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  cursor: pointer;
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm_main-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  max-height: 90%;
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm_main-cont .user {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm_main-cont .user .img_cont {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm_main-cont .user .img_cont img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm_main-cont .user span {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--primary-red);
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm_main-cont .user p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: rgb(102, 102, 102);
+}
+.header_main-cont .content .messages-wrapper .messages_model-cont .fuzzySearchCont-dm_main-cont .user:hover {
+  background-color: var(--secondary-bg);
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_enter {
   background-color: transparent;
@@ -1213,6 +1284,76 @@ body {
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message:hover {
   background-color: rgb(65, 65, 65);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house {
+  background-color: var(--primary-bg);
+  width: 95%;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -32%);
+  z-index: 5;
+  height: 25rem;
+  border-radius: 5px;
+  padding: 2rem 3rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house h2 {
+  color: #ddd;
+  margin-bottom: 1.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house i {
+  color: var(--primary-red);
+  font-size: 2rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  cursor: pointer;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  max-height: 90%;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user .img_cont {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user .img_cont img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user span {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--primary-red);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: rgb(102, 102, 102);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user:hover {
+  background-color: var(--secondary-bg);
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter {
   background-color: transparent;
@@ -2458,7 +2599,8 @@ body {
 .dm-message-contextMenu,
 .house-message-contextMenu,
 .house_member-list-copy-id,
-.friends-list-contextMenu {
+.friends-list-contextMenu,
+.mainVideo-contextMenu {
   background-color: rgb(41, 41, 41);
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -2476,7 +2618,8 @@ body {
 .dm-message-contextMenu a,
 .house-message-contextMenu a,
 .house_member-list-copy-id a,
-.friends-list-contextMenu a {
+.friends-list-contextMenu a,
+.mainVideo-contextMenu a {
   text-decoration: none;
   color: #ddd;
   display: flex;
@@ -2493,18 +2636,25 @@ body {
 .dm-message-contextMenu a i,
 .house-message-contextMenu a i,
 .house_member-list-copy-id a i,
-.friends-list-contextMenu a i {
+.friends-list-contextMenu a i,
+.mainVideo-contextMenu a i {
   font-size: 2.2rem;
+  color: var(--primary-red);
 }
 .dm-contextMenu a span,
 .house-contextMenu a span,
 .dm-message-contextMenu a span,
 .house-message-contextMenu a span,
 .house_member-list-copy-id a span,
-.friends-list-contextMenu a span {
+.friends-list-contextMenu a span,
+.mainVideo-contextMenu a span {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-size: 1.4rem;
   font-weight: 500;
+}
+
+.mainVideo-contextMenu {
+  z-index: 130;
 }
 
 .friends-list-contextMenu {
@@ -2606,7 +2756,7 @@ body {
   transform: translate(-50%, -50%) scale(0);
   background-color: #161b22;
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 1rem;
   height: 98vh;
   width: 99vw;
   display: flex;
@@ -2646,10 +2796,14 @@ body {
 }
 .videoAndScreenShareCont_main-cont {
   width: 100%;
-  height: 98vh;
+  height: 100%;
   border-radius: 5px;
   position: relative;
-  padding-top: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 .videoAndScreenShareCont_main-cont span {
   position: absolute;
@@ -2659,13 +2813,25 @@ body {
   top: 0;
   left: 0;
   font-size: 2.5rem;
-  padding: 0 1rem;
   transform: translateY(-20%);
   z-index: 1;
 }
-.videoAndScreenShareCont_main-cont video {
+.videoAndScreenShareCont_main-cont span::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 96vh;
+  height: 100%;
+  z-index: -1;
+  filter: blur(10px);
+  background-color: rgb(41, 41, 41);
+}
+.videoAndScreenShareCont_main-cont video {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
 }
 .videoAndScreenShareCont_users-cont {
   max-height: 98vh;
@@ -2749,7 +2915,7 @@ body {
 .bottom-arrow-tooltip-copyId-overflow::before {
   content: attr(data-tooltip);
   color: #ddd;
-  margin-left: 3rem;
+  margin-left: -1rem;
   margin-top: -4rem;
   background-color: var(--primary-red);
   padding: 0.5rem 1rem;

@@ -78,6 +78,49 @@ exports.getHouse = async (req, res) => {
   }
 };
 
+exports.getHouseDetailed = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      res.status(400).json({
+        status: "fail",
+        message: "No Valid ID",
+      });
+    } else {
+      const result = await house.findOne({ _id: id });
+
+      if (!result) {
+        res.status(400).json({
+          status: "fail",
+          message: "No Valid ID",
+        });
+      }
+      const users = [];
+      const totalUsers = result.members;
+
+      for (let id of totalUsers) {
+        const user = await account.findOne({ _id: id });
+        users.push({
+          id,
+          name: user.name,
+          image: user.image,
+        });
+      }
+
+      res.status(200).json({
+        status: "ok",
+        users,
+      });
+    }
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
 exports.joinHouse = async (req, res) => {
   try {
     const { id } = req.body;
