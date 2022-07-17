@@ -754,6 +754,7 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 5px;
   transition: all 0.1s ease;
+  max-width: 100%;
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_main-cont .message_user {
   display: flex;
@@ -789,9 +790,10 @@ body {
   font-weight: 400;
   font-size: 1.4rem;
   color: #ddd;
-  padding: 0 5.1rem;
+  margin: 0 5.1rem;
   line-height: 1.5;
   overflow-wrap: break-word;
+  max-width: max-content;
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_main-cont .message .ping-cont {
   background-color: var(--secondary-bg);
@@ -806,9 +808,10 @@ body {
   font-weight: 400;
   font-size: 1.4rem;
   color: #9578d3;
-  padding: 0 5.1rem;
+  margin: 0 5.1rem;
   line-height: 1.5;
   overflow-wrap: break-word;
+  max-width: max-content;
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_main-cont .message .message-image_cont {
   margin-top: 1rem;
@@ -1181,6 +1184,7 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 5px;
   transition: all 0.1s ease;
+  max-width: 100%;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_user {
   display: flex;
@@ -1216,9 +1220,10 @@ body {
   font-weight: 400;
   font-size: 1.4rem;
   color: #ddd;
-  padding: 0 5.1rem;
+  margin: 0 5.1rem;
   line-height: 1.5;
   overflow-wrap: break-word;
+  max-width: max-content;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message .ping-cont {
   background-color: var(--secondary-bg);
@@ -1230,11 +1235,13 @@ body {
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_cont-link {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
+  font-weight: 400;
   font-size: 1.4rem;
   color: #9578d3;
-  padding: 0 5.1rem;
+  margin: 0 5.1rem;
   line-height: 1.5;
   overflow-wrap: break-word;
+  max-width: max-content;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message:hover {
   background-color: rgb(65, 65, 65);
@@ -2714,15 +2721,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  background-color: #d8315b;
+  gap: 2rem;
+  background-color: var(--secondary-bg);
   position: fixed;
   padding: 0.8rem 3rem;
-  border-radius: 10rem;
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, -100%);
+  border-radius: 1rem;
+  left: 0;
+  bottom: 0;
+  transform: translate(-100%, -20%);
   z-index: 10000;
+  border: 3px solid var(--primary-red);
 }
 .errorPopup i,
 .friendsPopup i {
@@ -2733,28 +2741,34 @@ body {
 .friendsPopup p {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-size: 2rem;
-  font-weight: 500;
-  color: #333;
+  font-weight: 400;
+  color: #ddd;
 }
 @keyframes moveDown {
   0% {
-    transform: translate(-50%, -100%);
+    transform: translate(-100%, -20%);
+  }
+  80% {
+    transform: translate(15%, -20%);
   }
   100% {
-    transform: translate(-50%, 20%);
+    transform: translate(5%, -20%);
   }
 }
 @keyframes moveUp {
   0% {
-    transform: translate(-50%, 20%);
+    transform: translate(5%, -20%);
+  }
+  20% {
+    transform: translate(15%, -20%);
   }
   100% {
-    transform: translate(-50%, -100%);
+    transform: translate(-100%, -20%);
   }
 }
 
 .friendsPopup {
-  background-color: #04e762;
+  border: 3px solid var(--primary-green);
 }
 
 .house_member-list-copy-id {

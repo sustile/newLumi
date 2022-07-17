@@ -2161,8 +2161,6 @@ async function remoteConnection() {
   myVideo.muted = true;
   myVideo.setAttribute("data-id", "mine");
 
-  const Audiocontext = new window.AudioContext();
-
   navigator.mediaDevices
     .getUserMedia({
       video: false,
@@ -2172,9 +2170,9 @@ async function remoteConnection() {
       },
     })
     .then((stream) => {
-      audioStream = stream;
       stream.userId = user.id;
-      addVideoStream(myVideo, stream);
+      audioStream = stream;
+      addVideoStream(myVideo, audioStream);
 
       // ON CALL
 
@@ -2290,14 +2288,14 @@ async function remoteConnection() {
 
       socket.on("user-joined-call", (room, id, name, image) => {
         if (activeCall.room === room) {
-          call = vcPeer.call(id, stream);
+          call = vcPeer.call(id, audioStream);
           sound_callJoin.play();
 
           socket.emit(
             "user-call-calling",
             activeCall.room,
             id,
-            stream.id,
+            audioStream.id,
             user.name,
             user.image,
             user.id
@@ -2383,7 +2381,7 @@ async function remoteConnection() {
 
         clearInterval(checkStatusInterval);
 
-        socket.emit("leave-vc", activeCall.room, stream.id, user.id);
+        socket.emit("leave-vc", activeCall.room, audioStream.id, user.id);
 
         clearAllStreams();
 
@@ -2426,14 +2424,14 @@ async function remoteConnection() {
 
       socket.on("user-joined-vc", (room, id, name, image) => {
         if (activeCall.room === room) {
-          call = vcPeer.call(id, stream);
+          call = vcPeer.call(id, audioStream);
           sound_callJoin.play();
 
           socket.emit(
             "user-vc-calling",
             activeCall.room,
             id,
-            stream.id,
+            audioStream.id,
             user.name,
             user.image,
             user.id
@@ -2556,7 +2554,7 @@ async function remoteConnection() {
       });
 
       vcPeer.on("call", (incoming) => {
-        incoming.answer(stream);
+        incoming.answer(audioStream);
 
         call = incoming;
 
@@ -2576,7 +2574,7 @@ async function remoteConnection() {
 
       // HOUSE VC
 
-      const audio = stream.getAudioTracks()[0];
+      const audio = audioStream.getAudioTracks()[0];
 
       if (audio) {
         muteBtn.addEventListener("click", () => {
@@ -2709,7 +2707,7 @@ async function remoteConnection() {
 
         screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
 
-        socket.emit("leave-call_dm", activeCall.room, stream.id, user.id);
+        socket.emit("leave-call_dm", activeCall.room, audioStream.id, user.id);
 
         clearAllStreams();
 
