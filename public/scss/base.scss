@@ -502,18 +502,18 @@ body {
       gap: 1rem;
       .main-heading {
         font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: 400;
-        color: var(--primary-green);
+        color: #333;
         letter-spacing: 1rem;
         transition: all 0.3s ease;
 
         &:hover {
           letter-spacing: 1.5rem;
+          color: #9578d3;
         }
 
         &:hover ~ .dev {
-          // transform: translateX(0);
           visibility: visible;
           opacity: 1;
         }
@@ -521,8 +521,11 @@ body {
 
       i {
         color: var(--primary-red);
-        font-size: 8rem;
-        // animation: check 3s infinite ease;
+        font-size: 7rem;
+
+        &:hover {
+          animation: spinnerAnimation 1s ease;
+        }
       }
 
       .dev {
@@ -862,6 +865,17 @@ body {
           text-align: left;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+
+        i {
+          color: var(--primary-red);
+          font-size: 2rem;
+          margin-left: 2rem;
+          visibility: hidden;
+        }
+
+        .userMute {
+          visibility: visible;
         }
       }
     }

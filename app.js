@@ -88,7 +88,7 @@ io.on("connection", async (socket) => {
         const userData = await account.findOne({ _id: user.userId });
         activeSockets.splice(i, 1);
         userData.dms.forEach((room) => {
-          socket.to(room).emit("userOffline", room);
+          socket.to(room).emit("checkOnline_dms_serverSideReq", room);
 
           socket.to(room).emit("user-left-server_check-vc", room, user.userId);
         });
@@ -101,7 +101,7 @@ io.on("connection", async (socket) => {
             if (user2.userId === from) {
               socket
                 .to(user2.id)
-                .emit("goingOffline-Standalone_final", user.userId, from);
+                .emit("checkOnline-Standalone_serverSideReq", user.userId);
             }
           });
         });
@@ -112,6 +112,14 @@ io.on("connection", async (socket) => {
   });
 
   // GLOBAL SOCKETS
+
+  socket.on("checkMute", (room, id) => {
+    socket.to(room).emit("checkMuteRequest", room, id);
+  });
+
+  socket.on("muteBtn", (room, id) => {
+    socket.to(room).emit("UserMuted", room, id);
+  });
 
   socket.on("user-data-update", async (id) => {
     const user = await account.findOne({ _id: id });

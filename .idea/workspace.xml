@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f29363e-0391-4107-95be-af6fdaaf064b" name="Changes" comment="Added the ability to edit Messages">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/base.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/base.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/html/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/html/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/base.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/scss/base.scss" beforeDir="false" afterPath="$PROJECT_DIR$/public/scss/base.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,6 +95,7 @@
       <workItem from="1657720768795" duration="4000" />
       <workItem from="1657730892599" duration="3059000" />
       <workItem from="1657800870804" duration="7214000" />
+      <workItem from="1658036117144" duration="3000" />
     </task>
     <task id="LOCAL-00001" summary="Some smol changes">
       <created>1657627919050</created>

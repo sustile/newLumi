@@ -2133,6 +2133,7 @@ function insertVcMembers(id, name, image, from) {
   const html = `<p data-id="${id}" data-user-id = "${from}" >
   <img src="./../img/${image}" alt="" />
   <span>${name}</span>
+  <i class="ph-microphone-slash-bold" ></i>
 </p>`;
 
   vc_members_cont.insertAdjacentHTML("beforeend", html);
@@ -2160,10 +2161,15 @@ async function remoteConnection() {
   myVideo.muted = true;
   myVideo.setAttribute("data-id", "mine");
 
+  const Audiocontext = new window.AudioContext();
+
   navigator.mediaDevices
     .getUserMedia({
       video: false,
-      audio: true,
+      audio: {
+        noiseSuppression: true,
+        echoCancellation: true,
+      },
     })
     .then((stream) => {
       audioStream = stream;
@@ -2223,8 +2229,6 @@ async function remoteConnection() {
 
           screenShareBtnCont.style.animation = "popup_btn 0.3s forwards ease";
 
-          socket.emit("send-call", user.id, activeCont);
-
           activeCall.status = true;
           activeCall.room = room;
           sound_callJoin.play();
@@ -2241,6 +2245,19 @@ async function remoteConnection() {
 
           sound_call.stop();
           call_prompt.style.animation = "popdownPrompt 0.3s forwards ease";
+
+          socket.emit("checkMute", activeCall.room, user.id);
+          if (muteBtn.style.color === "var(--primary-red)") {
+            socket.emit("muteBtn", activeCall.room, user.id);
+
+            const allUsers = vc_members_cont.querySelectorAll("p");
+            allUsers.forEach(async (user2) => {
+              if (user2.getAttribute("data-user-id") === user.id) {
+                const i = user2.querySelector("i");
+                i.classList.toggle("userMute");
+              }
+            });
+          }
         });
 
         call_prompt_decline.addEventListener("click", () => {
@@ -2290,6 +2307,10 @@ async function remoteConnection() {
 
           const video = document.createElement("audio");
 
+          if (muteBtn.style.color === "var(--primary-red)") {
+            socket.emit("muteBtn", activeCall.room, user.id);
+          }
+
           call.on("stream", (userVideoStream) => {
             const allVids = Array.from(videoCont.querySelectorAll("audio"));
             const checkArray = allVids.filter(
@@ -2300,6 +2321,7 @@ async function remoteConnection() {
               video.setAttribute("data-user-id", id);
               addVideoStream(video, userVideoStream);
               insertVcMembers(userVideoStream.id, name, image, id);
+              socket.emit("checkMute", activeCall.room, user.id);
             } else {
               updateVideoCont(id, userVideoStream);
             }
@@ -2336,6 +2358,18 @@ async function remoteConnection() {
         call_status.style.animation = "popup_btn 0.3s forwards ease";
 
         leave_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+
+        if (muteBtn.style.color === "var(--primary-red)") {
+          socket.emit("muteBtn", activeCall.room, user.id);
+
+          const allUsers = vc_members_cont.querySelectorAll("p");
+          allUsers.forEach(async (user2) => {
+            if (user2.getAttribute("data-user-id") === user.id) {
+              const i = user2.querySelector("i");
+              i.classList.toggle("userMute");
+            }
+          });
+        }
       });
 
       leave_house_vc.addEventListener("click", async () => {
@@ -2409,6 +2443,10 @@ async function remoteConnection() {
 
           const video = document.createElement("audio");
 
+          if (muteBtn.style.color === "var(--primary-red)") {
+            socket.emit("muteBtn", activeCall.room, user.id);
+          }
+
           call.on("stream", (userVideoStream) => {
             const allVids = Array.from(videoCont.querySelectorAll("audio"));
             const checkArray = allVids.filter(
@@ -2419,6 +2457,7 @@ async function remoteConnection() {
               video.setAttribute("data-user-id", id);
               addVideoStream(video, userVideoStream);
               insertVcMembers(userVideoStream.id, name, image, id);
+              socket.emit("checkMute", room, user.id);
             } else {
               updateVideoCont(id, userVideoStream);
             }
@@ -2428,9 +2467,6 @@ async function remoteConnection() {
             // console.log(`${name} left`);
             video.remove();
           });
-        } else if (activeCont === room) {
-          vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-          insertVcMembers(id, name, image, id);
         }
       });
 
@@ -2547,14 +2583,53 @@ async function remoteConnection() {
           if (audio.enabled) {
             audio.enabled = false;
             muteBtn.style.color = "var(--primary-red)";
+            if (activeCall.status) {
+              socket.emit("muteBtn", activeCall.room, user.id);
+
+              const allUsers = vc_members_cont.querySelectorAll("p");
+              allUsers.forEach(async (user2) => {
+                if (user2.getAttribute("data-user-id") === user.id) {
+                  const i = user2.querySelector("i");
+                  i.classList.toggle("userMute");
+                }
+              });
+            }
             // muteBtn.style.backgroundColor = "var(--primary-bg)";
           } else {
             audio.enabled = true;
             muteBtn.style.color = "var(--primary-green)";
-            // muteBtn.style.backgroundColor = "";
+            socket.emit("muteBtn", activeCall.room, user.id);
+
+            const allUsers = vc_members_cont.querySelectorAll("p");
+            allUsers.forEach(async (user2) => {
+              if (user2.getAttribute("data-user-id") === user.id) {
+                const i = user2.querySelector("i");
+                i.classList.toggle("userMute");
+              }
+            });
           }
         });
       }
+
+      socket.on("checkMuteRequest", (room, id) => {
+        if (activeCall.room === room) {
+          if (muteBtn.style.color === "var(--primary-red)") {
+            socket.emit("muteBtn", activeCall.room, user.id);
+          }
+        }
+      });
+
+      socket.on("UserMuted", (room, id) => {
+        if (activeCall.room === room) {
+          const allUsers = vc_members_cont.querySelectorAll("p");
+          allUsers.forEach(async (user) => {
+            if (user.getAttribute("data-user-id") === id) {
+              const i = user.querySelector("i");
+              i.classList.toggle("userMute");
+            }
+          });
+        }
+      });
 
       deafenBtn.addEventListener("click", (e) => {
         if (e.target.getAttribute("data-active") === "false") {
@@ -2564,12 +2639,22 @@ async function remoteConnection() {
             el.pause();
           });
           e.target.setAttribute("data-active", true);
-          audio.enabled = false;
-          muteBtn.style.color = "var(--primary-red)";
+          if (muteBtn.style.color !== "var(--primary-red)") {
+            audio.enabled = false;
+            muteBtn.style.color = "var(--primary-red)";
+            socket.emit("muteBtn", activeCall.room, user.id);
+
+            const allUsers = vc_members_cont.querySelectorAll("p");
+            allUsers.forEach(async (user2) => {
+              if (user2.getAttribute("data-user-id") === user.id) {
+                const i = user2.querySelector("i");
+                i.classList.toggle("userMute");
+              }
+            });
+          }
         } else if (e.target.getAttribute("data-active") === "true") {
           document.querySelectorAll("video").forEach((el) => {
             deafenBtn.style.color = "var(--primary-green)";
-            // deafenBtn.style.backgroundColor = "";
             el.play();
           });
           e.target.setAttribute("data-active", false);
@@ -2599,6 +2684,18 @@ async function remoteConnection() {
         call_status.style.animation = "popup_btn 0.3s forwards ease";
 
         decline_btn.style.animation = "popup_btn 0.3s forwards ease";
+
+        if (muteBtn.style.color === "var(--primary-red)") {
+          socket.emit("muteBtn", activeCall.room, user.id);
+
+          const allUsers = vc_members_cont.querySelectorAll("p");
+          allUsers.forEach(async (user2) => {
+            if (user2.getAttribute("data-user-id") === user.id) {
+              const i = user2.querySelector("i");
+              i.classList.toggle("userMute");
+            }
+          });
+        }
       });
 
       decline_btn.addEventListener("click", async (e) => {
@@ -2657,6 +2754,7 @@ async function remoteConnection() {
     })
     .catch(async (err) => {
       if (!ongoingError) {
+        console.log(err);
         await popupError("Mic not Found");
       }
     });
@@ -3293,6 +3391,11 @@ socket.on("user-left-server_check-vc", (room, id) => {
   }
 });
 
+socket.on("checkOnline_dms_serverSideReq", (room) => {
+  setUserOffline(room);
+  socket.emit("checkOnline_dms", room);
+});
+
 socket.on("areYouOnline_dms", (room) => {
   socket.emit("yesIamOnline_dms", room);
 });
@@ -3391,6 +3494,7 @@ async function loadVideoStreams() {
             video: {
               mediaDevices: "screen",
               cursor: "always",
+              frameRate: 60,
             },
             audio: false,
           })
@@ -3715,9 +3819,38 @@ socket.on("checkOnline-Standalone_request", (id, from) => {
   }
 });
 
+socket.on("checkOnline-Standalone_serverSideReq", (id) => {
+  if (activeCont === "friendslist-online") {
+    const all = onlineFriendsCont.querySelectorAll("a");
+    all.forEach(async (user) => {
+      if (user.getAttribute("data-user-id") === id) {
+        const p = onlineFriendsTab.querySelector("p");
+        let num = p.textContent.split(" ");
+        num = Number(num[num.length - 1]);
+        num -= 1;
+        if (num < 0) num = 0;
+        p.textContent = `Online - ${num}`;
+        user.remove();
+      }
+    });
+  }
+
+  socket.emit("checkOnline-Standalone", id, user.id);
+});
+
 socket.on("checkOnline-Standalone_final", async (id, from) => {
   if (from === user.id) {
     if (activeCont === "friendslist-online") {
+      const all = onlineFriendsCont.querySelectorAll("a");
+      let check = false;
+      all.forEach((user) => {
+        if (user.getAttribute("data-user-id") === id) {
+          check = true;
+        }
+      });
+
+      if (check) return;
+
       const p = onlineFriendsTab.querySelector("p");
       let num = p.textContent.split(" ");
       num = Number(num[num.length - 1]);
@@ -4381,6 +4514,8 @@ fuzzySearchCont_dm_main.addEventListener("click", (e) => {
     target.getAttribute("data-id");
 
   closeFuzzySearchDm();
+
+  messageInput.focus();
 });
 
 fuzzySearchCont_house_main.addEventListener("click", (e) => {
@@ -4393,6 +4528,8 @@ fuzzySearchCont_house_main.addEventListener("click", (e) => {
     target.getAttribute("data-id");
 
   closeFuzzySearchHouse();
+
+  houseMessageInput();
 });
 
 messageInput.addEventListener("input", async (e) => {

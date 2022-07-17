@@ -398,14 +398,15 @@ body {
 }
 .header_main-cont .side-bar .nav_headers .main-heading {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 400;
-  color: var(--primary-green);
+  color: #333;
   letter-spacing: 1rem;
   transition: all 0.3s ease;
 }
 .header_main-cont .side-bar .nav_headers .main-heading:hover {
   letter-spacing: 1.5rem;
+  color: #9578d3;
 }
 .header_main-cont .side-bar .nav_headers .main-heading:hover ~ .dev {
   visibility: visible;
@@ -413,7 +414,10 @@ body {
 }
 .header_main-cont .side-bar .nav_headers i {
   color: var(--primary-red);
-  font-size: 8rem;
+  font-size: 7rem;
+}
+.header_main-cont .side-bar .nav_headers i:hover {
+  animation: spinnerAnimation 1s ease;
 }
 .header_main-cont .side-bar .nav_headers .dev {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -685,6 +689,15 @@ body {
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.header_main-cont .content .vc_members p i {
+  color: var(--primary-red);
+  font-size: 2rem;
+  margin-left: 2rem;
+  visibility: hidden;
+}
+.header_main-cont .content .vc_members p .userMute {
+  visibility: visible;
 }
 .header_main-cont .content .messages-wrapper {
   width: 100%;
