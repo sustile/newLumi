@@ -75,24 +75,11 @@
             <a href="#" class="prevent createDm closeOverlayTrigger"
               ><i class="ph-hand-waving"></i><span>Friends</span></a
             >
+            <i class="ph-gear-six-bold settingsTrigger"></i>
           </div>
-          <!-- <div class="nav_controls">
-            <a href=""
-              ><i
-                class="ph-headphones prevent deafenBtn"
-                data-active="false"
-              ></i
-            ></a>
-            <a href=""><i class="ph-monitor-play-bold prevent"></i></a> 
-            <a href=""><i class="ph-microphone prevent muteBtn"></i></a>
-          </div> -->
+
           <div class="nav_acc">
-            <!-- <a href=""><i class="ph-identification-card-bold prevent"></i></a> -->
-            <!-- <a href="/logout" class="logout">Logout</a> -->
-            <div
-              class="img_cont bottom-arrow-tooltip"
-              data-tooltip="Change Account Details"
-            >
+            <div class="img_cont">
               <img
                 src="./../img/1653832165884.png"
                 alt=""
@@ -116,6 +103,7 @@
     <div class="header_main-cont">
       <div class="side-bar">
         <i class="ph-list-bold slider_btns"></i>
+        <!-- <div class="slider_btns"></div> -->
         <div class="nav_controls">
           <a
             href=""
@@ -138,9 +126,9 @@
         <div class="nav_headers">
           <i class="ph-moon-fill"></i>
           <h2 class="main-heading">Lumi</h2>
-          <span class="dev"
+          <!-- <span class="dev"
             >DEVELOPED BY <span class="systile">SYSTILE</span></span
-          >
+          > -->
         </div>
       </div>
       <div class="content">
@@ -314,62 +302,13 @@
                 <h2>Members</h2>
                 <i class="ph-x-bold close_house_fuzzySearch"></i>
                 <div class="fuzzySearchCont-house_main-cont">
-                  <div class="user" data-id="">
+                  <!-- <div class="user" data-id="">
                     <div class="img_cont">
                       <img src="./../img/1653719291251.jpg" alt="" />
                     </div>
                     <span>Test User</span>
                     <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
-                  <div class="user" data-id="">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
-                  <div class="user" data-id="">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
-                  <div class="user" data-id="">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
-                  <div class="user" data-id="">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
-                  <div class="user" data-id="">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
-                  <div class="user" data-id="">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
-                  <div class="user" data-id="">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                    <p>@62c97c4b7cdcbefb6ffb74e1</p>
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="house-message_enter" style="visibility: hidden">
@@ -500,6 +439,109 @@
             </div>
           </div>
         </div>
+
+        <div class="settings-wrapper" style="display: none">
+          <div class="setings-wrapper_content-main">
+            <h2 class="setings-wrapper_content-main-header">
+              <i class="ph-gear-six-bold"></i><span>Settings</span>
+            </h2>
+            <div class="accountSettingsOptions">
+              <a
+                href=""
+                class="accountSettings prevent active top-arrow-tooltip"
+                data-tooltip="Change Account Settings"
+                >Account</a
+              >
+              <a
+                href=""
+                class="soundSettings prevent top-arrow-tooltip"
+                data-tooltip="Sound Settings"
+                >Sound</a
+              >
+            </div>
+          </div>
+
+          <div class="settings-wrapper_model-cont">
+            <div class="accountSetings_model-cont">
+              <p>Account Settings</p>
+              <div class="accountSettings_main-cont">
+                <form class="form">
+                  <div class="nameChange_cont">
+                    <label for="nameChange">Change Your Name</label>
+                    <input
+                      type="text"
+                      id="nameChange"
+                      maxlength="16"
+                      placeholder="Systile"
+                    />
+                  </div>
+
+                  <div class="imageChange_cont">
+                    <label for="image" id="imageLabel">Change Your Image</label>
+                    <img src="./../img/default.png" alt="" class="image_main" />
+                    <input
+                      type="file"
+                      id="image"
+                      accept="image/jpeg, image/png, image/gif"
+                      style="display: none"
+                    />
+                  </div>
+
+                  <div class="submit-cont">
+                    <button type="submit" class="submit_acc_changes">
+                      Save
+                    </button>
+                  </div>
+                </form>
+                <a href="/logout">Logout</a>
+              </div>
+            </div>
+            <div class="soundSettings_model-cont" style="display: none">
+              <p>Sound Settings</p>
+              <div class="soundSettings_main-cont">
+                <div class="inputSoundSettings">
+                  <p>Input Devices</p>
+                  <div class="inputDeviceCont">
+                    <div class="inputDeviceTrigger" data-active="false">
+                      <span data-sound="Default" data-sound-id="">Default</span>
+                      <i class="ph-caret-right-bold"></i>
+                    </div>
+                    <div class="inputSoundSettings_dropdown"></div>
+                  </div>
+                </div>
+
+                <div class="outputSoundSettings">
+                  <p>Output Devices</p>
+                  <div class="outputDeviceCont">
+                    <div class="outputDeviceTrigger" data-active="false">
+                      <span data-sound="Default" data-sound-id="">Default</span>
+                      <i class="ph-caret-right-bold"></i>
+                    </div>
+
+                    <div class="outputSoundSettings_dropdown"></div>
+                  </div>
+                </div>
+                <div class="sliderCont">
+                  <p class="sliderCont_title">Output Volume</p>
+                  <div class="sliderCont_main">
+                    <span>0</span>
+                    <div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value="50"
+                      />
+                      <!-- <p class="sliderValue">50</p> -->
+                    </div>
+                    <span class="currentValue">50</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -623,7 +665,7 @@
     </div>
 
     <div class="house-members-cont">
-      <h2>Member List</h2>
+      <h2>Members</h2>
       <a href="" class="close_house-members-cont prevent">
         <i class="ph-x-bold"></i>
       </a>
@@ -681,6 +723,16 @@
       >
     </div>
 
+    <div class="messageUserContextMenu">
+      <div class="img_cont">
+        <img src="./../img/default.png" alt="" />
+      </div>
+      <div class="user">
+        <span>Systile</span>
+        <p>@ASDASDASDSAXASD7AS8ssssssssssD7S7</p>
+      </div>
+    </div>
+
     <div class="friends-list-contextMenu">
       <a href="" class="openDm_friends-list prevent"
         ><i class="ph-chat-centered-text-bold"></i
@@ -731,6 +783,10 @@
     <div class="errorPopup">
       <i class="ph-circle-wavy-warning-bold"></i>
       <p class="errorPopup_text">Something Went Wrong</p>
+    </div>
+    <div class="okPopup">
+      <i class="ph-check-bold"></i>
+      <p class="okPopup_text">Ok!</p>
     </div>
     <div class="friendsPopup">
       <i class="ph-user-gear-bold"></i>

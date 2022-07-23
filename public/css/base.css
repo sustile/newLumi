@@ -277,9 +277,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  gap: 2rem;
 }
 .slider .dms .nav_details .createDm_cont .createDm {
-  width: 90%;
   text-decoration: none;
   background-color: var(--secondary-bg);
   padding: 0.5rem 3rem;
@@ -325,9 +326,22 @@ body {
   font-size: 1.8rem;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
 }
+.slider .dms .nav_details .createDm_cont .settingsTrigger {
+  color: #ddd;
+  font-size: 2rem;
+  padding: 0.8rem;
+  background-color: var(--secondary-bg);
+  border-radius: 10rem;
+  border: 3px solid var(--primary-green);
+  cursor: pointer;
+  transition: all 1s ease;
+}
+.slider .dms .nav_details .createDm_cont .settingsTrigger:hover {
+  transform: rotate(180deg);
+}
 .slider .dms .nav_details .nav_acc {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 1rem 2rem;
   width: 100%;
   align-items: center;
@@ -345,7 +359,6 @@ body {
   object-fit: cover;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
-  cursor: pointer;
 }
 .slider .dms .nav_details .nav_acc div {
   display: flex;
@@ -356,8 +369,8 @@ body {
 .slider .dms .nav_details .nav_acc div span {
   width: 15rem;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  color: #ddd;
-  font-size: 1.8rem;
+  color: var(--primary-red);
+  font-size: 1.5rem;
   font-weight: 500;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -374,6 +387,7 @@ body {
   white-space: pre;
   cursor: pointer;
   position: relative;
+  text-align: center;
 }
 
 .header_main-cont {
@@ -388,17 +402,17 @@ body {
 }
 .header_main-cont .side-bar .nav_headers {
   position: absolute;
-  bottom: 10%;
+  bottom: 5%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-90deg);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 .header_main-cont .side-bar .nav_headers .main-heading {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 400;
   color: #333;
   letter-spacing: 1rem;
@@ -415,9 +429,6 @@ body {
 .header_main-cont .side-bar .nav_headers i {
   color: var(--primary-red);
   font-size: 7rem;
-}
-.header_main-cont .side-bar .nav_headers i:hover {
-  animation: spinnerAnimation 1s ease;
 }
 .header_main-cont .side-bar .nav_headers .dev {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -452,11 +463,11 @@ body {
 }
 .header_main-cont .side-bar .nav_controls a i {
   color: var(--primary-green);
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   border: 0;
   position: relative;
   background-color: var(--secondary-bg);
-  padding: 1rem;
+  padding: 0.8rem;
   border-radius: 5px;
   transition: all 0.2s;
 }
@@ -476,12 +487,8 @@ body {
   transform: translate(-50%, -50%);
   z-index: 5;
   color: var(--primary-red);
-  padding: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-.header_main-cont .slider_btns:hover {
-  transform: translate(-50%, -50%) skew(10deg) scale(1.1);
 }
 .header_main-cont .content {
   width: 95vw;
@@ -772,6 +779,7 @@ body {
   object-fit: cover;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
+  cursor: pointer;
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_main-cont .message_user span {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -1202,6 +1210,7 @@ body {
   object-fit: cover;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
+  cursor: pointer;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_user span {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -1454,6 +1463,432 @@ body {
   font-size: 3rem;
   color: #ddd;
   border-radius: 50%;
+}
+.header_main-cont .content .settings-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header_main-cont .content .settings-wrapper .setings-wrapper_content-main {
+  background-color: var(--primary-bg);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5rem;
+}
+.header_main-cont .content .settings-wrapper .setings-wrapper_content-main h2 {
+  padding: 1rem 3rem;
+  padding-right: 5rem;
+  border-right: 3px solid #04e762;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.header_main-cont .content .settings-wrapper .setings-wrapper_content-main h2 i {
+  color: #d8315b;
+  font-size: 3rem;
+  animation: gearSpin 2s infinite ease;
+}
+@keyframes gearSpin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.header_main-cont .content .settings-wrapper .setings-wrapper_content-main h2 span {
+  color: #ddd;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 400;
+  font-size: 2.5rem;
+}
+.header_main-cont .content .settings-wrapper .setings-wrapper_content-main div {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+.header_main-cont .content .settings-wrapper .setings-wrapper_content-main div .active {
+  background-color: rgb(51, 51, 51);
+}
+.header_main-cont .content .settings-wrapper .setings-wrapper_content-main div a {
+  text-decoration: none;
+  color: #ddd;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.6rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  position: relative;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: auto;
+  background-color: var(--primary-messsage-cont);
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont {
+  padding: 3rem 4rem;
+  height: 100%;
+  width: 100%;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.8rem;
+  color: rgb(85, 85, 85);
+  font-weight: 500;
+  margin-left: 0.5rem;
+  background-color: rgb(41, 41, 41);
+  padding: 0.5rem 2rem;
+  width: fit-content;
+  border-radius: 5px;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont {
+  width: 100%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form {
+  margin-top: 7rem;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5rem;
+  width: 100%;
+  height: 100%;
+  padding: 0 5rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20%;
+  width: 100%;
+  gap: 10rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form label {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #ddd;
+  padding: 1rem 3rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form input {
+  text-align: center;
+  padding: 0.8rem 2rem;
+  border: 0;
+  outline: 0;
+  border-radius: 5px;
+  font-size: 1.8rem;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  color: #ddd;
+  background-color: #333;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form .imageChange_cont label {
+  background-color: #333;
+  color: #9578d3;
+  padding: 1rem 3rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form .imageChange_cont img {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form .submit-cont {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: 4rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont .form .submit-cont .submit_acc_changes {
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+  padding: 1rem 3rem;
+  border-radius: 5px;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 2rem;
+  margin-top: 5rem;
+  background-color: #333;
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont .accountSettings_main-cont a {
+  text-decoration: none;
+  font-size: 2rem;
+  background-color: #333;
+  padding: 1rem 3rem;
+  border-radius: 5px;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  color: var(--primary-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--primary-red);
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont {
+  padding: 3rem 4rem;
+  height: 100%;
+  width: 100%;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont p:first-of-type {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.8rem;
+  color: rgb(85, 85, 85);
+  font-weight: 500;
+  margin-left: 0.5rem;
+  background-color: rgb(41, 41, 41);
+  padding: 0.5rem 2rem;
+  width: fit-content;
+  border-radius: 5px;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont {
+  width: 60%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: flex-start;
+  gap: 2rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  gap: 5rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings p,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.8rem;
+  color: rgb(85, 85, 85);
+  font-weight: 500;
+  background-color: rgb(41, 41, 41);
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  width: 20rem;
+  margin: 0 auto;
+  text-align: center;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont {
+  position: relative;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .inputDeviceTrigger,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .outputDeviceTrigger,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .inputDeviceTrigger,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .outputDeviceTrigger,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .inputDeviceTrigger,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .outputDeviceTrigger,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .inputDeviceTrigger,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .outputDeviceTrigger {
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+  background-color: #333;
+  align-items: center;
+  width: 25rem;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .inputDeviceTrigger span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .outputDeviceTrigger span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .inputDeviceTrigger span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .outputDeviceTrigger span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .inputDeviceTrigger span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .outputDeviceTrigger span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .inputDeviceTrigger span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .outputDeviceTrigger span {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.5rem;
+  color: #ddd;
+  font-weight: 500;
+  width: 18rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .inputDeviceTrigger i,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .outputDeviceTrigger i,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .inputDeviceTrigger i,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .outputDeviceTrigger i,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .inputDeviceTrigger i,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .outputDeviceTrigger i,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .inputDeviceTrigger i,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .outputDeviceTrigger i {
+  color: #ddd;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  border-radius: 5px;
+  width: 25rem;
+  margin-top: 1rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  position: absolute;
+  left: 120%;
+  top: -50%;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown span,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown span {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.3rem;
+  color: #ddd;
+  font-weight: 500;
+  width: 25rem;
+  padding: 1.2rem 2rem;
+  border-bottom: 2px solid var(--secondary-bg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown span:hover,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown span:hover,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown span:hover,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown span:hover,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown span:hover,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown span:hover,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown span:hover,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown span:hover {
+  color: var(--primary-red);
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown span:last-of-type,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown span:last-of-type,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown span:last-of-type,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .inputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown span:last-of-type,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .inputSoundSettings_dropdown span:last-of-type,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .inputDeviceCont .outputSoundSettings_dropdown span:last-of-type,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .inputSoundSettings_dropdown span:last-of-type,
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .outputSoundSettings .outputDeviceCont .outputSoundSettings_dropdown span:last-of-type {
+  border-bottom: 2px solid transparent;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  gap: 5rem;
+  margin-top: 8rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont .sliderCont_title {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.8rem;
+  color: rgb(85, 85, 85);
+  font-weight: 500;
+  background-color: rgb(41, 41, 41);
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  width: 20rem;
+  margin: 0 auto;
+  text-align: center;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont_main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont_main span {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.8rem;
+  color: #ddd;
+  font-weight: 500;
+  background-color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont_main div {
+  position: relative;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont_main div input {
+  height: 6px;
+  -webkit-appearance: none;
+  width: 20rem;
+  background-color: #333;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont_main div input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 1.8rem;
+  width: 1.8rem;
+  background-color: var(--primary-red);
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont_main div .sliderValue {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-size: 1.8rem;
+  color: #ddd;
+  position: absolute;
+  font-weight: 500;
+  background-color: transparent;
+  padding: 0.8rem;
+  text-align: center;
+  z-index: 1;
+  top: 0;
+  left: 50%;
+  transform: translate(-65%, -140%);
+}
+.header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .soundSettings_model-cont .soundSettings_main-cont .sliderCont_main div .sliderValue::before {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #333;
+  z-index: -1;
+  transform: rotate(45deg);
+  border-radius: 50%;
+  border-bottom-right-radius: 0;
 }
 .header_main-cont .content .friend-list-wrapper {
   width: 100%;
@@ -2341,7 +2776,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background-color: rgb(41, 41, 41);
+  background-color: var(--secondary-bg);
   border-radius: 1rem;
   padding: 4rem;
   visibility: hidden;
@@ -2364,10 +2799,14 @@ body {
 .house_details h2,
 .house-members-cont h2 {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 400;
   color: var(--primary-red);
-  text-align: left;
+  text-align: center;
+  background-color: rgb(32, 32, 32);
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  width: max-content;
 }
 .account_details .close_account_details,
 .account_details .close_house-members-cont,
@@ -2569,6 +3008,9 @@ body {
   width: 100%;
 }
 
+.house-members-cont {
+  width: 60rem;
+}
 .house-members-cont .member-list {
   margin-top: 3rem;
   width: 100%;
@@ -2584,10 +3026,10 @@ body {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 1.5rem;
-  width: 30rem;
+  width: 50rem;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0.5rem;
@@ -2608,10 +3050,77 @@ body {
   clip-path: circle(50% at 50% 50%);
 }
 .house-members-cont .member-list p span {
-  width: 80%;
+  width: max-content;
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.house-members-cont .member-list p .id {
+  width: max-content;
+  color: #333;
+  font-size: 1.5rem;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+}
+
+.messageUserContextMenu {
+  background-color: rgb(41, 41, 41);
+  padding: 0.8rem 1rem;
+  border-radius: 5px;
+  width: max-content;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 55;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  width: 32rem;
+}
+.messageUserContextMenu .img_cont {
+  width: 6rem;
+  height: 6rem;
+}
+.messageUserContextMenu .img_cont img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+}
+.messageUserContextMenu .user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  max-width: 70%;
+}
+.messageUserContextMenu .user span {
+  font-size: 1.6rem;
+  color: var(--primary-red);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
+  max-width: 90%;
+}
+.messageUserContextMenu .user p {
+  color: #9578d3;
+  font-size: 1.3rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
+  max-width: 90%;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .dm-contextMenu,
@@ -2717,7 +3226,8 @@ body {
   }
 }
 .errorPopup,
-.friendsPopup {
+.friendsPopup,
+.okPopup {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2733,12 +3243,14 @@ body {
   border: 3px solid var(--primary-red);
 }
 .errorPopup i,
-.friendsPopup i {
+.friendsPopup i,
+.okPopup i {
   font-size: 4rem;
   color: #333;
 }
 .errorPopup p,
-.friendsPopup p {
+.friendsPopup p,
+.okPopup p {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-size: 2rem;
   font-weight: 400;
@@ -2765,6 +3277,10 @@ body {
   100% {
     transform: translate(-100%, -20%);
   }
+}
+
+.friendsPopup {
+  border: 3px solid var(--primary-green);
 }
 
 .friendsPopup {

@@ -67,60 +67,39 @@ const popupError = async (message) => {
 
 (async function () {
   while (true) {
-    const delay = 0.3;
-    heading.textContent = "";
+    await wait(2);
+    await printLetters("Log into Lumi");
     await wait(1);
-    heading.textContent = "L";
-    await wait(delay);
-    heading.textContent = "Lo";
-    await wait(delay);
-    heading.textContent = "Log";
-    await wait(delay);
-    heading.textContent = "Log ";
-    await wait(delay);
-    heading.textContent = "Log I";
-    await wait(delay);
-    heading.textContent = "Log In";
-    await wait(delay);
-    heading.textContent = "Log Int";
-    await wait(delay);
-    heading.textContent = "Log Into";
-    await wait(delay);
-    heading.textContent = "Log Into ";
-    await wait(delay);
-    heading.textContent = "Log Into L";
-    await wait(delay);
-    heading.textContent = "Log Into Lu";
-    await wait(delay);
-    heading.textContent = "Log Into Lum";
-    await wait(delay);
-    heading.textContent = "Log Into Lumi";
-    await wait(3);
-
-    heading.textContent = "Log Into Lum";
-    await wait(delay - 0.1);
-    heading.textContent = "Log Into Lu";
-    await wait(delay - 0.1);
-    heading.textContent = "Log Into L";
-    await wait(delay - 0.1);
-    heading.textContent = "Log Into ";
-    await wait(delay - 0.1);
-    heading.textContent = "Log Into";
-    await wait(delay - 0.1);
-    heading.textContent = "Log Int";
-    await wait(delay - 0.1);
-    heading.textContent = "Log In";
-    await wait(delay - 0.1);
-    heading.textContent = "Log I";
-    await wait(delay - 0.1);
-    heading.textContent = "Log ";
-    await wait(delay - 0.1);
-    heading.textContent = "Log";
-    await wait(delay - 0.1);
-    heading.textContent = "Lo";
-    await wait(delay - 0.1);
-    heading.textContent = "L";
-    await wait(delay - 0.1);
-    heading.textContent = "";
+    await eraseLetters("Log into Lumi", 9);
+    await wait(1);
+    await printLetters("A New World!");
+    await wait(1);
+    await eraseLetters("Log into A New World!", 11);
+    await wait(1);
+    await printLetters("New Adventure!");
+    await wait(1);
+    await eraseLetters("Log into A New Adventure!", 0);
   }
 })();
+
+async function printLetters(string) {
+  return new Promise(async (res) => {
+    const delay = 0.3;
+    for (let i = 0; i < string.length; i++) {
+      heading.textContent = heading.textContent + string[i];
+      await wait(delay);
+    }
+    res();
+  });
+}
+
+async function eraseLetters(string, eraseLimit) {
+  return new Promise(async (res) => {
+    const delay = 0.2;
+    for (let i = string.length; i >= eraseLimit; i--) {
+      heading.textContent = string.slice(0, i);
+      await wait(delay);
+    }
+    res();
+  });
+}

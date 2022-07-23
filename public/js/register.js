@@ -70,22 +70,6 @@ const formSubmit = async () => {
   }
 };
 
-// window.addEventListener("keydown", (e) => {
-//   if (e.key === "Enter") {
-//     formSubmit();
-//   }
-// });
-
-// const imageCont = document.querySelector(".image_main");
-
-// imageMain.addEventListener("change", async () => {
-//   const fileReader = new FileReader();
-//   fileReader.readAsDataURL(imageMain.files[0]);
-//   fileReader.onload = () => {
-//     imageCont.src = fileReader.result;
-//   };
-// });
-
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   formSubmit();
@@ -106,60 +90,39 @@ const popupError = async (message) => {
 
 (async function () {
   while (true) {
-    const delay = 0.3;
-    heading.textContent = "";
+    await wait(2);
+    await printLetters("Step Into A Whole New World!");
     await wait(1);
-    heading.textContent = "J";
-    await wait(delay);
-    heading.textContent = "Jo";
-    await wait(delay);
-    heading.textContent = "Joi";
-    await wait(delay);
-    heading.textContent = "Join";
-    await wait(delay);
-    heading.textContent = "Join ";
-    await wait(delay);
-    heading.textContent = "Join L";
-    await wait(delay);
-    heading.textContent = "Join Lu";
-    await wait(delay);
-    heading.textContent = "Join Lum";
-    await wait(delay);
-    heading.textContent = "Join Lumi";
-    await wait(delay);
-    heading.textContent = "Join Lumi ";
-    await wait(delay);
-    heading.textContent = "Join Lumi N";
-    await wait(delay);
-    heading.textContent = "Join Lumi No";
-    await wait(delay);
-    heading.textContent = "Join Lumi Now";
-    await wait(3);
-
-    heading.textContent = "Join Lumi No";
-    await wait(delay - 0.1);
-    heading.textContent = "Join Lumi N";
-    await wait(delay - 0.1);
-    heading.textContent = "Join Lumi ";
-    await wait(delay - 0.1);
-    heading.textContent = "Join Lumi";
-    await wait(delay - 0.1);
-    heading.textContent = "Join Lum";
-    await wait(delay - 0.1);
-    heading.textContent = "Join Lu";
-    await wait(delay - 0.1);
-    heading.textContent = "Join L";
-    await wait(delay - 0.1);
-    heading.textContent = "Join ";
-    await wait(delay - 0.1);
-    heading.textContent = "Join";
-    await wait(delay - 0.1);
-    heading.textContent = "Joi";
-    await wait(delay - 0.1);
-    heading.textContent = "Jo";
-    await wait(delay - 0.1);
-    heading.textContent = "J";
-    await wait(delay - 0.1);
-    heading.textContent = "";
+    await eraseLetters("Step Into A Whole New World!", 22);
+    await wait(1);
+    await printLetters("Adventure!");
+    await wait(1);
+    await eraseLetters("Step Into A Whole New Adventure!", 0);
+    await wait(1);
+    await printLetters("Join Lumi Now!");
+    await wait(1);
+    await eraseLetters("Join Lumi Now!", 0);
   }
 })();
+
+async function printLetters(string) {
+  return new Promise(async (res) => {
+    const delay = 0.3;
+    for (let i = 0; i < string.length; i++) {
+      heading.textContent = heading.textContent + string[i];
+      await wait(delay);
+    }
+    res();
+  });
+}
+
+async function eraseLetters(string, eraseLimit) {
+  return new Promise(async (res) => {
+    const delay = 0.2;
+    for (let i = string.length; i >= eraseLimit; i--) {
+      heading.textContent = string.slice(0, i);
+      await wait(delay);
+    }
+    res();
+  });
+}
