@@ -119,6 +119,10 @@ let call;
 let currentOutputDevice;
 let currentOutputVolume = 0.5;
 
+// ALL MESSAGES STORAGE
+let allMessages = {};
+// ALL MESSAGES STORAGE
+
 const activeCall = {
   status: false,
 };
@@ -409,7 +413,20 @@ const loadDms = async () => {
 createDM.addEventListener("click", async (e) => {
   closeAllWarppers();
   friendListWrapper.style.display = "flex";
-  activeCont = "friendslist-online";
+
+  friendsListOptions.querySelectorAll("a").forEach((el) => {
+    if (el.classList.contains("active")) {
+      if (el.classList.contains("allFriends")) {
+        activeCont = "friendslist-all";
+      } else if (el.classList.contains("onlineFriends")) {
+        activeCont = "friendslist-online";
+      } else if (el.classList.contains("pendingRequestsFriends")) {
+        activeCont = "friendslist-pending";
+      } else {
+        activeCont = "friendslist-online";
+      }
+    }
+  });
 
   slider.style.transform = "translateX(-100%)";
   sliderOverlay.style.opacity = "0";
@@ -4063,7 +4080,7 @@ friendsListOptions.addEventListener("click", async (e) => {
 
 socket.on("receiveFriendRequest-Standalone", (id, from) => {
   if (id === user.id) {
-    if (activeCont === "friendslist-pending") {
+    if (activeCont === "pendingRequestsFriends") {
       loadFriendsPending();
     }
   }
@@ -4762,82 +4779,12 @@ settingsTrigger.addEventListener("click", async (e) => {
   accountSettingsOptions.addEventListener("click", async (e) => {
     const target = e.target.closest("a");
     if (!target) return;
-
     if (target.classList.contains("accountSettings")) {
       accountSetings_model.style.display = "initial";
       soundSettings_model.style.display = "none";
 
       accountSettings.classList.add("active");
       soundSettings.classList.remove("active");
-
-      const form = account_details.querySelector(".form");
-
-      const imageChange = form.querySelector("#image");
-
-      imageChange.addEventListener("change", () => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(imageChange.files[0]);
-        fileReader.onload = () => {
-          imageCont.src = fileReader.result;
-        };
-      });
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        if (!nameInput.value && !imageChange.files[0]) return;
-
-        let newName = nameInput.value;
-        let newImage = imageChange.files[0];
-
-        if (newImage) {
-          if (
-            !["image/jpeg", "image/gif", "image/png"].includes(newImage.type)
-          ) {
-            if (!ongoingError) {
-              await popupError("Only images are allowed");
-            }
-            return;
-          }
-          // check file size (< 10MB)
-          if (newImage.size > 10 * 1024 * 1024) {
-            if (!ongoingError) {
-              await popupError("File must be less than 10MB");
-            }
-            return;
-          }
-        }
-
-        const fd = new FormData();
-
-        if (!newName) {
-          fd.append("newName", "undefined");
-        } else {
-          fd.append("newName", newName);
-        }
-        fd.append("image", newImage);
-
-        const result = await (
-          await fetch("/api/changeData", {
-            method: "POST",
-            body: fd,
-          })
-        ).json();
-
-        if (result.status === "ok") {
-          nameInput.value = "";
-          getBasicData();
-          socket.emit("user-data-update", user.id);
-          // if (!ongoingError) {
-          //   await popupOk("Data Update");
-          // }
-        } else {
-          if (!ongoingError) {
-            await popupError("Something went wrong");
-          }
-        }
-      });
     } else {
       accountSetings_model.style.display = "none";
       soundSettings_model.style.display = "initial";
@@ -4847,162 +4794,224 @@ settingsTrigger.addEventListener("click", async (e) => {
     }
   });
 
-  soundSettingsOptions.addEventListener("click", async (e) => {
-    const inputDeviceTrigger = document.querySelector(".inputDeviceTrigger");
-    const inputDeviceTrigger_icon = inputDeviceTrigger.querySelector("i");
-    const inputSoundSettings_dropdown = document.querySelector(
-      ".inputSoundSettings_dropdown"
-    );
+  //ACCOUNT DETAILS TAB
+  const form = account_details.querySelector(".form");
 
-    const outputDeviceTrigger = document.querySelector(".outputDeviceTrigger");
-    const outputDeviceTrigger_icon = outputDeviceTrigger.querySelector("i");
-    const outputSoundSettings_dropdown = document.querySelector(
-      ".outputSoundSettings_dropdown"
-    );
+  const imageChange = form.querySelector("#image");
 
-    inputDeviceTrigger.addEventListener("click", async (e) => {
-      if (inputDeviceTrigger.getAttribute("data-active") === "false") {
-        closeAllDropdowns();
-        inputSoundSettings_dropdown.style.visibility = "visible";
-        inputSoundSettings_dropdown.style.opacity = "1";
-        inputDeviceTrigger.setAttribute("data-active", "true");
-        inputDeviceTrigger_icon.style.transform = "rotate(180deg)";
-        inputDeviceTrigger_icon.style.color = "var(--primary-red)";
+  imageChange.addEventListener("change", () => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(imageChange.files[0]);
+    fileReader.onload = () => {
+      imageCont.src = fileReader.result;
+    };
+  });
 
-        const allDevices = await navigator.mediaDevices.enumerateDevices();
-        inputSoundSettings_dropdown.innerHTML = "";
-        allDevices.forEach((device) => {
-          if (device.kind === "audioinput") {
-            if (
-              device.deviceId !== "default" &&
-              device.deviceId !== "communications"
-            ) {
-              const html = `
-              <span data-id="${device.deviceId}">${device.label}</span>
-              `;
-              inputSoundSettings_dropdown.insertAdjacentHTML(
-                "afterbegin",
-                html
-              );
-            }
-          }
-        });
-      } else {
-        closeAllDropdowns();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if (!nameInput.value && !imageChange.files[0]) return;
+
+    let newName = nameInput.value;
+    let newImage = imageChange.files[0];
+
+    if (newImage) {
+      if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
+        if (!ongoingError) {
+          await popupError("Only images are allowed");
+        }
+        return;
       }
-    });
-
-    outputDeviceTrigger.addEventListener("click", async (e) => {
-      if (outputDeviceTrigger.getAttribute("data-active") === "false") {
-        closeAllDropdowns();
-        outputSoundSettings_dropdown.style.visibility = "visible";
-        outputSoundSettings_dropdown.style.opacity = "1";
-        outputDeviceTrigger.setAttribute("data-active", "true");
-        outputDeviceTrigger_icon.style.transform = "rotate(180deg)";
-        outputDeviceTrigger_icon.style.color = "var(--primary-red)";
-
-        const allDevices = await navigator.mediaDevices.enumerateDevices();
-        outputSoundSettings_dropdown.innerHTML = "";
-        allDevices.forEach((device) => {
-          if (device.kind === "audiooutput") {
-            if (
-              device.deviceId !== "default" &&
-              device.deviceId !== "communications"
-            ) {
-              const html = `
-              <span data-id="${device.deviceId}">${device.label}</span>
-              `;
-              outputSoundSettings_dropdown.insertAdjacentHTML(
-                "afterbegin",
-                html
-              );
-            }
-          }
-        });
-      } else {
-        closeAllDropdowns();
+      // check file size (< 10MB)
+      if (newImage.size > 10 * 1024 * 1024) {
+        if (!ongoingError) {
+          await popupError("File must be less than 10MB");
+        }
+        return;
       }
-    });
+    }
 
-    inputSoundSettings_dropdown.addEventListener("click", async (e) => {
-      const target = e.target.closest("span");
-      if (!target) return;
+    const fd = new FormData();
 
-      const span = inputDeviceTrigger.querySelector("span");
-      span.textContent = target.textContent;
-      span.setAttribute("data-sound", target.textContent);
-      span.setAttribute("data-sound-id", target.getAttribute("data-id"));
+    if (!newName) {
+      fd.append("newName", "undefined");
+    } else {
+      fd.append("newName", newName);
+    }
+    fd.append("image", newImage);
 
-      navigator.mediaDevices
-        .getUserMedia({
-          video: false,
-          audio: {
-            deviceId: target.getAttribute("data-id"),
-            noiseSuppression: true,
-            echoCancellation: true,
-          },
-        })
-        .then((stream) => {
-          stream.userId = user.id;
-          audioStream = stream;
-        })
-        .catch(async (err) => {
-          if (!ongoingError) {
-            await popupError("Something Went Wrong");
-          }
-        });
+    const result = await (
+      await fetch("/api/changeData", {
+        method: "POST",
+        body: fd,
+      })
+    ).json();
 
-      closeAllDropdowns();
-    });
-
-    outputSoundSettings_dropdown.addEventListener("click", async (e) => {
-      const target = e.target.closest("span");
-      if (!target) return;
-
-      const span = outputDeviceTrigger.querySelector("span");
-      span.textContent = target.textContent;
-      span.setAttribute("data-sound", target.textContent);
-      span.setAttribute("data-sound-id", target.getAttribute("data-id"));
-
-      const allAudios = videoCont.querySelectorAll("audio");
-      allAudios.forEach(async (audio) => {
-        await audio.setSinkId(target.getAttribute("data-id"));
-      });
-
-      closeAllDropdowns();
-
-      // currentOutputDevice = target.getAttribute("data-id");
-    });
-
-    const sliderCont_main = document.querySelector(".sliderCont_main");
-    const sliderCont_input = sliderCont_main.querySelector("input");
-    const sliderCont_value = sliderCont_main.querySelector(".currentValue");
-
-    sliderCont_input.addEventListener("change", (e) => {
-      sliderCont_value.textContent = sliderCont_input.value;
-
-      const allAudios = videoCont.querySelectorAll("audio");
-      allAudios.forEach(async (audio) => {
-        audio.volume = sliderCont_input.value / 100;
-      });
-
-      currentOutputVolume = sliderCont_input.value / 100;
-    });
-
-    async function closeAllDropdowns() {
-      inputSoundSettings_dropdown.style.opacity = "0";
-      inputSoundSettings_dropdown.style.visibility = "hidden";
-      inputDeviceTrigger.setAttribute("data-active", "false");
-      inputDeviceTrigger_icon.style.transform = "rotate(0)";
-      inputDeviceTrigger_icon.style.color = "#ddd";
-
-      outputSoundSettings_dropdown.style.opacity = "0";
-      outputSoundSettings_dropdown.style.visibility = "hidden";
-      outputDeviceTrigger.setAttribute("data-active", "false");
-      outputDeviceTrigger_icon.style.transform = "rotate(0)";
-      outputDeviceTrigger_icon.style.color = "#ddd";
+    if (result.status === "ok") {
+      nameInput.value = "";
+      getBasicData();
+      socket.emit("user-data-update", user.id);
+      // if (!ongoingError) {
+      //   await popupOk("Data Update");
+      // }
+    } else {
+      if (!ongoingError) {
+        await popupError("Something went wrong");
+      }
     }
   });
+
+  // SOUND SETTINGS TAB
+
+  const inputDeviceTrigger = document.querySelector(".inputDeviceTrigger");
+  const inputDeviceTrigger_icon = inputDeviceTrigger.querySelector("i");
+  const inputSoundSettings_dropdown = document.querySelector(
+    ".inputSoundSettings_dropdown"
+  );
+
+  const outputDeviceTrigger = document.querySelector(".outputDeviceTrigger");
+  const outputDeviceTrigger_icon = outputDeviceTrigger.querySelector("i");
+  const outputSoundSettings_dropdown = document.querySelector(
+    ".outputSoundSettings_dropdown"
+  );
+
+  inputDeviceTrigger.addEventListener("click", async (e) => {
+    if (inputDeviceTrigger.getAttribute("data-active") === "false") {
+      closeAllDropdowns();
+      inputSoundSettings_dropdown.style.visibility = "visible";
+      inputSoundSettings_dropdown.style.opacity = "1";
+      inputDeviceTrigger.setAttribute("data-active", "true");
+      inputDeviceTrigger_icon.style.transform = "rotate(180deg)";
+      inputDeviceTrigger_icon.style.color = "var(--primary-red)";
+
+      const allDevices = await navigator.mediaDevices.enumerateDevices();
+      inputSoundSettings_dropdown.innerHTML = "";
+      allDevices.forEach((device) => {
+        if (device.kind === "audioinput") {
+          if (
+            device.deviceId !== "default" &&
+            device.deviceId !== "communications"
+          ) {
+            const html = `
+              <span data-id="${device.deviceId}">${device.label}</span>
+              `;
+            inputSoundSettings_dropdown.insertAdjacentHTML("afterbegin", html);
+          }
+        }
+      });
+    } else {
+      closeAllDropdowns();
+    }
+  });
+
+  outputDeviceTrigger.addEventListener("click", async (e) => {
+    if (outputDeviceTrigger.getAttribute("data-active") === "false") {
+      closeAllDropdowns();
+      outputSoundSettings_dropdown.style.visibility = "visible";
+      outputSoundSettings_dropdown.style.opacity = "1";
+      outputDeviceTrigger.setAttribute("data-active", "true");
+      outputDeviceTrigger_icon.style.transform = "rotate(180deg)";
+      outputDeviceTrigger_icon.style.color = "var(--primary-red)";
+
+      const allDevices = await navigator.mediaDevices.enumerateDevices();
+      outputSoundSettings_dropdown.innerHTML = "";
+      allDevices.forEach((device) => {
+        if (device.kind === "audiooutput") {
+          if (
+            device.deviceId !== "default" &&
+            device.deviceId !== "communications"
+          ) {
+            const html = `
+              <span data-id="${device.deviceId}">${device.label}</span>
+              `;
+            outputSoundSettings_dropdown.insertAdjacentHTML("afterbegin", html);
+          }
+        }
+      });
+    } else {
+      closeAllDropdowns();
+    }
+  });
+
+  inputSoundSettings_dropdown.addEventListener("click", async (e) => {
+    const target = e.target.closest("span");
+    if (!target) return;
+
+    const span = inputDeviceTrigger.querySelector("span");
+    span.textContent = target.textContent;
+    span.setAttribute("data-sound", target.textContent);
+    span.setAttribute("data-sound-id", target.getAttribute("data-id"));
+
+    navigator.mediaDevices
+      .getUserMedia({
+        video: false,
+        audio: {
+          deviceId: target.getAttribute("data-id"),
+          noiseSuppression: true,
+          echoCancellation: true,
+        },
+      })
+      .then((stream) => {
+        stream.userId = user.id;
+        audioStream = stream;
+      })
+      .catch(async (err) => {
+        if (!ongoingError) {
+          await popupError("Something Went Wrong");
+        }
+      });
+
+    closeAllDropdowns();
+  });
+
+  outputSoundSettings_dropdown.addEventListener("click", async (e) => {
+    const target = e.target.closest("span");
+    if (!target) return;
+
+    const span = outputDeviceTrigger.querySelector("span");
+    span.textContent = target.textContent;
+    span.setAttribute("data-sound", target.textContent);
+    span.setAttribute("data-sound-id", target.getAttribute("data-id"));
+
+    const allAudios = videoCont.querySelectorAll("audio");
+    allAudios.forEach(async (audio) => {
+      await audio.setSinkId(target.getAttribute("data-id"));
+    });
+
+    closeAllDropdowns();
+
+    // currentOutputDevice = target.getAttribute("data-id");
+  });
+
+  const sliderCont_main = document.querySelector(".sliderCont_main");
+  const sliderCont_input = sliderCont_main.querySelector("input");
+  const sliderCont_value = sliderCont_main.querySelector(".currentValue");
+
+  sliderCont_input.addEventListener("change", (e) => {
+    sliderCont_value.textContent = sliderCont_input.value;
+
+    const allAudios = videoCont.querySelectorAll("audio");
+    allAudios.forEach(async (audio) => {
+      audio.volume = sliderCont_input.value / 100;
+    });
+
+    currentOutputVolume = sliderCont_input.value / 100;
+  });
+
+  async function closeAllDropdowns() {
+    inputSoundSettings_dropdown.style.opacity = "0";
+    inputSoundSettings_dropdown.style.visibility = "hidden";
+    inputDeviceTrigger.setAttribute("data-active", "false");
+    inputDeviceTrigger_icon.style.transform = "rotate(0)";
+    inputDeviceTrigger_icon.style.color = "#ddd";
+
+    outputSoundSettings_dropdown.style.opacity = "0";
+    outputSoundSettings_dropdown.style.visibility = "hidden";
+    outputDeviceTrigger.setAttribute("data-active", "false");
+    outputDeviceTrigger_icon.style.transform = "rotate(0)";
+    outputDeviceTrigger_icon.style.color = "#ddd";
+  }
 });
 
 //SETTINGSt
