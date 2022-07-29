@@ -22,7 +22,7 @@ exports.saveHouseMessage = async (req, res) => {
       await message.create(
         Object.assign(
           {
-            _id : x,
+            _id: x,
             userId: user._id,
             name: user.name,
             image: user.image,
@@ -31,9 +31,11 @@ exports.saveHouseMessage = async (req, res) => {
         )
       );
 
+      const messageObj = await message.findOne({ _id: x });
+
       res.status(200).json({
         status: "ok",
-        id : x,
+        obj: messageObj,
       });
     } else {
       res.status(400).json({
@@ -54,7 +56,6 @@ exports.editHouseMessage = async (req, res) => {
     const body = req.body;
     const user = req.user;
 
-
     if (!body) {
       res.status(400).json({
         status: "fail",
@@ -63,21 +64,25 @@ exports.editHouseMessage = async (req, res) => {
       return;
     }
 
-
     if (user.house.includes(body.houseId)) {
-      console.log(body.messageId)
-      console.log(body)
+      console.log(body.messageId);
+      console.log(body);
 
-      await message.findByIdAndUpdate({
-        _id : body.messageId
-      }, {
-        message : body.message,
-        type : body.type
-      })
+      await message.findByIdAndUpdate(
+        {
+          _id: body.messageId,
+        },
+        {
+          message: body.message,
+          type: body.type,
+        }
+      );
 
+      const messageObj = await message.findOne({ _id: body.messageId });
 
       res.status(200).json({
         status: "ok",
+        obj: messageObj,
       });
     } else {
       res.status(400).json({

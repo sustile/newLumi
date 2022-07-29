@@ -36,7 +36,7 @@ html {
 
 body {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  background-color: var(--primary-bg);
+  background-color: var(--primary-messsage-cont);
   // max-height: 100vh;
   // max-width: 100vw;
   // height: 100vh;
@@ -45,6 +45,8 @@ body {
   // overflow: hidden;
   font-variant: no-common-ligatures !important;
   font-weight: 500 !important;
+
+  overflow: hidden;
 }
 
 .drag {
@@ -70,7 +72,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 49;
   visibility: hidden;
   opacity: 0;
@@ -86,6 +88,7 @@ body {
   transform: translateX(-100%);
   z-index: 50;
   transition: all 0.5s ease;
+  border-radius: 1rem;
 
   // &::before {
   //   content: "";
@@ -112,17 +115,19 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    width: 7vw;
+    gap: 1rem;
+    width: 11rem;
 
     &_main-cont {
-      padding: 1.5rem;
+      // padding-left: 1.5rem;
+      // padding-right: 1.5rem;
+      padding: 0.8rem 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1.5rem;
       overflow-y: auto;
-      height: 88vh;
+      height: 90vh;
       // background-color: red;
       a {
         // img {
@@ -133,8 +138,8 @@ body {
         // }
         position: relative;
         .img_cont {
-          width: 7rem;
-          height: 7rem;
+          width: 6rem;
+          height: 6rem;
           img {
             width: 100%;
             height: 100%;
@@ -217,6 +222,9 @@ body {
     align-items: center;
     box-sizing: content-box;
     width: 17vw;
+    padding-bottom: 0;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 
     &_main-cont {
       padding: 1.5rem 1rem;
@@ -243,8 +251,8 @@ body {
         border-radius: 1rem;
 
         .img_cont {
-          width: 6rem;
-          height: 4.3rem;
+          width: 5.5rem;
+          height: 4.1rem;
           transform: scale(1.1);
           position: relative;
           // background-color: red;
@@ -337,18 +345,14 @@ body {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      width: 90%;
+      width: 95%;
       margin: 0 auto;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       border-radius: 5px;
       background-color: var(--primary-bg);
       border: 3px solid var(--primary-green);
+      // border-bottom: 3px solid var(--primary-green);
       padding: 2rem 0rem;
-      // margin-top: 1rem;
-
-      // .createDm {
-      //   text-decoration: none;
-      //   text-align: center;
 
       .createDm_cont {
         display: flex;
@@ -431,12 +435,13 @@ body {
 
       .nav_acc {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         padding: 1rem 2rem;
         width: 100%;
         align-items: center;
         gap: 1rem;
         width: 100%;
+        // background-color: red;
 
         .img_cont {
           width: 5rem;
@@ -454,11 +459,13 @@ body {
         div {
           display: flex;
           flex-direction: column;
-          justify-content: center;
+          justify-content: flex-start;
+          align-items: flex-start;
           gap: 0.3rem;
+          // background-color: red;
 
           span {
-            width: 15rem;
+            width: 20rem;
             font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             color: var(--primary-red);
             font-size: 1.5rem;
@@ -470,7 +477,7 @@ body {
 
           a {
             font-size: 1.1rem;
-            width: 15rem;
+            width: 20rem;
             text-decoration: none;
             color: #ddd;
             font-weight: bolder;
@@ -479,7 +486,7 @@ body {
             white-space: pre;
             cursor: pointer;
             position: relative;
-            text-align: center;
+            text-align: left;
           }
         }
       }
@@ -495,9 +502,10 @@ body {
   // display: grid;
   display: flex;
   // grid-template-columns: 7vw 14vw 79vw;
+  transition: all 0.5s ease;
 
   .side-bar {
-    width: 5vw;
+    width: 9rem;
     height: 100vh;
     background-color: var(--primary-bg);
     //background-color: rgb(41, 41, 41);
@@ -515,7 +523,7 @@ body {
       gap: 1.5rem;
       .main-heading {
         font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-        font-size: 2rem;
+        font-size: 1.6rem;
         font-weight: 400;
         color: #333;
         letter-spacing: 1rem;
@@ -534,7 +542,7 @@ body {
 
       i {
         color: var(--primary-red);
-        font-size: 7rem;
+        font-size: 6rem;
       }
 
       .dev {
@@ -948,7 +956,7 @@ body {
           // padding-left: 3rem;
           color: #ddd;
           font-weight: 400;
-          font-size: 2.5rem;
+          font-size: 2.2rem;
         }
 
         span {
@@ -1284,6 +1292,7 @@ body {
               z-index: 5;
               position: relative;
               border: 3px solid var(--primary-green);
+              // box-shadow: 0px 0px 20px 1px var(--primary-green);
             }
 
             // label {
@@ -1491,7 +1500,7 @@ body {
           color: #ddd;
           font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
           font-weight: 400;
-          font-size: 2.5rem;
+          font-size: 2.2rem;
         }
       }
 
@@ -1591,6 +1600,49 @@ body {
                 line-height: 1.5;
                 overflow-wrap: break-word;
                 max-width: max-content;
+              }
+
+              &:hover {
+                background-color: rgb(65, 65, 65);
+              }
+            }
+
+            .joinHouseMessage {
+              padding: 0.5rem 1rem;
+              border-radius: 5px;
+              transition: all 0.1s ease;
+              max-width: 100%;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              gap: 0.5rem;
+
+              p {
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-weight: 500;
+                font-size: 1.2rem;
+                color: rgb(102, 102, 102);
+              }
+              .joinHouseMessage_cont {
+                font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+                font-weight: 500;
+                font-size: 1.5rem;
+                color: #9578d3;
+                margin: 0 5.1rem;
+                line-height: 1.5;
+                overflow-wrap: break-word;
+                max-width: max-content;
+
+                // span {
+
+                .ping-cont {
+                  background-color: var(--secondary-bg);
+                  padding: 1px 5px;
+                  border-radius: 2px;
+                  color: #d8315b;
+                  font-weight: 500;
+                  font-size: 1.6rem;
+                }
               }
 
               &:hover {
@@ -1881,7 +1933,7 @@ body {
             color: #ddd;
             font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 400;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
           }
         }
 
@@ -2291,7 +2343,7 @@ body {
             color: #ddd;
             font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 400;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
           }
         }
 
@@ -2749,40 +2801,6 @@ body {
     line-height: 1.5;
     display: none;
   }
-
-  @keyframes popupPrompt {
-    0% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-  }
-
-  @keyframes popdownPrompt {
-    0% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-  }
 }
 
 .createDm_input_field,
@@ -2869,40 +2887,6 @@ body {
       font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
       font-weight: 500;
       font-size: 1.6rem;
-    }
-  }
-
-  @keyframes popupPrompt {
-    0% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-  }
-
-  @keyframes popdownPrompt {
-    0% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
     }
   }
 }
@@ -2993,39 +2977,6 @@ body {
       font-size: 1.6rem;
     }
   }
-  @keyframes popupPrompt {
-    0% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-  }
-
-  @keyframes popdownPrompt {
-    0% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-  }
 }
 
 .chooseHouse_option {
@@ -3093,40 +3044,6 @@ body {
     font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
     font-weight: 500;
     font-size: 1.6rem;
-  }
-
-  @keyframes popupPrompt {
-    0% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-  }
-
-  @keyframes popdownPrompt {
-    0% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
   }
 }
 
@@ -3216,39 +3133,6 @@ body {
       font-size: 1.6rem;
     }
   }
-  @keyframes popupPrompt {
-    0% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-  }
-
-  @keyframes popdownPrompt {
-    0% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    80% {
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    100% {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0);
-    }
-  }
 }
 
 .account_details,
@@ -3299,13 +3183,13 @@ body {
 
     i {
       font-size: 2.5rem;
-      background-color: #333;
+      background-color: var(--secondary-bg);
+      border-radius: 5px;
       padding: 1rem;
-      color: #ddd;
-      // border-radius: 50%;
-      border-bottom: 3px solid var(--primary-red);
-      border-left: 3px solid var(--primary-red);
-      border-bottom-left-radius: 1rem;
+      color: #d8315b;
+      // border-bottom: 3px solid var(--primary-red);
+      // border-left: 3px solid var(--primary-red);
+      // border-bottom-left-radius: 1rem;
       border-top-right-radius: 1rem;
       cursor: pointer;
     }
@@ -3663,7 +3547,7 @@ body {
   0% {
     opacity: 0;
     visibility: hidden;
-    transform: translate(-50%, -50%) scale(0.8);
+    transform: translate(-50%, -50%) scale(1.2);
   }
 
   100% {
@@ -3778,8 +3662,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  // background-color: rgb(41, 41, 41);
-  background-color: #161b22;
+  background-color: rgb(32, 32, 32);
   border-radius: 1rem;
   padding: 1rem;
   height: 98vh;
@@ -3790,18 +3673,18 @@ body {
 
   visibility: hidden;
 
-  &::before {
-    content: "";
-    display: inline-block;
-    width: 200vw;
-    height: 200vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: -1;
-    transform: translate(-50%, -50%);
-  }
+  // &::before {
+  //   content: "";
+  //   display: inline-block;
+  //   width: 200vw;
+  //   height: 200vh;
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   // background-color: rgba(0, 0, 0, 0.3);
+  //   z-index: -1;
+  //   transform: translate(-50%, -50%);
+  // }
 
   .close_videoAndScreenShareCont {
     text-decoration: none;
@@ -3812,68 +3695,110 @@ body {
 
     i {
       font-size: 2.5rem;
-      background-color: #333;
+      background-color: var(--secondary-bg);
+      border-radius: 5px;
       padding: 1rem;
-      color: #ddd;
-      // border-radius: 50%;
-      border-bottom: 3px solid var(--primary-red);
-      border-left: 3px solid var(--primary-red);
-      border-bottom-left-radius: 1rem;
+      color: #d8315b;
+      // border-bottom: 3px solid var(--primary-red);
+      // border-left: 3px solid var(--primary-red);
+      // border-bottom-left-radius: 1rem;
       border-top-right-radius: 1rem;
       cursor: pointer;
     }
   }
 
-  &_main-cont {
-    width: 100%;
+  .videoSharingModelCont {
     height: 100%;
-    // background-color: rgb(65, 65, 65);
-    border-radius: 5px;
-    position: relative;
-    padding: 1rem;
-    // background-color: red;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-end;
-    // visibility: visible;
+    justify-content: space-between;
+    align-items: center;
 
-    span {
-      position: absolute;
-      font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-      font-weight: 500;
-      color: #ddd;
-      top: 0;
-      left: 0;
-      font-size: 2.5rem;
-      transform: translateY(-20%);
-      z-index: 1;
+    .videoAndScreenShareCont_main-cont {
+      width: 100%;
+      height: 88vh;
+      // background-color: rgb(65, 65, 65);
+      border-radius: 5px;
+      position: relative;
+      padding: 1rem;
+      // background-color: red;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      // visibility: visible;
 
-      &::before {
-        content: "";
-        display: inline-block;
+      span {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        filter: blur(10px);
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-weight: 500;
+        color: #ddd;
+        top: 1rem;
+        left: 1rem;
+        font-size: 2.5rem;
+        transform: translateY(-20%);
+        z-index: 1;
 
-        background-color: rgb(41, 41, 41);
+        &::before {
+          content: "";
+          display: inline-block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          filter: blur(10px);
+
+          background-color: rgb(41, 41, 41);
+        }
+      }
+      video {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 5px;
       }
     }
-    video {
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 5px;
+
+    &_controls {
+      height: 8vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      align-items: center;
+      // background-color: blue;
+
+      a {
+        text-decoration: none;
+        position: relative;
+
+        i {
+          color: var(--primary-green);
+          font-size: 3rem;
+          border: 0;
+          position: relative;
+
+          background-color: var(--secondary-bg);
+          // color: var(--primary-red);
+          padding: 1.5rem;
+          border-radius: 10rem;
+          transition: all 0.2s;
+        }
+
+        .screenShareBtn_screenShareCont {
+          transition: all 0.3s ease;
+          color: var(--primary-red);
+        }
+      }
     }
   }
 
   &_users-cont {
     max-height: 98vh;
     // width: 18vw;
-    // background-color: rgb(65, 65, 65);
+    background-color: var(--primary-bg);
     border-radius: 5px;
     padding: 0.5rem;
     overflow-x: hidden;
@@ -3881,10 +3806,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 18vw;
     // visibility: visible;
 
     .user {
-      max-width: 18vw;
       // min-width: 20rem;
       border-radius: 5px;
       position: relative;

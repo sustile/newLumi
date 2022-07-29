@@ -167,7 +167,8 @@ io.on("connection", async (socket) => {
       replyTo,
       replyMessage,
       messageId,
-      userId
+      userId,
+      obj
     ) => {
       socket
         .to(room)
@@ -181,7 +182,8 @@ io.on("connection", async (socket) => {
           replyTo,
           replyMessage,
           messageId,
-          userId
+          userId,
+          obj
         );
     }
   );
@@ -197,7 +199,8 @@ io.on("connection", async (socket) => {
       replyTo,
       replyMessage,
       messageId,
-      userId
+      userId,
+      obj
     ) => {
       socket
         .to(room)
@@ -211,7 +214,8 @@ io.on("connection", async (socket) => {
           replyTo,
           replyMessage,
           messageId,
-          userId
+          userId,
+          obj
         );
 
       // socket.to(room).emit("receive-house-message", user, message, room, image);

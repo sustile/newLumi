@@ -82,6 +82,8 @@ const settingsWrapper = document.querySelector(".settings-wrapper");
 
 const spinner = document.querySelector(".spinner");
 
+const headerMainCont = document.querySelector(".header_main-cont");
+
 async function showSpinner() {
   spinner.style.visibility = "visible";
   spinner.style.opacity = "1";
@@ -125,6 +127,7 @@ let allMessages = {};
 
 const activeCall = {
   status: false,
+  name: "",
 };
 
 // SOUND VARIABLES
@@ -262,6 +265,7 @@ const openADm = async function (room, target) {
   slider.style.transform = "translateX(-100%)";
   sliderOverlay.style.opacity = "0";
   sliderOverlay.style.visibility = "hidden";
+  headerMainCont.style.transform = "translateX(0)";
 
   dmUserId.setAttribute("data-id", target.getAttribute("data-user-id"));
   dmUserId.textContent = `@${target.getAttribute("data-user-id")}`;
@@ -319,53 +323,56 @@ houseCont.addEventListener("click", (e) => {
 });
 
 const loadServers = async () => {
-  const result = (await (await fetch("/api/house")).json()).houses;
+  return new Promise(async (res) => {
+    const result = (await (await fetch("/api/house")).json()).houses;
 
-  if (!result) return;
+    if (!result) return;
 
-  houseCont.innerHTML = "";
-  housesOwned = [];
+    houseCont.innerHTML = "";
+    housesOwned = [];
 
-  for (let id of result) {
-    const house = await (
-      await fetch("/api/getHouse", {
-        method: "POST",
-        body: JSON.stringify({
-          id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
+    for (let id of result) {
+      const house = await (
+        await fetch("/api/getHouse", {
+          method: "POST",
+          body: JSON.stringify({
+            id,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
 
-    if (!house) return;
+      if (!house) return;
 
-    if (house.status === "fail") return;
+      if (house.status === "fail") return;
 
-    if (house.result.createdBy === user.id) {
-      housesOwned.push(house.result._id);
+      if (house.result.createdBy === user.id) {
+        housesOwned.push(house.result._id);
+      }
+
+      if (house.result.image === undefined) {
+        house.result.image = "default.png";
+      }
+
+      const html = `<a href="" class="closeOverlayTrigger" data-id="${house.result._id}" data-name="${house.result.name}">
+      <div class="img_cont">
+      <img
+        src="./../img/${house.result.image}"
+        alt=""
+        class="house_image"
+      />
+      </div>
+      <span class="house-text-notis" > </span>
+      </a>`;
+
+      houseCont.insertAdjacentHTML("afterbegin", html);
+
+      socket.emit("join-room", house.result._id);
     }
-
-    if (house.result.image === undefined) {
-      house.result.image = "default.png";
-    }
-
-    const html = `<a href="" class="closeOverlayTrigger" data-id="${house.result._id}" data-name="${house.result.name}">
-    <div class="img_cont">
-    <img
-      src="./../img/${house.result.image}"
-      alt=""
-      class="house_image"
-    />
-    </div>
-    <span class="house-text-notis" > </span>
-    </a>`;
-
-    houseCont.insertAdjacentHTML("afterbegin", html);
-
-    socket.emit("join-room", house.result._id);
-  }
+    res();
+  });
 };
 
 const loadDms = async () => {
@@ -431,6 +438,7 @@ createDM.addEventListener("click", async (e) => {
   slider.style.transform = "translateX(-100%)";
   sliderOverlay.style.opacity = "0";
   sliderOverlay.style.visibility = "hidden";
+  headerMainCont.style.transform = "translateX(0)";
 
   if (!activeCall.status) {
     if (call_btn.style.animation.includes("popup_btn")) {
@@ -540,9 +548,9 @@ createHouse.addEventListener("click", async (e) => {
       ).json();
 
       if (dm.status === "fail") {
-        if (dm.message === "Duplicate Dms") {
+        if (dm.message === "User is Already a Member") {
           if (!ongoingError) {
-            await popupError("Duplicate Dms");
+            await popupError("User is Already a Member");
           }
         } else {
           if (!ongoingError) {
@@ -550,7 +558,52 @@ createHouse.addEventListener("click", async (e) => {
           }
         }
       } else {
-        loadServers();
+        await loadServers();
+
+        const dateSent = new Date();
+        let hours =
+          dateSent.getHours() > 12
+            ? dateSent.getHours() - 12
+            : dateSent.getHours();
+        let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+        let day = dateSent.getDate();
+        if (day[-1] === "1") {
+          day = `${dateSent.getDate()}st`;
+        } else if (day[-1] === "2") {
+          day = `${dateSent.getDate()}nd`;
+        } else if (day[-1] === "3") {
+          day = `${dateSent.getDate()}rd`;
+        } else if (day == "11" || day == "12" || day == "13") {
+          day = `${dateSent.getDate()}th`;
+        } else {
+          day = `${dateSent.getDate()}th`;
+        }
+        const finalDateString = `${hours}:${String(
+          dateSent.getMinutes()
+        ).padStart(2, "0")} ${pmAm}, ${day} ${
+          monthLoadList[dateSent.getMonth()]
+        }, ${dateSent.getFullYear()}`;
+
+        const obj = await saveHouseMessage(
+          "house-join",
+          id,
+          `@${user.id} Joined The House`
+        );
+
+        socket.emit(
+          "send-house-message",
+          "house-join",
+          `@${user.id} Joined The House`,
+          user.name,
+          id,
+          "",
+          "",
+          "",
+          obj._id,
+          user.id,
+          obj
+        );
       }
       joinHouse_input.style.animation =
         "overlayProf_DownPrompt 0.3s forwards ease";
@@ -610,7 +663,7 @@ messageFrom.addEventListener("submit", async (e) => {
     const replyMessage = dm_replyBar.getAttribute("data-replyMessage");
 
     if (isLink) {
-      const id = await saveMessage(
+      const obj = await saveMessage(
         "reply-link",
         activeCont,
         message,
@@ -626,7 +679,7 @@ messageFrom.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -640,12 +693,13 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
       closeReplyBarFunction();
     } else {
-      const id = await saveMessage(
+      const obj = await saveMessage(
         "reply",
         activeCont,
         message,
@@ -661,7 +715,7 @@ messageFrom.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -675,15 +729,23 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
       closeReplyBarFunction();
     }
   } else if (dm_edit_bar.style.visibility === "visible") {
     if (isLink) {
       const id = dm_edit_bar.getAttribute("data-messageId");
-      await saveMessage("normal-link_edited", activeCont, message, "", "", id);
+      const obj = await saveMessage(
+        "normal-link_edited",
+        activeCont,
+        message,
+        "",
+        "",
+        id
+      );
 
       displayMessage(
         "normal-link_edited",
@@ -708,11 +770,19 @@ messageFrom.addEventListener("submit", async (e) => {
         "",
         "",
         id,
-        user.id
+        user.id,
+        obj
       );
     } else {
       const id = dm_edit_bar.getAttribute("data-messageId");
-      await saveMessage("normal_edited", activeCont, message, "", "", id);
+      const obj = await saveMessage(
+        "normal_edited",
+        activeCont,
+        message,
+        "",
+        "",
+        id
+      );
 
       displayMessage(
         "normal_edited",
@@ -737,13 +807,14 @@ messageFrom.addEventListener("submit", async (e) => {
         "",
         "",
         id,
-        user.id
+        user.id,
+        obj
       );
     }
     closeDmEditBarFunction();
   } else {
     if (isLink) {
-      const id = await saveMessage("normal-link", activeCont, message);
+      const obj = await saveMessage("normal-link", activeCont, message);
 
       displayMessage(
         "normal-link",
@@ -753,7 +824,7 @@ messageFrom.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -767,11 +838,12 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
     } else {
-      const id = await saveMessage("normal", activeCont, message);
+      const obj = await saveMessage("normal", activeCont, message);
 
       displayMessage(
         "normal",
@@ -781,7 +853,7 @@ messageFrom.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -795,8 +867,9 @@ messageFrom.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
     }
   }
@@ -813,7 +886,8 @@ socket.on(
     replyTo,
     replyMessage,
     messageId,
-    userId
+    userId,
+    obj
   ) => {
     const dateSent = new Date();
     let hours =
@@ -838,6 +912,8 @@ socket.on(
     )} ${pmAm}, ${day} ${
       monthLoadList[dateSent.getMonth()]
     }, ${dateSent.getFullYear()}`;
+
+    updateMessageInList(room, obj);
 
     if (message.includes("@")) {
       const wholeMessage = message.split(" ");
@@ -871,6 +947,23 @@ socket.on(
   }
 );
 
+async function updateMessageInList(room, obj) {
+  if (allMessages[room]) {
+    const messages = allMessages[room].messages;
+    let found = false;
+    for (let i = 0; i < messages.length; i++) {
+      if (messages[i]._id == obj._id) {
+        allMessages[room].messages[i] = obj;
+        found = true;
+      }
+    }
+
+    if (!found) {
+      allMessages[room].messages.unshift(obj);
+    }
+  }
+}
+
 const checkMessage = async function (str) {
   return new Promise((res) => {
     if (str[0] === "@") {
@@ -883,7 +976,7 @@ const checkMessage = async function (str) {
             user.id === userId
           ) {
             const getData = await getSomeOtherUserData(userId);
-            const newString = `<span class="ping-cont" >@${getData.name}</span>`;
+            const newString = `<span class="ping-cont" data-id="${userId}" >@${getData.name}</span>`;
             res(newString);
           } else {
             res(str);
@@ -1098,8 +1191,16 @@ const displayMessage = async (
 // CHECK IF USER HAS REACH THE TOP
 messageMain.addEventListener("scroll", async () => {
   if (messageMain.scrollTop === 0) {
+    if (messageMain.scrollHeight === messageMain.clientHeight) return;
     await wait(1);
     if (messageMain.scrollTop === 0) {
+      if (allMessages[activeCont]) {
+        if (allMessages[activeCont].isMaximum) {
+          return;
+        } else {
+          // currentDmPage = allMessages[activeCont].page;
+        }
+      }
       currentDmPage = currentDmPage + 1;
       lazyLoadMessages(activeCont, currentDmPage, true);
     }
@@ -1134,7 +1235,7 @@ const saveMessage = async (
         })
       ).json();
 
-      res(dm.id);
+      res(dm.obj);
     } else if (type === "normal" || type === "normal-link") {
       const dm = await (
         await fetch("/api/saveMessage", {
@@ -1150,7 +1251,7 @@ const saveMessage = async (
         })
       ).json();
 
-      res(dm.id);
+      res(dm.obj);
     } else if (type === "normal-link_edited" || type === "normal_edited") {
       const dm = await (
         await fetch("/api/editMessage", {
@@ -1167,7 +1268,7 @@ const saveMessage = async (
         })
       ).json();
 
-      res(dm.id);
+      res(dm.obj);
     }
   });
 };
@@ -1188,24 +1289,87 @@ const monthLoadList = [
 ];
 
 const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
+  // if (messageMain.scrollHeight === messageMain.clientHeight) return;
+
   showSpinner();
 
-  const dm = await (
-    await fetch("/api/lazyLoadMessages", {
-      method: "POST",
-      body: JSON.stringify({
-        dmId,
-        page,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  ).json();
+  let dm;
+
+  if (allMessages[dmId]) {
+    const messageObj = allMessages[dmId];
+    if (messageObj.page >= page) {
+      dm = messageObj.messages;
+    } else {
+      const newPage = await (
+        await fetch("/api/lazyLoadMessages", {
+          method: "POST",
+          body: JSON.stringify({
+            dmId,
+            page,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+
+      if (newPage.result.length === 0) {
+        allMessages[dmId].isMaximum = true;
+        await wait(1);
+
+        hideSpinner();
+        return;
+      }
+
+      messageObj.page = page;
+      messageObj.messages = messageObj.messages.concat(newPage.result);
+      dm = newPage.result;
+
+      if (page * 15 > messageObj.messages.length) {
+        allMessages[dmId].isMaximum = true;
+      }
+    }
+  } else {
+    const newPage = await (
+      await fetch("/api/lazyLoadMessages", {
+        method: "POST",
+        body: JSON.stringify({
+          dmId,
+          page,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (newPage.result.length === 0) {
+      if (!allMessages[dmId]) {
+        allMessages[dmId] = {};
+      }
+      allMessages[dmId].isMaximum = true;
+      await wait(1);
+
+      hideSpinner();
+      return;
+    }
+
+    allMessages[dmId] = {
+      page,
+      messages: newPage.result,
+    };
+    dm = allMessages[dmId].messages;
+
+    if (page * 15 > allMessages[dmId].messages.length) {
+      allMessages[dmId].isMaximum = true;
+    }
+  }
 
   const finalArray = [];
 
-  for (let el of dm.result) {
+  // console.log(dm);
+
+  for (let el of dm) {
     const user = await getSomeOtherUserData(el.userId);
 
     const dateSent = new Date(el.createdAt);
@@ -1235,7 +1399,7 @@ const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
     finalArray.push([
       el.type,
       el.message,
-      el.name,
+      user.name,
       user.image,
       el.replyTo,
       el.replyMessage,
@@ -1374,6 +1538,7 @@ houseCont.addEventListener("click", (e) => {
   slider.style.transform = "translateX(-100%)";
   sliderOverlay.style.opacity = "0";
   sliderOverlay.style.visibility = "hidden";
+  headerMainCont.style.transform = "translateX(0)";
 
   house_members_cont.style.visibility = "visible";
 
@@ -1600,6 +1765,16 @@ const displayHouseMessage = async (
     } else {
       return;
     }
+  } else if (type === "house-join") {
+    console.log(message);
+    html = `
+    <div class="joinHouseMessage" data-message-id="${messageId}" data-user-id="${userId}">
+                <span class="joinHouseMessage_cont"
+                  >${message}</span
+                >
+                <p>${time}</p>
+              </div> 
+    `;
   }
 
   houseMessageCont.insertAdjacentHTML(printType, html);
@@ -1653,7 +1828,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
     const replyMessage = house_replyBar.getAttribute("data-replyMessage");
 
     if (isLink) {
-      const id = await saveHouseMessage(
+      const obj = await saveHouseMessage(
         "reply-link",
         activeCont,
         message,
@@ -1668,7 +1843,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -1682,12 +1857,13 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
       closeHouseReplyBarFunction();
     } else {
-      const id = await saveHouseMessage(
+      const obj = await saveHouseMessage(
         "reply",
         activeCont,
         message,
@@ -1702,7 +1878,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         replyTo,
         replyMessage,
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -1716,15 +1892,16 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         replyTo,
         replyMessage,
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
       closeHouseReplyBarFunction();
     }
   } else if (house_edit_bar.style.visibility === "visible") {
     if (isLink) {
       const id = house_edit_bar.getAttribute("data-messageId");
-      await saveHouseMessage(
+      const obj = await saveHouseMessage(
         "normal-link_edited",
         activeCont,
         message,
@@ -1741,7 +1918,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -1755,12 +1932,20 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
     } else {
       const id = house_edit_bar.getAttribute("data-messageId");
-      await saveHouseMessage("normal_edited", activeCont, message, "", "", id);
+      const obj = await saveHouseMessage(
+        "normal_edited",
+        activeCont,
+        message,
+        "",
+        "",
+        id
+      );
 
       displayHouseMessage(
         "normal_edited",
@@ -1770,7 +1955,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -1784,14 +1969,15 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
     }
     closeHouseEditBarFunction();
   } else {
     if (isLink) {
-      const id = await saveHouseMessage("normal-link", activeCont, message);
+      const obj = await saveHouseMessage("normal-link", activeCont, message);
 
       displayHouseMessage(
         "normal-link",
@@ -1801,7 +1987,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -1815,11 +2001,12 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
     } else {
-      const id = await saveHouseMessage("normal", activeCont, message);
+      const obj = await saveHouseMessage("normal", activeCont, message);
 
       displayHouseMessage(
         "normal",
@@ -1829,7 +2016,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         "",
         finalDateString,
-        id,
+        obj._id,
         user.id,
         true
       );
@@ -1843,8 +2030,9 @@ houseMessageForm.addEventListener("submit", async (e) => {
         user.image,
         "",
         "",
-        id,
-        user.id
+        obj._id,
+        user.id,
+        obj
       );
     }
   }
@@ -1881,7 +2069,7 @@ const saveHouseMessage = async (
         })
       ).json();
 
-      res(dm.id);
+      res(dm.obj);
     } else if (type === "normal" || type === "normal-link") {
       const dm = await (
         await fetch("/api/saveHouseMessage", {
@@ -1897,7 +2085,7 @@ const saveHouseMessage = async (
         })
       ).json();
 
-      res(dm.id);
+      res(dm.obj);
     } else if (type === "normal-link_edited" || type === "normal_edited") {
       const dm = await (
         await fetch("/api/editHouseMessage", {
@@ -1914,7 +2102,23 @@ const saveHouseMessage = async (
         })
       ).json();
 
-      res(dm.id);
+      res(dm.obj);
+    } else if (type === "house-join") {
+      const dm = await (
+        await fetch("/api/saveHouseMessage", {
+          method: "POST",
+          body: JSON.stringify({
+            type,
+            houseId,
+            message,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+
+      res(dm.obj);
     }
   });
 };
@@ -1922,8 +2126,16 @@ const saveHouseMessage = async (
 // CHECK IF USER HAS REACH THE TOP
 house_scroll.addEventListener("scroll", async () => {
   if (house_scroll.scrollTop === 0) {
+    if (house_scroll.scrollHeight === house_scroll.clientHeight) return;
     await wait(1);
     if (house_scroll.scrollTop === 0) {
+      if (allMessages[activeCont]) {
+        if (allMessages[activeCont].isMaximum) {
+          return;
+        } else {
+          // currentDmPage = allMessages[activeCont].page;
+        }
+      }
       currentDmPage = currentDmPage + 1;
       lazyLoadHouseMessages(activeCont, currentDmPage, true);
     }
@@ -1934,22 +2146,81 @@ house_scroll.addEventListener("scroll", async () => {
 const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
   showSpinner();
 
-  const dm = await (
-    await fetch("/api/lazyLoadHouseMessages", {
-      method: "POST",
-      body: JSON.stringify({
-        houseId,
-        page,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  ).json();
+  let dm;
+
+  if (allMessages[houseId]) {
+    const messageObj = allMessages[houseId];
+    if (messageObj.page >= page) {
+      dm = messageObj.messages;
+    } else {
+      const newPage = await (
+        await fetch("/api/lazyLoadHouseMessages", {
+          method: "POST",
+          body: JSON.stringify({
+            houseId,
+            page,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+
+      if (newPage.result.length === 0) {
+        allMessages[houseId].isMaximum = true;
+        await wait(1);
+
+        hideSpinner();
+        return;
+      }
+
+      messageObj.page = page;
+      messageObj.messages = messageObj.messages.concat(newPage.result);
+      dm = newPage.result;
+
+      if (page * 15 > messageObj.messages.length) {
+        allMessages[houseId].isMaximum = true;
+      }
+    }
+  } else {
+    const newPage = await (
+      await fetch("/api/lazyLoadHouseMessages", {
+        method: "POST",
+        body: JSON.stringify({
+          houseId,
+          page,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (newPage.result.length === 0) {
+      if (!allMessages[houseId]) {
+        allMessages[houseId] = {};
+      }
+      allMessages[houseId].isMaximum = true;
+      await wait(1);
+
+      hideSpinner();
+      return;
+    }
+
+    allMessages[houseId] = {
+      page,
+      messages: newPage.result,
+    };
+    dm = allMessages[houseId].messages;
+
+    if (page * 15 > allMessages[houseId].messages.length) {
+      allMessages[houseId].isMaximum = true;
+    }
+  }
 
   const finalArray = [];
 
-  for (let el of dm.result) {
+  for (let el of dm) {
     const user = await getSomeOtherUserData(el.userId);
 
     const dateSent = new Date(el.createdAt);
@@ -2011,7 +2282,8 @@ socket.on(
     replyTo,
     replyMessage,
     messageId,
-    userId
+    userId,
+    obj
   ) => {
     const dateSent = new Date();
     let hours =
@@ -2050,6 +2322,8 @@ socket.on(
         }
       });
     }
+
+    updateMessageInList(room, obj);
 
     if (room === activeCont) {
       displayHouseMessage(
@@ -2188,6 +2462,7 @@ async function remoteConnection() {
 
           activeCall.status = true;
           activeCall.room = room;
+
           sound_callJoin.play();
 
           socket.emit("joined-call", room, user.id, user.name, user.image);
@@ -2196,6 +2471,7 @@ async function remoteConnection() {
           insertVcMembers("mine", user.name, user.image, user.id);
 
           call_status_text.textContent = `${incomingCallData.name} VC Connected`;
+          call_status_text.setAttribute("data-name", incomingCallData.name);
           call_status.style.animation = "popup_btn 0.3s forwards ease";
 
           decline_btn.style.animation = "popup_btn 0.3s forwards ease";
@@ -2303,6 +2579,7 @@ async function remoteConnection() {
 
         activeCall.status = true;
         activeCall.room = activeCont;
+
         sound_callJoin.play();
         socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
 
@@ -2312,6 +2589,7 @@ async function remoteConnection() {
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
         call_status_text.textContent = `${houseHeader.textContent} VC Connected`;
+        call_status_text.setAttribute("data-name", houseHeader.textContent);
         call_status.style.animation = "popup_btn 0.3s forwards ease";
 
         leave_house_vc.style.animation = "popup_btn 0.3s forwards ease";
@@ -2357,7 +2635,9 @@ async function remoteConnection() {
           socket.emit("stop-video-stream", activeCall.room, user.id);
 
           videoSharing_MainCont.innerHTML = "";
-          const html = `<span>*Sad Cricket Noises*</span>
+          const html = `<span>${call_status_text.getAttribute(
+            "data-name"
+          )} VC</span>
       <video></video>`;
           videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
         }
@@ -2540,6 +2820,7 @@ async function remoteConnection() {
           if (audio.enabled) {
             audio.enabled = false;
             muteBtn.style.color = "var(--primary-red)";
+            muteBtnVideoSharing.style.color = "var(--primary-red)";
             if (activeCall.status) {
               socket.emit("muteBtn", activeCall.room, user.id);
 
@@ -2554,6 +2835,39 @@ async function remoteConnection() {
             // muteBtn.style.backgroundColor = "var(--primary-bg)";
           } else {
             audio.enabled = true;
+            muteBtn.style.color = "var(--primary-green)";
+            muteBtnVideoSharing.style.color = "var(--primary-green)";
+            socket.emit("muteBtn", activeCall.room, user.id);
+
+            const allUsers = vc_members_cont.querySelectorAll("p");
+            allUsers.forEach(async (user2) => {
+              if (user2.getAttribute("data-user-id") === user.id) {
+                const i = user2.querySelector("i");
+                i.classList.toggle("userMute");
+              }
+            });
+          }
+        });
+
+        muteBtnVideoSharing.addEventListener("click", () => {
+          if (audio.enabled) {
+            audio.enabled = false;
+            muteBtnVideoSharing.style.color = "var(--primary-red)";
+            muteBtn.style.color = "var(--primary-red)";
+            if (activeCall.status) {
+              socket.emit("muteBtn", activeCall.room, user.id);
+
+              const allUsers = vc_members_cont.querySelectorAll("p");
+              allUsers.forEach(async (user2) => {
+                if (user2.getAttribute("data-user-id") === user.id) {
+                  const i = user2.querySelector("i");
+                  i.classList.toggle("userMute");
+                }
+              });
+            }
+          } else {
+            audio.enabled = true;
+            muteBtnVideoSharing.style.color = "var(--primary-green)";
             muteBtn.style.color = "var(--primary-green)";
             socket.emit("muteBtn", activeCall.room, user.id);
 
@@ -2591,13 +2905,49 @@ async function remoteConnection() {
       deafenBtn.addEventListener("click", (e) => {
         if (e.target.getAttribute("data-active") === "false") {
           document.querySelectorAll("video").forEach((el) => {
-            deafenBtn.style.color = "var(--primary-red)";
-            // deafenBtn.style.backgroundColor = "var(--primary-bg)";
             el.pause();
           });
+          defeanBtnVideoSharing.style.color = "var(--primary-red)";
+          deafenBtn.style.color = "var(--primary-red)";
           e.target.setAttribute("data-active", true);
+          defeanBtnVideoSharing.setAttribute("data-active", true);
           if (muteBtn.style.color !== "var(--primary-red)") {
             audio.enabled = false;
+            muteBtn.style.color = "var(--primary-red)";
+            muteBtnVideoSharing.style.color = "var(--primary-red)";
+            socket.emit("muteBtn", activeCall.room, user.id);
+
+            const allUsers = vc_members_cont.querySelectorAll("p");
+            allUsers.forEach(async (user2) => {
+              if (user2.getAttribute("data-user-id") === user.id) {
+                const i = user2.querySelector("i");
+                i.classList.toggle("userMute");
+              }
+            });
+          }
+        } else if (e.target.getAttribute("data-active") === "true") {
+          document.querySelectorAll("video").forEach((el) => {
+            el.play();
+          });
+          deafenBtn.style.color = "var(--primary-green)";
+          defeanBtnVideoSharing.style.color = "var(--primary-green)";
+          e.target.setAttribute("data-active", false);
+          defeanBtnVideoSharing.setAttribute("data-active", false);
+        }
+      });
+
+      defeanBtnVideoSharing.addEventListener("click", (e) => {
+        if (e.target.getAttribute("data-active") === "false") {
+          document.querySelectorAll("video").forEach((el) => {
+            el.pause();
+          });
+          defeanBtnVideoSharing.style.color = "var(--primary-red)";
+          deafenBtn.style.color = "var(--primary-red)";
+          e.target.setAttribute("data-active", true);
+          deafenBtn.setAttribute("data-active", true);
+          if (muteBtnVideoSharing.style.color !== "var(--primary-red)") {
+            audio.enabled = false;
+            muteBtnVideoSharing.style.color = "var(--primary-red)";
             muteBtn.style.color = "var(--primary-red)";
             socket.emit("muteBtn", activeCall.room, user.id);
 
@@ -2611,10 +2961,12 @@ async function remoteConnection() {
           }
         } else if (e.target.getAttribute("data-active") === "true") {
           document.querySelectorAll("video").forEach((el) => {
-            deafenBtn.style.color = "var(--primary-green)";
             el.play();
           });
+          defeanBtnVideoSharing.style.color = "var(--primary-green)";
+          deafenBtn.style.color = "var(--primary-green)";
           e.target.setAttribute("data-active", false);
+          deafenBtn.setAttribute("data-active", false);
         }
       });
 
@@ -2629,6 +2981,7 @@ async function remoteConnection() {
 
         activeCall.status = true;
         activeCall.room = activeCont;
+
         sound_callJoin.play();
         socket.emit("joined-call", activeCont, user.id, user.name, user.image);
 
@@ -2638,6 +2991,7 @@ async function remoteConnection() {
         // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
         // await wait(0.2);
         call_status_text.textContent = `${dmHeader.textContent} VC Connected`;
+        call_status_text.setAttribute("data-name", dmHeader.textContent);
         call_status.style.animation = "popup_btn 0.3s forwards ease";
 
         decline_btn.style.animation = "popup_btn 0.3s forwards ease";
@@ -2683,7 +3037,9 @@ async function remoteConnection() {
           socket.emit("stop-video-stream", activeCall.room, user.id);
 
           videoSharing_MainCont.innerHTML = "";
-          const html = `<span>*Sad Cricket Noises*</span>
+          const html = `<span>${call_status_text.getAttribute(
+            "data-name"
+          )} VC</span>
       <video></video>`;
           videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
         }
@@ -3348,7 +3704,9 @@ socket.on("user-left-server_check-vc", (room, id) => {
 
     if (streamMainContVideo.getAttribute("data-user-id") === id) {
       videoSharing_MainCont.innerHTML = "";
-      const html = `<span>*Sad Cricket Noises*</span>
+      const html = `<span>${call_status_text.getAttribute(
+        "data-name"
+      )} VC</span>
 <video></video>`;
       videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
     }
@@ -3403,6 +3761,8 @@ sliderBtn.addEventListener("click", async () => {
   slider.style.transform = "translateX(0)";
   sliderOverlay.style.visibility = "visible";
   sliderOverlay.style.opacity = "1";
+
+  headerMainCont.style.transform = "translateX(43rem)";
 });
 
 sliderOverlay.addEventListener("click", async () => {
@@ -3410,6 +3770,8 @@ sliderOverlay.addEventListener("click", async () => {
   sliderOverlay.style.opacity = "0";
   // await wait(0.3);
   sliderOverlay.style.visibility = "hidden";
+
+  headerMainCont.style.transform = "translateX(0)";
 });
 
 // SLIDER
@@ -3436,6 +3798,9 @@ async function loadVideoStreams() {
   });
 
   call_status.addEventListener("click", async (e) => {
+    videoSharing_MainCont.querySelector(
+      "span"
+    ).textContent = `${call_status_text.getAttribute("data-name")} VC`;
     videoSharingCont.style.animation =
       "overlayProf_UpPrompt 0.3s forwards ease";
   });
@@ -3452,6 +3817,9 @@ async function loadVideoStreams() {
       if (screenShareBtn.getAttribute("data-active") == "false") {
         screenShareBtn.setAttribute("data-active", true);
         screenShareBtn.style.color = "var(--primary-green)";
+
+        screenShareVideoSharing.setAttribute("data-active", true);
+        screenShareVideoSharing.style.color = "var(--primary-green)";
 
         navigator.mediaDevices
           .getDisplayMedia({
@@ -3512,8 +3880,125 @@ async function loadVideoStreams() {
           .catch((err) => {
             screenShareBtn.setAttribute("data-active", false);
             screenShareBtn.style.color = "var(--primary-red)";
+
+            screenShareVideoSharing.setAttribute("data-active", false);
+            screenShareVideoSharing.style.color = "var(--primary-red)";
           });
       } else if (screenShareBtn.getAttribute("data-active") == "true") {
+        screenShareBtn.setAttribute("data-active", false);
+        screenShareBtn.style.color = "var(--primary-red)";
+
+        screenShareVideoSharing.setAttribute("data-active", false);
+        screenShareVideoSharing.style.color = "var(--primary-red)";
+
+        const vid = videoStream.getTracks()[0];
+        vid.stop();
+        videoStream = "";
+
+        socket.emit("stop-video-stream", activeCall.room, user.id);
+
+        const streamMainContVideo =
+          videoSharing_MainCont.querySelector("video");
+
+        if (streamMainContVideo.getAttribute("data-user-id") === user.id) {
+          videoSharing_MainCont.innerHTML = "";
+          const html = `<span>${call_status_text.getAttribute(
+            "data-name"
+          )} VC</span>
+    <video></video>`;
+          videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+        }
+
+        const allVids = videoSharing_UsersCont.querySelectorAll(".user");
+        allVids.forEach((vid) => {
+          if (vid.getAttribute("data-user-id") === user.id) {
+            vid.remove();
+          }
+        });
+      }
+    }
+  });
+
+  screenShareVideoSharing.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (activeCall.status) {
+      if (screenShareVideoSharing.getAttribute("data-active") == "false") {
+        screenShareBtn.setAttribute("data-active", true);
+        screenShareBtn.style.color = "var(--primary-green)";
+
+        screenShareVideoSharing.setAttribute("data-active", true);
+        screenShareVideoSharing.style.color = "var(--primary-green)";
+
+        navigator.mediaDevices
+          .getDisplayMedia({
+            video: {
+              mediaDevices: "screen",
+              cursor: "always",
+              frameRate: 60,
+            },
+            audio: false,
+          })
+          .then(async (stream) => {
+            const streamMainContVideo =
+              videoSharing_MainCont.querySelector("video");
+            const streamMainContTitle =
+              videoSharing_MainCont.querySelector("span");
+
+            streamMainContVideo.setAttribute("data-user-id", user.id);
+
+            streamMainContVideo.srcObject = stream;
+            streamMainContTitle.textContent = user.name;
+            streamMainContVideo.addEventListener("loadedmetadata", () => {
+              streamMainContVideo.play();
+            });
+            videoStream = stream;
+
+            const html = `
+            <div class="user" data-id="${stream.id}" data-user-id="${user.id}">
+            <span>${user.name}</span>
+            <video></video>
+          </div>
+            `;
+
+            videoSharing_UsersCont.insertAdjacentHTML("afterbegin", html);
+
+            const allVids = videoSharing_UsersCont.querySelectorAll(".user");
+            allVids.forEach((vid) => {
+              if (vid.getAttribute("data-user-id") === user.id) {
+                const video = vid.querySelector("video");
+                video.srcObject = stream;
+
+                video.addEventListener("loadedmetadata", () => {
+                  video.play();
+                });
+              }
+            });
+
+            socket.emit("video-stream-data-request", activeCall.room);
+
+            await wait(1);
+
+            socket.emit(
+              "video-stream-send-request",
+              activeCall.room,
+              user.id,
+              user.name
+            );
+          })
+          .catch((err) => {
+            screenShareVideoSharing.setAttribute("data-active", false);
+            screenShareVideoSharing.style.color = "var(--primary-red)";
+
+            screenShareBtn.setAttribute("data-active", false);
+            screenShareBtn.style.color = "var(--primary-red)";
+          });
+      } else if (
+        screenShareVideoSharing.getAttribute("data-active") == "true"
+      ) {
+        screenShareVideoSharing.setAttribute("data-active", false);
+        screenShareVideoSharing.style.color = "var(--primary-red)";
+
         screenShareBtn.setAttribute("data-active", false);
         screenShareBtn.style.color = "var(--primary-red)";
 
@@ -3528,7 +4013,9 @@ async function loadVideoStreams() {
 
         if (streamMainContVideo.getAttribute("data-user-id") === user.id) {
           videoSharing_MainCont.innerHTML = "";
-          const html = `<span>*Sad Cricket Noises*</span>
+          const html = `<span>${call_status_text.getAttribute(
+            "data-name"
+          )} VC</span>
     <video></video>`;
           videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
         }
@@ -3598,7 +4085,9 @@ async function loadVideoStreams() {
       const streamMainContTitle = videoSharing_MainCont.querySelector("span");
       if (streamMainContVideo.getAttribute("data-user-id") === id) {
         videoSharing_MainCont.innerHTML = "";
-        const html = `<span>*Sad Cricket Noises*</span>
+        const html = `<span>${call_status_text.getAttribute(
+          "data-name"
+        )} VC</span>
   <video></video>`;
         videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
       }
@@ -3620,7 +4109,7 @@ async function clearVideoStreams() {
   });
 
   videoSharing_MainCont.innerHTML = "";
-  const html = `<span>*Sad Cricket Noises*</span>
+  const html = `<span>${call_status_text.getAttribute("data-name")} VC</span>
   <video></video>`;
 
   videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
@@ -4760,6 +5249,7 @@ settingsTrigger.addEventListener("click", async (e) => {
   slider.style.transform = "translateX(-100%)";
   sliderOverlay.style.opacity = "0";
   sliderOverlay.style.visibility = "hidden";
+  headerMainCont.style.transform = "translateX(0)";
 
   if (!activeCall.status) {
     if (call_btn.style.animation.includes("popup_btn")) {
@@ -5076,3 +5566,14 @@ async function messsageUserDetailsContextMenu(e) {
   messageUserContextMenu.style.opacity = "1";
 }
 // MESSAGE USER DETAILS CONTEXTMENU
+
+// SCREEN SHARE CONT
+const screenShareVideoSharing = document.querySelector(
+  ".screenShareBtn_screenShareCont"
+);
+const muteBtnVideoSharing = document.querySelector(".muteBtn_screenShareCont");
+const defeanBtnVideoSharing = document.querySelector(
+  ".deafenBtn_screenShareCont"
+);
+
+// SCREEN SHARE CONT

@@ -35,9 +35,10 @@ html {
 
 body {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  background-color: var(--primary-bg);
+  background-color: var(--primary-messsage-cont);
   font-variant: no-common-ligatures !important;
   font-weight: 500 !important;
+  overflow: hidden;
 }
 
 .drag {
@@ -62,7 +63,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 49;
   visibility: hidden;
   opacity: 0;
@@ -77,6 +78,7 @@ body {
   transform: translateX(-100%);
   z-index: 50;
   transition: all 0.5s ease;
+  border-radius: 1rem;
 }
 .slider .houses {
   background-color: var(--primary-bg);
@@ -85,24 +87,24 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  width: 7vw;
+  gap: 1rem;
+  width: 11rem;
 }
 .slider .houses_main-cont {
-  padding: 1.5rem;
+  padding: 0.8rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
   overflow-y: auto;
-  height: 88vh;
+  height: 90vh;
 }
 .slider .houses_main-cont a {
   position: relative;
 }
 .slider .houses_main-cont a .img_cont {
-  width: 7rem;
-  height: 7rem;
+  width: 6rem;
+  height: 6rem;
 }
 .slider .houses_main-cont a .img_cont img {
   width: 100%;
@@ -171,6 +173,9 @@ body {
   align-items: center;
   box-sizing: content-box;
   width: 17vw;
+  padding-bottom: 0;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
 }
 .slider .dms_main-cont {
   padding: 1.5rem 1rem;
@@ -195,8 +200,8 @@ body {
   border-radius: 1rem;
 }
 .slider .dms_main-cont a .img_cont {
-  width: 6rem;
-  height: 4.3rem;
+  width: 5.5rem;
+  height: 4.1rem;
   transform: scale(1.1);
   position: relative;
 }
@@ -265,9 +270,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   border-radius: 5px;
   background-color: var(--primary-bg);
   border: 3px solid var(--primary-green);
@@ -341,7 +346,7 @@ body {
 }
 .slider .dms .nav_details .nav_acc {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 1rem 2rem;
   width: 100%;
   align-items: center;
@@ -363,11 +368,12 @@ body {
 .slider .dms .nav_details .nav_acc div {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 0.3rem;
 }
 .slider .dms .nav_details .nav_acc div span {
-  width: 15rem;
+  width: 20rem;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   color: var(--primary-red);
   font-size: 1.5rem;
@@ -378,7 +384,7 @@ body {
 }
 .slider .dms .nav_details .nav_acc div a {
   font-size: 1.1rem;
-  width: 15rem;
+  width: 20rem;
   text-decoration: none;
   color: #ddd;
   font-weight: bolder;
@@ -387,15 +393,16 @@ body {
   white-space: pre;
   cursor: pointer;
   position: relative;
-  text-align: center;
+  text-align: left;
 }
 
 .header_main-cont {
   border-radius: 1rem;
   display: flex;
+  transition: all 0.5s ease;
 }
 .header_main-cont .side-bar {
-  width: 5vw;
+  width: 9rem;
   height: 100vh;
   background-color: var(--primary-bg);
   position: relative;
@@ -412,7 +419,7 @@ body {
 }
 .header_main-cont .side-bar .nav_headers .main-heading {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 400;
   color: #333;
   letter-spacing: 1rem;
@@ -428,7 +435,7 @@ body {
 }
 .header_main-cont .side-bar .nav_headers i {
   color: var(--primary-red);
-  font-size: 7rem;
+  font-size: 6rem;
 }
 .header_main-cont .side-bar .nav_headers .dev {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -727,7 +734,7 @@ body {
   padding-right: 1rem;
   color: #ddd;
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 .header_main-cont .content .messages-wrapper .message-header-content_main span {
   color: #d8315b;
@@ -1161,7 +1168,7 @@ body {
   color: #ddd;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 .header_main-cont .content .house-wrapper .house_main-cont {
   width: 100%;
@@ -1253,6 +1260,43 @@ body {
   max-width: max-content;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message:hover {
+  background-color: rgb(65, 65, 65);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.1s ease;
+  max-width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: rgb(102, 102, 102);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage .joinHouseMessage_cont {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: #9578d3;
+  margin: 0 5.1rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  max-width: max-content;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage .joinHouseMessage_cont .ping-cont {
+  background-color: var(--secondary-bg);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: #d8315b;
+  font-weight: 500;
+  font-size: 1.6rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage:hover {
   background-color: rgb(65, 65, 65);
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message {
@@ -1506,7 +1550,7 @@ body {
   color: #ddd;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 .header_main-cont .content .settings-wrapper .setings-wrapper_content-main div {
   display: flex;
@@ -1923,7 +1967,7 @@ body {
   color: #ddd;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 .header_main-cont .content .friend-list-wrapper .friend-list-header-content_main div {
   display: flex;
@@ -2314,34 +2358,6 @@ body {
   line-height: 1.5;
   display: none;
 }
-@keyframes popupPrompt {
-  0% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-@keyframes popdownPrompt {
-  0% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-}
 
 .createDm_input_field,
 .sendfriendRequest_input_field {
@@ -2430,34 +2446,6 @@ body {
   font-weight: 500;
   font-size: 1.6rem;
 }
-@keyframes popupPrompt {
-  0% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-@keyframes popdownPrompt {
-  0% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-}
 
 .createHouse_input_field {
   z-index: 80;
@@ -2539,34 +2527,6 @@ body {
   font-weight: 500;
   font-size: 1.6rem;
 }
-@keyframes popupPrompt {
-  0% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-@keyframes popdownPrompt {
-  0% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-}
 
 .chooseHouse_option {
   z-index: 80;
@@ -2629,34 +2589,6 @@ body {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 500;
   font-size: 1.6rem;
-}
-@keyframes popupPrompt {
-  0% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-@keyframes popdownPrompt {
-  0% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
 }
 
 .joinHouse_input_field {
@@ -2739,34 +2671,6 @@ body {
   font-weight: 500;
   font-size: 1.6rem;
 }
-@keyframes popupPrompt {
-  0% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-@keyframes popdownPrompt {
-  0% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  80% {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0);
-  }
-}
 
 .account_details,
 .house_details,
@@ -2826,12 +2730,10 @@ body {
 .house-members-cont .close_account_details i,
 .house-members-cont .close_house-members-cont i {
   font-size: 2.5rem;
-  background-color: #333;
+  background-color: var(--secondary-bg);
+  border-radius: 5px;
   padding: 1rem;
-  color: #ddd;
-  border-bottom: 3px solid var(--primary-red);
-  border-left: 3px solid var(--primary-red);
-  border-bottom-left-radius: 1rem;
+  color: #d8315b;
   border-top-right-radius: 1rem;
   cursor: pointer;
 }
@@ -3194,7 +3096,7 @@ body {
   0% {
     opacity: 0;
     visibility: hidden;
-    transform: translate(-50%, -50%) scale(0.8);
+    transform: translate(-50%, -50%) scale(1.2);
   }
   100% {
     opacity: 1;
@@ -3297,7 +3199,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background-color: #161b22;
+  background-color: rgb(32, 32, 32);
   border-radius: 1rem;
   padding: 1rem;
   height: 98vh;
@@ -3306,18 +3208,6 @@ body {
   flex-direction: row;
   gap: 1rem;
   visibility: hidden;
-}
-.videoAndScreenShareCont::before {
-  content: "";
-  display: inline-block;
-  width: 200vw;
-  height: 200vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: -1;
-  transform: translate(-50%, -50%);
 }
 .videoAndScreenShareCont .close_videoAndScreenShareCont {
   text-decoration: none;
@@ -3328,38 +3218,44 @@ body {
 }
 .videoAndScreenShareCont .close_videoAndScreenShareCont i {
   font-size: 2.5rem;
-  background-color: #333;
+  background-color: var(--secondary-bg);
+  border-radius: 5px;
   padding: 1rem;
-  color: #ddd;
-  border-bottom: 3px solid var(--primary-red);
-  border-left: 3px solid var(--primary-red);
-  border-bottom-left-radius: 1rem;
+  color: #d8315b;
   border-top-right-radius: 1rem;
   cursor: pointer;
 }
-.videoAndScreenShareCont_main-cont {
-  width: 100%;
+.videoAndScreenShareCont .videoSharingModelCont {
   height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.videoAndScreenShareCont .videoSharingModelCont .videoAndScreenShareCont_main-cont {
+  width: 100%;
+  height: 88vh;
   border-radius: 5px;
   position: relative;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
 }
-.videoAndScreenShareCont_main-cont span {
+.videoAndScreenShareCont .videoSharingModelCont .videoAndScreenShareCont_main-cont span {
   position: absolute;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 500;
   color: #ddd;
-  top: 0;
-  left: 0;
+  top: 1rem;
+  left: 1rem;
   font-size: 2.5rem;
   transform: translateY(-20%);
   z-index: 1;
 }
-.videoAndScreenShareCont_main-cont span::before {
+.videoAndScreenShareCont .videoSharingModelCont .videoAndScreenShareCont_main-cont span::before {
   content: "";
   display: inline-block;
   position: absolute;
@@ -3371,13 +3267,40 @@ body {
   filter: blur(10px);
   background-color: rgb(41, 41, 41);
 }
-.videoAndScreenShareCont_main-cont video {
+.videoAndScreenShareCont .videoSharingModelCont .videoAndScreenShareCont_main-cont video {
   max-width: 100%;
   max-height: 100%;
   border-radius: 5px;
 }
+.videoAndScreenShareCont .videoSharingModelCont_controls {
+  height: 8vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  align-items: center;
+}
+.videoAndScreenShareCont .videoSharingModelCont_controls a {
+  text-decoration: none;
+  position: relative;
+}
+.videoAndScreenShareCont .videoSharingModelCont_controls a i {
+  color: var(--primary-green);
+  font-size: 3rem;
+  border: 0;
+  position: relative;
+  background-color: var(--secondary-bg);
+  padding: 1.5rem;
+  border-radius: 10rem;
+  transition: all 0.2s;
+}
+.videoAndScreenShareCont .videoSharingModelCont_controls a .screenShareBtn_screenShareCont {
+  transition: all 0.3s ease;
+  color: var(--primary-red);
+}
 .videoAndScreenShareCont_users-cont {
   max-height: 98vh;
+  background-color: var(--primary-bg);
   border-radius: 5px;
   padding: 0.5rem;
   overflow-x: hidden;
@@ -3385,9 +3308,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 18vw;
 }
 .videoAndScreenShareCont_users-cont .user {
-  max-width: 18vw;
   border-radius: 5px;
   position: relative;
   cursor: pointer;

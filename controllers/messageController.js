@@ -36,11 +36,11 @@ exports.saveMessage = async (req, res) => {
         )
       );
 
-      // console.log(message);
+      const messageObj = await message.findOne({ _id: x });
 
       res.status(200).json({
         status: "ok",
-        id: x,
+        obj: messageObj,
       });
     } else {
       res.status(400).json({
@@ -61,7 +61,6 @@ exports.editMessage = async (req, res) => {
     const body = req.body;
     const user = req.user;
 
-
     if (!body) {
       res.status(400).json({
         status: "fail",
@@ -70,19 +69,22 @@ exports.editMessage = async (req, res) => {
       return;
     }
 
-
     if (user.dms.includes(body.dmId)) {
+      await message.findByIdAndUpdate(
+        {
+          _id: body.messageId,
+        },
+        {
+          message: body.message,
+          type: body.type,
+        }
+      );
 
-      await message.findByIdAndUpdate({
-        _id : body.messageId
-      }, {
-        message : body.message,
-        type : body.type
-      })
-
+      const messageObj = await message.findOne({ _id: body.messageId });
 
       res.status(200).json({
         status: "ok",
+        obj: messageObj,
       });
     } else {
       res.status(400).json({
@@ -97,7 +99,6 @@ exports.editMessage = async (req, res) => {
     });
   }
 };
-
 
 exports.lazyLoadMessages = async (req, res) => {
   try {
