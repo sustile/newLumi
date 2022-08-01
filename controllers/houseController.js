@@ -24,6 +24,16 @@ exports.createHouse = async (req, res) => {
       createdBy: user._id,
       members: [user._id],
       image: "default.png",
+      textChannel: [
+        {
+          name: "Default Text Channel",
+        },
+      ],
+      voiceChannel: [
+        {
+          name: "Default Voice Channel",
+        },
+      ],
     });
     const newHouse = await house.create(body);
 
@@ -38,6 +48,90 @@ exports.createHouse = async (req, res) => {
       status: "ok",
       newHouse,
     });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.createTextChannel = async (req, res) => {
+  try {
+    const user = req.user;
+    const reqBody = req.body;
+
+    if (!user) {
+      res.redirect("/login");
+    } else {
+      const houseCheck = await house.findOne({ _id: reqBody.house });
+
+      if (!houseCheck) {
+        res.redirect("/login");
+      } else {
+        if (!houseCheck.createdBy.includes(user._id)) {
+          res.redirect("/login");
+        } else {
+          const x = await new mongoose.Types.ObjectId().toHexString();
+
+          let channel1 = houseCheck.textChannel;
+          channel1.push({
+            name: reqBody.name,
+            _id: x,
+          });
+
+          await house.findByIdAndUpdate(reqBody.house, {
+            textChannel: channel1,
+          });
+
+          res.status(200).json({
+            status: "ok",
+          });
+        }
+      }
+    }
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.createVoiceChannel = async (req, res) => {
+  try {
+    const user = req.user;
+    const reqBody = req.body;
+
+    if (!user) {
+      res.redirect("/login");
+    } else {
+      const houseCheck = await house.findOne({ _id: reqBody.house });
+
+      if (!houseCheck) {
+        res.redirect("/login");
+      } else {
+        if (!houseCheck.createdBy.includes(user._id)) {
+          res.redirect("/login");
+        } else {
+          const x = await new mongoose.Types.ObjectId().toHexString();
+
+          let channel1 = houseCheck.voiceChannel;
+          channel1.push({
+            name: reqBody.name,
+            _id: x,
+          });
+
+          await house.findByIdAndUpdate(reqBody.house, {
+            voiceChannel: channel1,
+          });
+
+          res.status(200).json({
+            status: "ok",
+          });
+        }
+      }
+    }
   } catch (err) {
     res.status(400).json({
       status: "fail",

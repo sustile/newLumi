@@ -200,7 +200,8 @@ io.on("connection", async (socket) => {
       replyMessage,
       messageId,
       userId,
-      obj
+      obj,
+      channelId
     ) => {
       socket
         .to(room)
@@ -215,7 +216,8 @@ io.on("connection", async (socket) => {
           replyMessage,
           messageId,
           userId,
-          obj
+          obj,
+          channelId
         );
 
       // socket.to(room).emit("receive-house-message", user, message, room, image);

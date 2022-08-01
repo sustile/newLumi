@@ -115,7 +115,7 @@ exports.lazyLoadHouseMessages = async (req, res) => {
     const page = (body.page - 1) * limit;
 
     const result = await message
-      .find({ houseId: body.houseId })
+      .find({ channelId: body.channelId })
       .sort({ createdAt: -1 })
       .skip(page)
       .limit(limit);

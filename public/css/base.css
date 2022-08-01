@@ -35,7 +35,7 @@ html {
 
 body {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  background-color: var(--primary-messsage-cont);
+  background-color: var(--primary-bg);
   font-variant: no-common-ligatures !important;
   font-weight: 500 !important;
   overflow: hidden;
@@ -718,6 +718,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: var(--primary-bg);
 }
 .header_main-cont .content .messages-wrapper .message-header-content_main {
   background-color: var(--primary-bg);
@@ -752,7 +753,8 @@ body {
   position: relative;
   max-height: 100%;
   overflow: auto;
-  background-color: var(--primary-messsage-cont);
+  background-color: var(--secondary-bg);
+  border-radius: 5px;
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_main-cont {
   padding: 1rem;
@@ -816,6 +818,7 @@ body {
   border-radius: 2px;
   color: #d8315b;
   font-weight: 500;
+  cursor: pointer;
 }
 .header_main-cont .content .messages-wrapper .messages_model-cont .message_main-cont .message_cont-link {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -1163,12 +1166,38 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.header_main-cont .content .house-wrapper .house-header-content_main h2 {
+.header_main-cont .content .house-wrapper .house-header-content_main div {
+  display: flex;
+  align-items: center;
+}
+.header_main-cont .content .house-wrapper .house-header-content_main div .colon {
+  padding: 1rem 0;
+  padding-right: 1.5rem;
+  color: #ddd;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 400;
+  font-size: 1.5rem;
+  padding-bottom: 5px;
+}
+.header_main-cont .content .house-wrapper .house-header-content_main div h2 {
   padding: 1rem 3rem;
+  padding-right: 1.5rem;
   color: #ddd;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
   font-size: 2.2rem;
+}
+.header_main-cont .content .house-wrapper .house-header-content_main div p {
+  padding: 1rem 0;
+  color: #ddd;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 400;
+  font-size: 1.7rem;
+  padding-bottom: 9px;
+}
+.header_main-cont .content .house-wrapper .house-header-content_main div p span {
+  color: var(--primary-red);
+  padding-right: 5px;
 }
 .header_main-cont .content .house-wrapper .house_main-cont {
   width: 100%;
@@ -1180,10 +1209,85 @@ body {
   display: flex;
   width: 100%;
   height: 100%;
-  flex-direction: column;
+  background-color: var(--primary-bg);
+  display: grid;
+  gap: 2px;
   justify-content: space-between;
+  grid-template-columns: 80% 19%;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont {
+  height: 100%;
+  max-height: 100%;
   overflow: auto;
-  background-color: var(--primary-messsage-cont);
+  background-color: var(--secondary-bg);
+  visibility: visible;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 1rem 0;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_model-cont, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_model-cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_model-cont p, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_model-cont p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  background-color: var(--primary-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  margin: 0 auto;
+  gap: 2rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_model-cont p span, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_model-cont p span {
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: rgb(51, 51, 51);
+  text-align: left;
+  width: 100%;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_model-cont p i, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_model-cont p i {
+  color: #ddd;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transform: rotate(-90deg);
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  gap: 1rem;
+  display: none;
+  align-items: flex-end;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont span, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont span {
+  display: block;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: rgb(85, 85, 85);
+  background-color: rgb(32, 32, 32);
+  border-radius: 5px;
+  padding: 0.5rem 2rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  transition: all 0.3s ease;
+  width: 87%;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .active, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .active {
+  color: var(--primary-red);
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont {
   padding: 1rem;
@@ -1192,6 +1296,8 @@ body {
   gap: 1rem;
   padding-bottom: 10rem;
   background-color: var(--primary-messsage-cont);
+  overflow: auto;
+  border-radius: 5px;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message {
   display: flex;
@@ -1247,6 +1353,7 @@ body {
   border-radius: 2px;
   color: #d8315b;
   font-weight: 500;
+  cursor: pointer;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_cont-link {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -1295,6 +1402,7 @@ body {
   color: #d8315b;
   font-weight: 500;
   font-size: 1.6rem;
+  cursor: pointer;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage:hover {
   background-color: rgb(65, 65, 65);
@@ -1430,7 +1538,7 @@ body {
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter {
   background-color: transparent;
-  width: 100%;
+  width: 80%;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -1513,6 +1621,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: var(--primary-bg);
 }
 .header_main-cont .content .settings-wrapper .setings-wrapper_content-main {
   background-color: var(--primary-bg);
@@ -1579,6 +1688,7 @@ body {
   position: relative;
   overflow: auto;
   background-color: var(--primary-messsage-cont);
+  border-radius: 5px;
 }
 .header_main-cont .content .settings-wrapper .settings-wrapper_model-cont .accountSetings_model-cont {
   padding: 3rem 4rem;
@@ -1939,6 +2049,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: var(--primary-bg);
 }
 .header_main-cont .content .friend-list-wrapper .friend-list-header-content_main {
   background-color: var(--primary-bg);
@@ -2001,6 +2112,7 @@ body {
   position: relative;
   overflow: auto;
   background-color: var(--primary-messsage-cont);
+  border-radius: 5px;
 }
 .header_main-cont .content .friend-list-wrapper .friend-list-model-cont .online-friends_main-cont {
   padding: 3rem 4rem;
@@ -2360,7 +2472,9 @@ body {
 }
 
 .createDm_input_field,
-.sendfriendRequest_input_field {
+.sendfriendRequest_input_field,
+.createTextChannel_input_field,
+.createVoiceChannel_input_field {
   z-index: 90;
   position: fixed;
   top: 50%;
@@ -2376,7 +2490,9 @@ body {
   width: 55rem;
 }
 .createDm_input_field::before,
-.sendfriendRequest_input_field::before {
+.sendfriendRequest_input_field::before,
+.createTextChannel_input_field::before,
+.createVoiceChannel_input_field::before {
   content: "";
   display: inline-block;
   width: 200vw;
@@ -2389,7 +2505,9 @@ body {
   transform: translate(-50%, -50%);
 }
 .createDm_input_field p,
-.sendfriendRequest_input_field p {
+.sendfriendRequest_input_field p,
+.createTextChannel_input_field p,
+.createVoiceChannel_input_field p {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   color: var(--primary-red);
   font-weight: bolder;
@@ -2397,7 +2515,9 @@ body {
   text-align: center;
 }
 .createDm_input_field form,
-.sendfriendRequest_input_field form {
+.sendfriendRequest_input_field form,
+.createTextChannel_input_field form,
+.createVoiceChannel_input_field form {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2405,7 +2525,9 @@ body {
   gap: 1.5rem;
 }
 .createDm_input_field form .input_div,
-.sendfriendRequest_input_field form .input_div {
+.sendfriendRequest_input_field form .input_div,
+.createTextChannel_input_field form .input_div,
+.createVoiceChannel_input_field form .input_div {
   display: flex;
   width: 100%;
   justify-content: center;
@@ -2413,7 +2535,9 @@ body {
   gap: 2rem;
 }
 .createDm_input_field form .input_div input,
-.sendfriendRequest_input_field form .input_div input {
+.sendfriendRequest_input_field form .input_div input,
+.createTextChannel_input_field form .input_div input,
+.createVoiceChannel_input_field form .input_div input {
   width: 80%;
   border: 0;
   outline: 0;
@@ -2426,7 +2550,9 @@ body {
   background-color: #333;
 }
 .createDm_input_field form .input_div button,
-.sendfriendRequest_input_field form .input_div button {
+.sendfriendRequest_input_field form .input_div button,
+.createTextChannel_input_field form .input_div button,
+.createVoiceChannel_input_field form .input_div button {
   border: 0;
   outline: 0;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -2439,7 +2565,9 @@ body {
   cursor: pointer;
 }
 .createDm_input_field form a,
-.sendfriendRequest_input_field form a {
+.sendfriendRequest_input_field form a,
+.createTextChannel_input_field form a,
+.createVoiceChannel_input_field form a {
   text-decoration: none;
   color: #ddd;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -2982,7 +3110,7 @@ body {
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  width: 32rem;
+  width: 33rem;
 }
 .messageUserContextMenu .img_cont {
   width: 6rem;
@@ -3002,7 +3130,7 @@ body {
   justify-content: center;
   gap: 0.5rem;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  max-width: 70%;
+  max-width: 90%;
 }
 .messageUserContextMenu .user span {
   font-size: 1.6rem;
@@ -3016,12 +3144,11 @@ body {
 .messageUserContextMenu .user p {
   color: #9578d3;
   font-size: 1.3rem;
-  font-weight: 400;
+  font-weight: 600;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: pre;
-  max-width: 90%;
-  text-decoration: underline;
+  max-width: 100%;
   cursor: pointer;
 }
 

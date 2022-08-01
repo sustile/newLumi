@@ -22,6 +22,22 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, "An House Must Have a Image"],
   },
+  textChannel: {
+    type: [
+      {
+        name: String,
+      },
+    ],
+    required: [true, " An House must alleast have on voice Channel"],
+  },
+  voiceChannel: {
+    type: [
+      {
+        name: String,
+      },
+    ],
+    required: [true, " An House must alleast have on voice Channel"],
+  },
 });
 
 module.exports = schema;

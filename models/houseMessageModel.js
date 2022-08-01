@@ -6,6 +6,10 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, "A DM must have a dmId"],
     },
+    channelId: {
+      type: String,
+      required: [true, "A DM must have a dmId"],
+    },
     type: {
       type: String,
       required: [true, "A Message Must have a Type"],

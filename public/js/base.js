@@ -45,7 +45,7 @@ const call_prompt_decline = call_prompt.querySelector(".call_prompt_decline");
 
 const message_load_trigger = document.querySelector(".message_load_trigger");
 
-const house_scroll = document.querySelector(".house_model-cont");
+const house_scroll = document.querySelector(".house-message_main-cont");
 const house_main_cont = document.querySelector(".house_main-cont");
 const dm_main_cont = document.querySelector(".messages_model-cont");
 const houseMessageCont = document.querySelector(".house-message_main-cont");
@@ -83,6 +83,9 @@ const settingsWrapper = document.querySelector(".settings-wrapper");
 const spinner = document.querySelector(".spinner");
 
 const headerMainCont = document.querySelector(".header_main-cont");
+const houseTextChannelHeader = document.querySelector(
+  ".house-active-textChannel"
+);
 
 async function showSpinner() {
   spinner.style.visibility = "visible";
@@ -117,6 +120,8 @@ let vcPeer = "";
 let ongoingError = false;
 
 let call;
+
+let activeVC;
 
 let currentOutputDevice;
 let currentOutputVolume = 0.5;
@@ -485,6 +490,7 @@ createHouse.addEventListener("click", async (e) => {
     });
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      e.stopImmediatePropagation();
       const name = form.querySelector("input").value;
       const dm = await (
         await fetch("/api/createHouse", {
@@ -588,7 +594,11 @@ createHouse.addEventListener("click", async (e) => {
         const obj = await saveHouseMessage(
           "house-join",
           id,
-          `@${user.id} Joined The House`
+          `@${user.id} Joined The House`,
+          "",
+          "",
+          "",
+          houseTextChannelHeader.getAttribute("data-id")
         );
 
         socket.emit(
@@ -602,7 +612,8 @@ createHouse.addEventListener("click", async (e) => {
           "",
           obj._id,
           user.id,
-          obj
+          obj,
+          houseTextChannelHeader.getAttribute("data-id")
         );
       }
       joinHouse_input.style.animation =
@@ -1411,13 +1422,13 @@ const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
     ]);
   }
 
-  await wait(1);
-
-  hideSpinner();
-
   for (let el of finalArray) {
     await displayMessage(...el);
   }
+
+  await wait(0.5);
+
+  hideSpinner();
 };
 
 const getSomeOtherUserData = async (id) => {
@@ -1509,7 +1520,7 @@ userData_id.addEventListener("click", async () => {
 
 // ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
-houseCont.addEventListener("click", (e) => {
+houseCont.addEventListener("click", async (e) => {
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
@@ -1521,11 +1532,61 @@ houseCont.addEventListener("click", (e) => {
 
   if (target.getAttribute("data-id") == activeCont) return;
 
+  let house = await (
+    await fetch("/api/getHouse", {
+      method: "POST",
+      body: JSON.stringify({
+        id: target.getAttribute("data-id"),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+  house = house.result;
+
+  loadChannels(house);
+
+  if (!housesOwned.includes(target.getAttribute("data-id"))) {
+    textChannelHeader.querySelector(".ph-plus-bold").style.display = "none";
+    voiceChannelHeader.querySelector(".ph-plus-bold").style.display = "none";
+  }
+
+  const x = textChannel_mainCont.querySelector("span");
+  x.classList.add("active");
+
+  houseTextChannelHeader.innerHTML = `<span>#</span>${x.textContent}`;
+  houseTextChannelHeader.setAttribute("data-id", x.getAttribute("data-id"));
+
+  textChannelHeader.querySelector(".ph-caret-down-bold").style.transform =
+    "rotate(0deg)";
+  textChannelHeader.querySelector(".ph-caret-down-bold").style.color =
+    "var(--primary-red)";
+  textChannel_mainCont.style.display = "flex";
+
+  voiceChannelHeader.querySelector(".ph-caret-down-bold").style.transform =
+    "rotate(0deg)";
+  voiceChannelHeader.querySelector(".ph-caret-down-bold").style.color =
+    "var(--primary-red)";
+  voiceChannel_mainCont.style.display = "flex";
+
   activeCont = target.getAttribute("data-id");
   houseHeader.textContent = target.getAttribute("data-name");
   closeReplyBarFunction();
   houseMessageInput.style.visibility = "visible";
   emoji_btn_house.style.visibility = "visible";
+
+  houseMessageInput.placeholder = `Send a Message in #${x.textContent}`;
+
+  // CHECK IF IN VC AND HIGHTLIGHT THAT VC
+  if (activeCall.status) {
+    voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
+      if (el.getAttribute("data-id") === activeCall.room) {
+        el.classList.add("active");
+      }
+    });
+  }
+  // CHECK IF IN VC AND HIGHTLIGHT THAT VC
 
   try {
     closeEmojiBoxes();
@@ -1542,12 +1603,12 @@ houseCont.addEventListener("click", (e) => {
 
   house_members_cont.style.visibility = "visible";
 
-  if (join_house_vc.style.animation.includes("popdown_btn")) {
-    join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
-  }
+  // if (join_house_vc.style.animation.includes("popdown_btn")) {
+  //   join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+  // }
 
   if (!leave_house_vc.style.animation.includes("popup_btn")) {
-    join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+    // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
 
     if (call_btn.style.animation.includes("popup_btn")) {
       call_btn.style.animation = "popdown_btn 0.3s forwards ease";
@@ -1833,7 +1894,9 @@ houseMessageForm.addEventListener("submit", async (e) => {
         activeCont,
         message,
         replyTo,
-        replyMessage
+        replyMessage,
+        "",
+        houseTextChannelHeader.getAttribute("data-id")
       );
       displayHouseMessage(
         "reply-link",
@@ -1859,7 +1922,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         replyMessage,
         obj._id,
         user.id,
-        obj
+        obj,
+        houseTextChannelHeader.getAttribute("data-id")
       );
       closeHouseReplyBarFunction();
     } else {
@@ -1868,7 +1932,9 @@ houseMessageForm.addEventListener("submit", async (e) => {
         activeCont,
         message,
         replyTo,
-        replyMessage
+        replyMessage,
+        "",
+        houseTextChannelHeader.getAttribute("data-id")
       );
       displayHouseMessage(
         "reply",
@@ -1894,7 +1960,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         replyMessage,
         obj._id,
         user.id,
-        obj
+        obj,
+        houseTextChannelHeader.getAttribute("data-id")
       );
       closeHouseReplyBarFunction();
     }
@@ -1907,7 +1974,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         message,
         "",
         "",
-        id
+        id,
+        houseTextChannelHeader.getAttribute("data-id")
       );
 
       displayHouseMessage(
@@ -1934,7 +2002,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         obj._id,
         user.id,
-        obj
+        obj,
+        houseTextChannelHeader.getAttribute("data-id")
       );
     } else {
       const id = house_edit_bar.getAttribute("data-messageId");
@@ -1944,7 +2013,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         message,
         "",
         "",
-        id
+        id,
+        houseTextChannelHeader.getAttribute("data-id")
       );
 
       displayHouseMessage(
@@ -1971,13 +2041,22 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         obj._id,
         user.id,
-        obj
+        obj,
+        houseTextChannelHeader.getAttribute("data-id")
       );
     }
     closeHouseEditBarFunction();
   } else {
     if (isLink) {
-      const obj = await saveHouseMessage("normal-link", activeCont, message);
+      const obj = await saveHouseMessage(
+        "normal-link",
+        activeCont,
+        message,
+        "",
+        "",
+        "",
+        houseTextChannelHeader.getAttribute("data-id")
+      );
 
       displayHouseMessage(
         "normal-link",
@@ -2003,10 +2082,19 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         obj._id,
         user.id,
-        obj
+        obj,
+        houseTextChannelHeader.getAttribute("data-id")
       );
     } else {
-      const obj = await saveHouseMessage("normal", activeCont, message);
+      const obj = await saveHouseMessage(
+        "normal",
+        activeCont,
+        message,
+        "",
+        "",
+        "",
+        houseTextChannelHeader.getAttribute("data-id")
+      );
 
       displayHouseMessage(
         "normal",
@@ -2032,7 +2120,8 @@ houseMessageForm.addEventListener("submit", async (e) => {
         "",
         obj._id,
         user.id,
-        obj
+        obj,
+        houseTextChannelHeader.getAttribute("data-id")
       );
     }
   }
@@ -2049,7 +2138,8 @@ const saveHouseMessage = async (
   message,
   replyTo,
   replyMessage,
-  messageId
+  messageId,
+  channelId
 ) => {
   return new Promise(async (res) => {
     if (type === "reply" || type === "reply-link") {
@@ -2062,6 +2152,7 @@ const saveHouseMessage = async (
             message,
             replyTo,
             replyMessage,
+            channelId,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -2078,6 +2169,9 @@ const saveHouseMessage = async (
             type,
             houseId,
             message,
+            replyTo,
+            replyMessage,
+            channelId,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -2095,6 +2189,9 @@ const saveHouseMessage = async (
             houseId,
             message,
             messageId,
+            replyTo,
+            replyMessage,
+            channelId,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -2111,6 +2208,9 @@ const saveHouseMessage = async (
             type,
             houseId,
             message,
+            replyTo,
+            replyMessage,
+            channelId,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -2148,8 +2248,10 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
 
   let dm;
 
-  if (allMessages[houseId]) {
-    const messageObj = allMessages[houseId];
+  let channelId = houseTextChannelHeader.getAttribute("data-id");
+
+  if (allMessages[channelId]) {
+    const messageObj = allMessages[channelId];
     if (messageObj.page >= page) {
       dm = messageObj.messages;
     } else {
@@ -2159,6 +2261,7 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
           body: JSON.stringify({
             houseId,
             page,
+            channelId,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -2167,7 +2270,7 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
       ).json();
 
       if (newPage.result.length === 0) {
-        allMessages[houseId].isMaximum = true;
+        allMessages[channelId].isMaximum = true;
         await wait(1);
 
         hideSpinner();
@@ -2175,11 +2278,12 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
       }
 
       messageObj.page = page;
+      console.log(messageObj);
       messageObj.messages = messageObj.messages.concat(newPage.result);
       dm = newPage.result;
 
       if (page * 15 > messageObj.messages.length) {
-        allMessages[houseId].isMaximum = true;
+        allMessages[channelId].isMaximum = true;
       }
     }
   } else {
@@ -2189,6 +2293,7 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
         body: JSON.stringify({
           houseId,
           page,
+          channelId,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -2197,24 +2302,24 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
     ).json();
 
     if (newPage.result.length === 0) {
-      if (!allMessages[houseId]) {
-        allMessages[houseId] = {};
+      if (!allMessages[channelId]) {
+        allMessages[channelId] = {};
       }
-      allMessages[houseId].isMaximum = true;
+      allMessages[channelId].isMaximum = true;
       await wait(1);
 
       hideSpinner();
       return;
     }
 
-    allMessages[houseId] = {
+    allMessages[channelId] = {
       page,
       messages: newPage.result,
     };
-    dm = allMessages[houseId].messages;
+    dm = allMessages[channelId].messages;
 
-    if (page * 15 > allMessages[houseId].messages.length) {
-      allMessages[houseId].isMaximum = true;
+    if (page * 15 > allMessages[channelId].messages.length) {
+      allMessages[channelId].isMaximum = true;
     }
   }
 
@@ -2262,13 +2367,13 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
     ]);
   }
 
-  await wait(1);
-
-  hideSpinner();
-
   for (let el of finalArray) {
     await displayHouseMessage(...el);
   }
+
+  await wait(0.5);
+
+  hideSpinner();
 };
 
 socket.on(
@@ -2283,7 +2388,8 @@ socket.on(
     replyMessage,
     messageId,
     userId,
-    obj
+    obj,
+    channelId
   ) => {
     const dateSent = new Date();
     let hours =
@@ -2323,9 +2429,12 @@ socket.on(
       });
     }
 
-    updateMessageInList(room, obj);
+    updateMessageInList(channelId, obj);
 
-    if (room === activeCont) {
+    if (
+      room === activeCont &&
+      houseTextChannelHeader.getAttribute("data-id") === channelId
+    ) {
       displayHouseMessage(
         type,
         message,
@@ -2570,6 +2679,7 @@ async function remoteConnection() {
       // HOUSE VC
       let checkStatusInterval;
       let checkStatusIntervalArray;
+
       join_house_vc.addEventListener("click", async () => {
         if (call) {
           call.close();
@@ -2616,8 +2726,6 @@ async function remoteConnection() {
 
         screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
 
-        clearInterval(checkStatusInterval);
-
         socket.emit("leave-vc", activeCall.room, audioStream.id, user.id);
 
         clearAllStreams();
@@ -2647,6 +2755,10 @@ async function remoteConnection() {
         activeCall.status = false;
 
         sound_callLeave.play();
+
+        voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
+          el.classList.remove("active");
+        });
 
         // await wait(0.2);
         // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
@@ -5515,6 +5627,12 @@ houseMessageCont.addEventListener("click", messsageUserDetailsContextMenu);
 
 messageMain.addEventListener("click", messsageUserDetailsContextMenu);
 
+// PINGS
+houseMessageCont.addEventListener("click", messsagePingUserDetailsContextMenu);
+
+messageMain.addEventListener("click", messsagePingUserDetailsContextMenu);
+// PINGS
+
 async function messsageUserDetailsContextMenu(e) {
   await closeAllContextMenus();
 
@@ -5565,6 +5683,49 @@ async function messsageUserDetailsContextMenu(e) {
   messageUserContextMenu.style.visibility = "visible";
   messageUserContextMenu.style.opacity = "1";
 }
+
+async function messsagePingUserDetailsContextMenu(e) {
+  await closeAllContextMenus();
+
+  let target = e.target.closest(".ping-cont");
+
+  if (!target) return;
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = messageUserContextMenu.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = messageUserContextMenu.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  messageUserContextMenu.style.left = `${x}px`;
+  messageUserContextMenu.style.top = `${y}px`;
+
+  const img = messageUserContextMenu.querySelector("img");
+  const span = messageUserContextMenu.querySelector("span");
+  const p = messageUserContextMenu.querySelector("p");
+
+  p.addEventListener("click", async (e) => {
+    e.stopImmediatePropagation();
+
+    navigator.clipboard.writeText(target.getAttribute("data-id"));
+    messageUserContextMenu.style.opacity = "0";
+    await wait(0.1);
+    messageUserContextMenu.style.visibility = "hidden";
+  });
+
+  const data = await getSomeOtherUserData(target.getAttribute("data-id"));
+
+  img.src = `./../img/${data.image}`;
+  span.textContent = data.name;
+  p.textContent = target.getAttribute("data-id");
+
+  messageUserContextMenu.style.visibility = "visible";
+  messageUserContextMenu.style.opacity = "1";
+}
 // MESSAGE USER DETAILS CONTEXTMENU
 
 // SCREEN SHARE CONT
@@ -5577,3 +5738,394 @@ const defeanBtnVideoSharing = document.querySelector(
 );
 
 // SCREEN SHARE CONT
+
+// HOUSES ROOM SYSTEM
+const textChannel_modelCont = document.querySelector(
+  ".house-message-channels-cont_text-channels_model-cont"
+);
+const voiceChannel_modelCont = document.querySelector(
+  ".house-message-channels-cont_voice-channels_model-cont"
+);
+
+const textChannelHeader = textChannel_modelCont.querySelector(".header");
+const voiceChannelHeader = voiceChannel_modelCont.querySelector(".header");
+
+const textChannel_mainCont = textChannel_modelCont.querySelector(
+  ".house-message-channels-cont_text-channels_main-cont"
+);
+const voiceChannel_mainCont = voiceChannel_modelCont.querySelector(
+  ".house-message-channels-cont_voice-channels_main-cont"
+);
+
+textChannelHeader.addEventListener("click", async (e) => {
+  const target = e.target.closest(".ph-caret-down-bold");
+
+  if (!target) return;
+
+  if (target.style.color === "var(--primary-red)") {
+    target.style.transform = "rotate(-90deg)";
+    target.style.color = "#ddd";
+
+    textChannel_mainCont.style.display = "none";
+  } else {
+    target.style.transform = "rotate(0deg)";
+    target.style.color = "var(--primary-red)";
+
+    textChannel_mainCont.style.display = "flex";
+  }
+});
+
+voiceChannelHeader.addEventListener("click", async (e) => {
+  const target = e.target.closest(".ph-caret-down-bold");
+
+  if (!target) return;
+
+  if (target.style.color === "var(--primary-red)") {
+    target.style.transform = "rotate(-90deg)";
+    target.style.color = "#ddd";
+
+    voiceChannel_mainCont.style.display = "none";
+  } else {
+    target.style.transform = "rotate(0deg)";
+    target.style.color = "var(--primary-red)";
+
+    voiceChannel_mainCont.style.display = "flex";
+  }
+});
+
+textChannel_mainCont.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+
+  const target = e.target.closest("span");
+  if (!target) return;
+
+  if (!target.classList.contains("active")) {
+    textChannel_mainCont.querySelectorAll("span").forEach((el) => {
+      el.classList.remove("active");
+    });
+
+    target.classList.add("active");
+
+    houseTextChannelHeader.innerHTML = `<span>#</span>${target.textContent}`;
+    houseTextChannelHeader.setAttribute(
+      "data-id",
+      target.getAttribute("data-id")
+    );
+
+    houseMessageInput.placeholder = `Send a Message in #${target.textContent}`;
+    houseMessageCont.innerHTML = "";
+    currentDmPage = 1;
+    lazyLoadHouseMessages(activeCont, currentDmPage);
+  }
+});
+
+const createTextChannel = document.querySelector(
+  ".createTextChannel_input_field"
+);
+
+const createVoiceChannel = document.querySelector(
+  ".createVoiceChannel_input_field"
+);
+
+textChannelHeader.addEventListener("click", async (e) => {
+  const target = e.target.closest(".ph-plus-bold");
+
+  if (!target) return;
+
+  const inputField = createTextChannel.querySelector("input");
+  const form = createTextChannel.querySelector("form");
+
+  createTextChannel.querySelector("a").addEventListener("click", () => {
+    inputField.value = "";
+    createTextChannel.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
+  });
+
+  createTextChannel.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
+
+  form.addEventListener("submit", async (e) => {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+
+    const name = inputField.value;
+
+    const dm = await (
+      await fetch("/api/createTextChannel", {
+        method: "POST",
+        body: JSON.stringify({
+          house: activeCont,
+          name,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (dm.status === "fail") {
+      if (!ongoingError) {
+        inputField.value = "";
+        console.log(dm.message);
+        await popupError("Something Went Wrong");
+      }
+    } else {
+      inputField.value = "";
+      createTextChannel.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
+
+      let house = await (
+        await fetch("/api/getHouse", {
+          method: "POST",
+          body: JSON.stringify({
+            id: activeCont,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+      house = house.result;
+      await loadChannels(house);
+
+      textChannel_mainCont.querySelectorAll("span").forEach((el) => {
+        if (el.textContent === name) {
+          el.classList.add("active");
+          houseTextChannelHeader.innerHTML = `<span>#</span>${el.textContent}`;
+          houseTextChannelHeader.setAttribute(
+            "data-id",
+            el.getAttribute("data-id")
+          );
+
+          houseMessageCont.innerHTML = "";
+          currentDmPage = 1;
+          lazyLoadHouseMessages(activeCont, currentDmPage);
+        } else {
+          el.classList.remove("active");
+        }
+      });
+    }
+  });
+});
+
+voiceChannelHeader.addEventListener("click", async (e) => {
+  const target = e.target.closest(".ph-plus-bold");
+
+  if (!target) return;
+
+  const inputField = createVoiceChannel.querySelector("input");
+  const form = createVoiceChannel.querySelector("form");
+
+  createVoiceChannel.querySelector("a").addEventListener("click", () => {
+    inputField.value = "";
+    createVoiceChannel.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
+  });
+
+  createVoiceChannel.style.animation =
+    "overlayProf_UpPrompt 0.3s forwards ease";
+
+  form.addEventListener("submit", async (e) => {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+
+    const name = inputField.value;
+
+    const dm = await (
+      await fetch("/api/createVoiceChannel", {
+        method: "POST",
+        body: JSON.stringify({
+          house: activeCont,
+          name,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    if (dm.status === "fail") {
+      if (!ongoingError) {
+        inputField.value = "";
+        console.log(dm.message);
+        await popupError("Something Went Wrong");
+      }
+    } else {
+      inputField.value = "";
+      createVoiceChannel.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
+
+      let house = await (
+        await fetch("/api/getHouse", {
+          method: "POST",
+          body: JSON.stringify({
+            id: activeCont,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+      house = house.result;
+      await loadChannels(house);
+
+      // voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
+      //   if (el.textContent === name) {
+      //     el.classList.add("active");
+      //     houseTextChannelHeader.innerHTML = `<span>#</span>${el.textContent}`;
+      //     houseTextChannelHeader.setAttribute(
+      //       "data-id",
+      //       el.getAttribute("data-id")
+      //     );
+
+      //     houseMessageCont.innerHTML = "";
+      //     currentDmPage = 1;
+      //     lazyLoadHouseMessages(activeCont, currentDmPage);
+      //   } else {
+      //     el.classList.remove("active");
+      //   }
+      // });
+    }
+  });
+});
+
+voiceChannel_mainCont.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+
+  const target = e.target.closest("span");
+  if (!target) return;
+
+  if (!target.classList.contains("active")) {
+    activeVC = target.getAttribute("data-id");
+
+    // CALL CODE
+
+    if (activeCall.status) {
+      if (call) {
+        call.close();
+      }
+
+      clearVideoStreams();
+
+      screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
+
+      socket.emit("leave-vc", activeCall.room, audioStream.id, user.id);
+
+      clearAllStreams();
+
+      vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+
+      if (screenShareBtn.getAttribute("data-active") == "true") {
+        screenShareBtn.setAttribute("data-active", false);
+        screenShareBtn.style.color = "var(--primary-red)";
+
+        const vid = videoStream.getTracks()[0];
+        vid.stop();
+        videoStream = "";
+
+        socket.emit("stop-video-stream", activeCall.room, user.id);
+
+        videoSharing_MainCont.innerHTML = "";
+        const html = `<span>${call_status_text.getAttribute(
+          "data-name"
+        )} VC</span>
+    <video></video>`;
+        videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+      }
+
+      activeCall.with = undefined;
+      activeCall.room = undefined;
+      activeCall.status = false;
+
+      sound_callLeave.play();
+
+      voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
+        el.classList.remove("active");
+      });
+
+      // await wait(0.2);
+      // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+      call_status.style.animation = "popdown_btn 0.3s forwards ease";
+      leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+
+      if (activeCont === "friendsList") {
+        join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
+      }
+
+      await wait(0.2);
+      vc_members_cont.innerHTML = "";
+      await wait(0.3);
+    }
+
+    voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
+      el.classList.remove("active");
+    });
+
+    target.classList.add("active");
+
+    screenShareBtnCont.style.animation = "popup_btn 0.3s forwards ease";
+
+    activeCall.status = true;
+    activeCall.room = activeVC;
+
+    sound_callJoin.play();
+    socket.emit("joined-vc", activeVC, user.id, user.name, user.image);
+
+    vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
+    insertVcMembers("mine", user.name, user.image, user.id);
+
+    call_status_text.textContent = `${target.textContent} VC Connected`;
+    call_status_text.setAttribute("data-name", houseHeader.textContent);
+    call_status.style.animation = "popup_btn 0.3s forwards ease";
+
+    leave_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+
+    if (muteBtn.style.color === "var(--primary-red)") {
+      socket.emit("muteBtn", activeCall.room, user.id);
+
+      const allUsers = vc_members_cont.querySelectorAll("p");
+      allUsers.forEach(async (user2) => {
+        if (user2.getAttribute("data-user-id") === user.id) {
+          const i = user2.querySelector("i");
+          i.classList.toggle("userMute");
+        }
+      });
+    }
+  }
+});
+
+async function loadChannels(house) {
+  textChannel_mainCont.innerHTML = "";
+  voiceChannel_mainCont.innerHTML = "";
+
+  house.textChannel.forEach((el) => {
+    textChannel_mainCont.insertAdjacentHTML(
+      "afterbegin",
+      `<span data-id="${el._id}" >${el.name}</span>`
+    );
+
+    socket.emit("join-room", el._id);
+  });
+
+  house.voiceChannel.forEach((el) => {
+    voiceChannel_mainCont.insertAdjacentHTML(
+      "afterbegin",
+      `<span data-id="${el._id}" >${el.name}</span>`
+    );
+
+    socket.emit("join-room", el._id);
+  });
+}
+
+// <div class="el">
+//       <span data-id="${el._id}" >${el.name}</span>
+//       <div class="el-main">
+//         <div class="user" >
+//           <div class="img_cont">
+//             <img src="./../img/1653719291251.jpg" alt="" />
+//           </div>
+//           <span class="user-name" >Test User</span>
+//         </div>
+//     </div>
+//     </div>
+
+// HOUSES ROOM SYSTEM

@@ -123,4 +123,14 @@ router.route("/api/getDMUsers").post(verify, dmController.getDMUsers);
 router
   .route("/api/getHouseDetailed")
   .post(verify, houseController.getHouseDetailed);
+
+// CREATE A NEW TEXT CHANNEL IN A HOUSE
+router
+  .route("/api/createTextChannel")
+  .post(verify, houseController.createTextChannel);
+
+// CREATE A NEW VOICE CHANNEL IN A HOUSE
+router
+  .route("/api/createVoiceChannel")
+  .post(verify, houseController.createVoiceChannel);
 module.exports = router;
