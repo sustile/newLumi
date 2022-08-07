@@ -244,9 +244,11 @@ exports.joinHouse = async (req, res) => {
         return;
       }
 
+      let houseMessageId = result.textChannel[0];
+
       const members = result.members;
       if (members.includes(user._id)) {
-        res.status(200).json({
+        res.status(400).json({
           status: "fail",
           message: "User is Already a Member",
         });
@@ -277,6 +279,7 @@ exports.joinHouse = async (req, res) => {
 
       res.status(400).json({
         status: "ok",
+        id: houseMessageId._id,
       });
     }
   } catch (err) {

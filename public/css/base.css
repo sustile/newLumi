@@ -486,6 +486,14 @@ body {
   transition: all 0.3s ease;
   color: var(--primary-red);
 }
+.header_main-cont .side-bar .nav_controls .leave-vc_Cont {
+  visibility: hidden;
+  transform: scale(0);
+}
+.header_main-cont .side-bar .nav_controls .leave-vc_Cont .leave-vc {
+  transition: all 0.3s ease;
+  color: var(--primary-red);
+}
 .header_main-cont .slider_btns {
   position: absolute;
   font-size: 3.5rem;
@@ -1210,30 +1218,48 @@ body {
   width: 100%;
   height: 100%;
   background-color: var(--primary-bg);
-  display: grid;
-  gap: 2px;
+  display: flex;
+  gap: 5px;
   justify-content: space-between;
-  grid-template-columns: 80% 19%;
+  position: relative;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont {
+  width: 20%;
   height: 100%;
   max-height: 100%;
   overflow: auto;
   background-color: var(--secondary-bg);
   visibility: visible;
   border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 5px;
   display: flex;
   flex-direction: column;
   gap: 3rem;
   padding: 1rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont .closeChannelCont {
+  color: var(--primary-red);
+  font-size: 3rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  cursor: pointer;
+  display: flex !important;
+  transition: all 0.3s ease;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_model-cont, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_model-cont {
+  width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  transition: all 0.2s ease;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_model-cont p, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_model-cont p {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
@@ -1252,7 +1278,10 @@ body {
   font-size: 1.6rem;
   color: rgb(51, 51, 51);
   text-align: left;
-  width: 100%;
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
 }
 .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_model-cont p i, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_model-cont p i {
   color: #ddd;
@@ -1270,7 +1299,13 @@ body {
   display: none;
   align-items: flex-end;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont span, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont span {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el {
+  width: 87%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el span, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el span {
   display: block;
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
@@ -1284,269 +1319,128 @@ body {
   text-overflow: ellipsis;
   white-space: pre;
   transition: all 0.3s ease;
-  width: 87%;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .active, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .active {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .active, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .active {
   color: var(--primary-red);
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont {
-  padding: 1rem;
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .el-main, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .el-main {
+  width: 80%;
+  align-self: flex-end;
   display: flex;
+  justify-content: flex-start;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
-  padding-bottom: 10rem;
-  background-color: var(--primary-messsage-cont);
-  overflow: auto;
-  border-radius: 5px;
+  display: none;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .el-main .user, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .el-main .user {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  transition: all 0.1s ease;
-  max-width: 100%;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_user {
-  display: flex;
-  gap: 1.5rem;
   justify-content: flex-start;
   align-items: center;
+  gap: 1rem;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_user .img_cont {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .el-main .user .img_cont, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .el-main .user .img_cont {
   width: 3.5rem;
   height: 3.5rem;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_user .img_cont img {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .el-main .user .img_cont img, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .el-main .user .img_cont img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
-  cursor: pointer;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_user span {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .el-main .user .user-name, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .el-main .user .user-name {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 500;
   font-size: 1.6rem;
   color: var(--primary-red);
+  background-color: transparent;
+  padding: 0;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_user p {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: rgb(102, 102, 102);
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .el-main .user i, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .el-main .user i {
+  color: var(--primary-red);
+  font-size: 1.7rem;
+  margin-left: 2.5rem;
+  visibility: hidden;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_cont {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 400;
-  font-size: 1.4rem;
-  color: #ddd;
-  margin: 0 5.1rem;
-  line-height: 1.5;
-  overflow-wrap: break-word;
-  max-width: max-content;
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_text-channels_main-cont .el .el-main .user .userMute, .header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message-channels-cont_voice-channels_main-cont .el .el-main .user .userMute {
+  visibility: visible;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message .ping-cont {
-  background-color: var(--secondary-bg);
-  padding: 1px 5px;
-  border-radius: 2px;
-  color: #d8315b;
-  font-weight: 500;
-  cursor: pointer;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message_cont-link {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 400;
-  font-weight: 400;
-  font-size: 1.4rem;
-  color: #9578d3;
-  margin: 0 5.1rem;
-  line-height: 1.5;
-  overflow-wrap: break-word;
-  max-width: max-content;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .message:hover {
-  background-color: rgb(65, 65, 65);
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage {
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  transition: all 0.1s ease;
-  max-width: 100%;
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont {
+  position: relative;
+  width: 79%;
+  height: 100%;
+  background-color: var(--primary-messsage-cont);
+  transition: all 0.3s ease;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5rem;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage p {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: rgb(102, 102, 102);
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage .joinHouseMessage_cont {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 500;
-  font-size: 1.5rem;
-  color: #9578d3;
-  margin: 0 5.1rem;
-  line-height: 1.5;
-  overflow-wrap: break-word;
-  max-width: max-content;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage .joinHouseMessage_cont .ping-cont {
-  background-color: var(--secondary-bg);
-  padding: 1px 5px;
-  border-radius: 2px;
-  color: #d8315b;
-  font-weight: 500;
-  font-size: 1.6rem;
-  cursor: pointer;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .joinHouseMessage:hover {
-  background-color: rgb(65, 65, 65);
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message {
-  transition: all 0.1s ease;
-  padding: 0.5rem 0rem;
   border-radius: 5px;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message .og {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message-members-main-cont {
+  width: 25%;
+  height: 100%;
+  background-color: var(--secondary-bg);
+  padding: 1.5rem 0.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message-members-main-cont h2 {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 1rem;
-  overflow: hidden;
+  font-size: 1.8rem;
+  color: rgb(85, 85, 85);
+  font-weight: 500;
+  background-color: rgb(41, 41, 41);
+  padding: 0.5rem 2rem;
+  width: fit-content;
+  border-radius: 5px;
+  margin-bottom: 1rem;
   margin-left: 2rem;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message .og-reply-arrow {
-  color: var(--primary-green);
-  font-size: 2rem;
-  transform: translateY(20%);
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message .og-user {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message-members-main-cont p {
+  margin: 0 auto;
+  cursor: pointer;
+  margin-top: 0.5rem;
   color: #ddd;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 400;
   display: flex;
-  gap: 1rem;
-  justify-content: flex-start;
-  align-items: baseline;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message .og-user_name {
-  font-weight: 500;
-  color: var(--primary-red);
-  font-size: 1.3rem;
-  background-color: var(--secondary-bg);
-  padding: 0.5rem;
-  border-radius: 5px;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message .og-colon {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  color: #ddd;
-  font-size: 1.3rem;
-  font-weight: 500;
-  align-self: center;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message .og-message {
-  background-color: var(--secondary-bg);
-  padding: 0.5rem;
-  border-radius: 5px;
-  display: block;
-  color: #ddd;
-  font-size: 1.3rem;
-  font-weight: 500;
-  max-width: 70%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_main-cont .reply_message:hover {
-  background-color: rgb(65, 65, 65);
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house {
-  background-color: var(--primary-bg);
-  width: 95%;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, -32%);
-  z-index: 5;
-  height: 25rem;
-  border-radius: 5px;
-  padding: 2rem 3rem;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house h2 {
-  color: #ddd;
-  margin-bottom: 1.5rem;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house i {
-  color: var(--primary-red);
-  font-size: 2rem;
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  cursor: pointer;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  overflow-y: auto;
-  max-height: 90%;
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user {
-  display: flex;
-  gap: 1.5rem;
   justify-content: flex-start;
   align-items: center;
-  cursor: pointer;
+  gap: 1.5rem;
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 0.5rem;
   border-radius: 5px;
   transition: all 0.2s ease;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user .img_cont {
-  width: 3.5rem;
-  height: 3.5rem;
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message-members-main-cont p:first-of-type {
+  margin-top: 0;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user .img_cont img {
-  width: 100%;
-  height: 100%;
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message-members-main-cont p img {
+  width: 4rem;
+  height: 4rem;
   object-fit: cover;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user span {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 500;
-  font-size: 1.6rem;
-  color: var(--primary-red);
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message-members-main-cont p span {
+  width: max-content;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user p {
-  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: rgb(102, 102, 102);
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .fuzzySearchCont-house_main-cont .user:hover {
-  background-color: var(--secondary-bg);
-}
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter {
   background-color: transparent;
-  width: 80%;
+  width: 95%;
   position: absolute;
   bottom: 0;
-  left: 0;
-  transform: translateY(-20%);
+  right: 50%;
+  transform: translateY(-20%) translateX(50%);
   z-index: 5;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_replybar,
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_edit_bar {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_replybar,
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_edit_bar {
   width: 95%;
   background-color: var(--primary-green);
   border-radius: 10rem;
@@ -1558,32 +1452,32 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_replybar span,
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_edit_bar span {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_replybar span,
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_edit_bar span {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   font-weight: 500;
   font-size: 1.4rem;
   color: #333;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_replybar .close_dm_replybar,
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_replybar .close_house_editbar,
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_edit_bar .close_dm_replybar,
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_edit_bar .close_house_editbar {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_replybar .close_dm_replybar,
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_replybar .close_house_editbar,
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_edit_bar .close_dm_replybar,
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_edit_bar .close_house_editbar {
   font-size: 2rem;
   color: #333;
   cursor: pointer;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .house_replybar {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .house_replybar {
   transform: translateY(118%);
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter form {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter form {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   background-color: transparent;
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter form .message-input {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter form .message-input {
   background-color: var(--secondary-bg);
   padding: 1.2rem 3rem;
   width: 95%;
@@ -1598,7 +1492,7 @@ body {
   position: relative;
   border: 3px solid var(--primary-green);
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .emoji_btn_house {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .emoji_btn_house {
   border: 0;
   outline: 0;
   background-color: transparent;
@@ -1610,11 +1504,261 @@ body {
   cursor: pointer;
   transform: translateY(0.2rem);
 }
-.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_enter .emoji_btn_house i {
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_enter .emoji_btn_house i {
   padding: 1rem;
   font-size: 3rem;
   color: #ddd;
   border-radius: 50%;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont {
+  transition: all 0.3s ease;
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 10rem;
+  background-color: var(--primary-messsage-cont);
+  overflow: auto;
+  border-radius: 5px;
+  position: relative;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.1s ease;
+  max-width: 100%;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message_user {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message_user .img_cont {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message_user .img_cont img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  cursor: pointer;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message_user span {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--primary-red);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message_user p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: rgb(102, 102, 102);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message_cont {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: #ddd;
+  margin: 0 5.1rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  max-width: max-content;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message .ping-cont {
+  background-color: var(--secondary-bg);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: #d8315b;
+  font-weight: 500;
+  cursor: pointer;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message_cont-link {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 400;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: #9578d3;
+  margin: 0 5.1rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  max-width: max-content;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .message:hover {
+  background-color: rgb(65, 65, 65);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .joinHouseMessage {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.1s ease;
+  max-width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .joinHouseMessage p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: rgb(102, 102, 102);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .joinHouseMessage .joinHouseMessage_cont {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: #9578d3;
+  margin: 0 5.1rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  max-width: max-content;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .joinHouseMessage .joinHouseMessage_cont .ping-cont {
+  background-color: var(--secondary-bg);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: #d8315b;
+  font-weight: 500;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .joinHouseMessage:hover {
+  background-color: rgb(65, 65, 65);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message {
+  transition: all 0.1s ease;
+  padding: 0.5rem 0rem;
+  border-radius: 5px;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message .og {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+  overflow: hidden;
+  margin-left: 2rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message .og-reply-arrow {
+  color: var(--primary-green);
+  font-size: 2rem;
+  transform: translateY(20%);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message .og-user {
+  color: #ddd;
+  font-size: 1.4rem;
+  font-weight: 400;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message .og-user_name {
+  font-weight: 500;
+  color: var(--primary-red);
+  font-size: 1.3rem;
+  background-color: var(--secondary-bg);
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message .og-colon {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  color: #ddd;
+  font-size: 1.3rem;
+  font-weight: 500;
+  align-self: center;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message .og-message {
+  background-color: var(--secondary-bg);
+  padding: 0.5rem;
+  border-radius: 5px;
+  display: block;
+  color: #ddd;
+  font-size: 1.3rem;
+  font-weight: 500;
+  max-width: 70%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .house-message_main-cont .reply_message:hover {
+  background-color: rgb(65, 65, 65);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house {
+  background-color: var(--primary-bg);
+  width: 95%;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -32%);
+  z-index: 5;
+  height: 25rem;
+  border-radius: 5px;
+  padding: 2rem 3rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house h2 {
+  color: #ddd;
+  margin-bottom: 1.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house i {
+  color: var(--primary-red);
+  font-size: 2rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  cursor: pointer;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house_main-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  max-height: 90%;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house_main-cont .user {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house_main-cont .user .img_cont {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house_main-cont .user .img_cont img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house_main-cont .user span {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--primary-red);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house_main-cont .user p {
+  font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: rgb(102, 102, 102);
+}
+.header_main-cont .content .house-wrapper .house_main-cont .house_model-cont .house-message_model-cont .fuzzySearchCont-house_main-cont .user:hover {
+  background-color: var(--secondary-bg);
 }
 .header_main-cont .content .settings-wrapper {
   width: 100%;

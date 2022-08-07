@@ -237,6 +237,14 @@ io.on("connection", async (socket) => {
     // console.log(id);
   });
 
+  socket.on("checkIfUserInVc", (room, id) => {
+    socket.to(room).emit("areYouInVc", room, id);
+  });
+
+  socket.on("yesIamInVc", (room, name, image, id, og) => {
+    socket.to(room).emit("areYouInVc_final", room, name, image, id, og);
+  });
+
   socket.on("joined-call", (room, id, name, image) => {
     // console.log(`joined ${name}`);
     socket.to(room).emit("user-joined-call", room, id, name, image);

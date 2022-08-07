@@ -121,6 +121,9 @@
           <a href="" class="left-arrow-tooltip_mute" data-tooltip="Mute"
             ><i class="ph-microphone prevent muteBtn"></i
           ></a>
+          <a href="" class="leave-vc_Cont prevent" data-tooltip="Leave VC"
+            ><i class="ph-phone-slash leave-vc"></i
+          ></a>
         </div>
 
         <div class="nav_headers">
@@ -137,7 +140,7 @@
           <i class="ph-phone-slash call-decline"></i>
 
           <i class="ph-headset join-vc"> </i>
-          <i class="ph-phone-slash leave-vc"></i>
+          <!-- <i class="ph-phone-slash leave-vc"></i> -->
         </div>
 
         <div class="call_status">
@@ -300,17 +303,6 @@
 
           <div class="house_main-cont">
             <div class="house_model-cont">
-              <div class="house-message_main-cont">
-                <div class="message">
-                  <div class="message_user">
-                    <div class="img_cont">
-                      <img src="./../img/1653719291251.jpg" alt="" />
-                    </div>
-                    <span>Test User</span>
-                  </div>
-                  <span class="message_cont">How You Doin?</span>
-                </div>
-              </div>
               <div class="house-message-channels-cont">
                 <div
                   class="house-message-channels-cont_text-channels_model-cont"
@@ -321,14 +313,7 @@
                   </p>
                   <div
                     class="house-message-channels-cont_text-channels_main-cont"
-                  >
-                    <span>Hello</span>
-                    <span>Hello</span>
-                    <span>Hello</span>
-                    <span>Hello</span>
-                    <span>Hello</span>
-                    <span>Hello</span>
-                  </div>
+                  ></div>
                 </div>
                 <div
                   class="house-message-channels-cont_voice-channels_model-cont"
@@ -339,65 +324,84 @@
                   </p>
                   <div
                     class="house-message-channels-cont_voice-channels_main-cont"
-                  >
-                    <div class="el">
-                      <span>Hello</span>
-                      <div class="el-main"></div>
+                  ></div>
+                </div>
+                <i
+                  class="ph-caret-right-bold closeChannelCont"
+                  data-active="true"
+                ></i>
+              </div>
+
+              <div class="house-message_model-cont">
+                <div class="house-message_main-cont">
+                  <div class="message">
+                    <!-- <div class="message_user">
+                      <div class="img_cont">
+                        <img src="./../img/1653719291251.jpg" alt="" />
+                      </div>
+                      <span>Test User</span>
                     </div>
-                    <span>Hello</span>
-                    <span>Hello</span>
-                    <span>Hello</span>
-                    <span>Hello</span>
-                    <span>Hello</span>
+                    <span class="message_cont">How You Doin?</span> -->
                   </div>
                 </div>
-              </div>
-              <div class="fuzzySearchCont-house">
-                <h2>Members</h2>
-                <i class="ph-x-bold close_house_fuzzySearch"></i>
-                <div class="fuzzySearchCont-house_main-cont">
-                  <!-- <div class="user" data-id="">
+                <div
+                  class="house-message-members-main-cont"
+                  style="display: none"
+                >
+                  <h2>Online</h2>
+                  <!-- <p data-id="${id}">
+                    <img src="./../img/1653721239585.png" alt="" />
+                    <span>Systile</span>
+                  </p> -->
+                </div>
+                <div class="house-message_enter" style="visibility: hidden">
+                  <div
+                    class="house_replybar"
+                    data-replyTo=""
+                    data-replyMessage=""
+                    style="visibility: hidden"
+                  >
+                    <span>Replying to Systile</span>
+                    <i class="ph-x-bold close_dm_replybar"></i>
+                  </div>
+
+                  <div
+                    class="house_edit_bar"
+                    data-editMessage=""
+                    data-messageId=""
+                    style="visibility: hidden"
+                  >
+                    <span>Editing Message</span>
+                    <i class="ph-x-bold close_house_editbar"></i>
+                  </div>
+
+                  <form class="house-message_form">
+                    <input
+                      type="text"
+                      class="message-input"
+                      required
+                      placeholder="Send a Message in This House"
+                      maxlength="200"
+                    />
+                  </form>
+                  <button class="emoji_btn_house">
+                    <i class="ph-smiley"></i>
+                  </button>
+                </div>
+
+                <div class="fuzzySearchCont-house">
+                  <h2>Members</h2>
+                  <i class="ph-x-bold close_house_fuzzySearch"></i>
+                  <div class="fuzzySearchCont-house_main-cont">
+                    <!-- <div class="user" data-id="">
                     <div class="img_cont">
                       <img src="./../img/1653719291251.jpg" alt="" />
                     </div>
                     <span>Test User</span>
                     <p>@62c97c4b7cdcbefb6ffb74e1</p>
                   </div> -->
+                  </div>
                 </div>
-              </div>
-              <div class="house-message_enter" style="visibility: hidden">
-                <div
-                  class="house_replybar"
-                  data-replyTo=""
-                  data-replyMessage=""
-                  style="visibility: hidden"
-                >
-                  <span>Replying to Systile</span>
-                  <i class="ph-x-bold close_dm_replybar"></i>
-                </div>
-
-                <div
-                  class="house_edit_bar"
-                  data-editMessage=""
-                  data-messageId=""
-                  style="visibility: hidden"
-                >
-                  <span>Editing Message</span>
-                  <i class="ph-x-bold close_house_editbar"></i>
-                </div>
-
-                <form class="house-message_form">
-                  <input
-                    type="text"
-                    class="message-input"
-                    required
-                    placeholder="Send a Message in This House"
-                    maxlength="200"
-                  />
-                </form>
-                <button class="emoji_btn_house">
-                  <i class="ph-smiley"></i>
-                </button>
               </div>
             </div>
           </div>

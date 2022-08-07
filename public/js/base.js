@@ -58,9 +58,8 @@ const userData_id = document.querySelector(".user-data_id");
 const account_details = document.querySelector(".accountSettings_main-cont");
 const house_details = document.querySelector(".house_details");
 
-// const join_house_vc = document.querySelector(".join-house-vc");
-const join_house_vc = document.querySelector(".join-vc");
 const leave_house_vc = document.querySelector(".leave-vc");
+const leave_house_vc_cont = document.querySelector(".leave-vc_Cont");
 const vc_members_cont = document.querySelector(".vc_members");
 
 const house_members_cont = document.querySelector(".trigger_members-cont");
@@ -135,6 +134,8 @@ const activeCall = {
   name: "",
 };
 
+let activeVcDetails = [];
+
 // SOUND VARIABLES
 const sound_notification = new Howl({
   src: ["./../sounds/notification.wav"],
@@ -153,8 +154,6 @@ const sound_call = new Howl({
   src: ["./../sounds/call.mp3"],
   volume: 0.3,
 });
-
-// console.log(sound_call.playing());
 
 // SOUND VARIABLES
 
@@ -276,10 +275,6 @@ const openADm = async function (room, target) {
   dmUserId.textContent = `@${target.getAttribute("data-user-id")}`;
 
   call_btn.style.animation = "popup_btn 0.3s forwards ease";
-
-  if (join_house_vc.style.animation.includes("popup_btn")) {
-    join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-  }
 
   messageMain.innerHTML = "";
   messageInput.value = "";
@@ -449,9 +444,6 @@ createDM.addEventListener("click", async (e) => {
     if (call_btn.style.animation.includes("popup_btn")) {
       call_btn.style.animation = "popdown_btn 0.3s forwards ease";
     }
-    if (join_house_vc.style.animation.includes("popup_btn")) {
-      join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-    }
   }
 });
 
@@ -591,30 +583,36 @@ createHouse.addEventListener("click", async (e) => {
           monthLoadList[dateSent.getMonth()]
         }, ${dateSent.getFullYear()}`;
 
-        const obj = await saveHouseMessage(
-          "house-join",
-          id,
-          `@${user.id} Joined The House`,
-          "",
-          "",
-          "",
-          houseTextChannelHeader.getAttribute("data-id")
-        );
+        let x = houseCont.querySelectorAll("a");
 
-        socket.emit(
-          "send-house-message",
-          "house-join",
-          `@${user.id} Joined The House`,
-          user.name,
-          id,
-          "",
-          "",
-          "",
-          obj._id,
-          user.id,
-          obj,
-          houseTextChannelHeader.getAttribute("data-id")
-        );
+        for (let el of x) {
+          if (el.getAttribute("data-id") === id) el.click();
+        }
+
+        // const obj = await saveHouseMessage(
+        //   "house-join",
+        //   dm.id,
+        //   `@${user.id} Joined The House`,
+        //   "",
+        //   "",
+        //   "",
+        //   dm.id
+        // );
+
+        // socket.emit(
+        //   "send-house-message",
+        //   "house-join",
+        //   `@${user.id} Joined The House`,
+        //   user.name,
+        //   dm.id,
+        //   "",
+        //   "",
+        //   "",
+        //   obj._id,
+        //   user.id,
+        //   obj,
+        //   houseTextChannelHeader.getAttribute("data-id")
+        // );
       }
       joinHouse_input.style.animation =
         "overlayProf_DownPrompt 0.3s forwards ease";
@@ -1022,8 +1020,6 @@ const displayMessage = async (
     finalMsg.push(await checkMessage(str));
   }
 
-  // const finalMsg = await checkMessage(wholeMessage);
-  // console.log(finalMsg);
   message = finalMsg.join(" ");
 
   if (type === "reply") {
@@ -1378,8 +1374,6 @@ const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
 
   const finalArray = [];
 
-  // console.log(dm);
-
   for (let el of dm) {
     const user = await getSomeOtherUserData(el.userId);
 
@@ -1521,6 +1515,8 @@ userData_id.addEventListener("click", async () => {
 // ALL HOUSE RELATED EVENTS AND HANDLERS EXCEPT LOADING THE HOUSE IN THE FIRST PLACE
 
 houseCont.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+
   const target = e.target.closest("a");
   if (!target) return;
   e.preventDefault();
@@ -1601,19 +1597,58 @@ houseCont.addEventListener("click", async (e) => {
   sliderOverlay.style.visibility = "hidden";
   headerMainCont.style.transform = "translateX(0)";
 
-  house_members_cont.style.visibility = "visible";
+  if (activeCall.status) {
+    house.voiceChannel.forEach((x) => {
+      if (x._id === activeCall.room) {
+        for (let el of activeVcDetails) {
+          voiceChannel_mainCont.querySelectorAll(".el").forEach((y) => {
+            if (y.getAttribute("data-id") === el.parentCont) {
+              insertVcMembers(
+                el.user,
+                el.name,
+                el.image,
+                el.id,
+                y,
+                el.muteStatus
+              );
+            }
+          });
+        }
+      }
+    });
+  }
 
-  // if (join_house_vc.style.animation.includes("popdown_btn")) {
-  //   join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
-  // }
+  // house.voiceChannel.forEach((el) => {
+  //   if (el._id === activeCall.room && !activeCall.status) {
+  //     checkIfUserInVc();
+  //   }
+  // });
 
-  if (!leave_house_vc.style.animation.includes("popup_btn")) {
-    // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+  checkIfUserInVc();
 
-    if (call_btn.style.animation.includes("popup_btn")) {
+  if (activeCall.status) {
+    let found = false;
+    house.voiceChannel.forEach((el) => {
+      if (el._id === activeCall.room) {
+        call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+        found = true;
+      }
+    });
+
+    if (!found) {
       call_btn.style.animation = "popdown_btn 0.3s forwards ease";
     }
+  } else {
+    call_btn.style.animation = "popdown_btn 0.3s forwards ease";
   }
+
+  house_members_cont.style.visibility = "visible";
+
+  // if (!leave_house_vc_cont.style.animation.includes("popup_btn")) {
+  //   if (call_btn.style.animation.includes("popup_btn")) {
+  //     call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+  //   }
+  // }
 
   houseMessageInput.value = "";
   houseMessageCont.innerHTML = "";
@@ -1626,6 +1661,7 @@ houseCont.addEventListener("click", async (e) => {
   lazyLoadHouseMessages(activeCont, currentDmPage);
   closeFuzzySearchHouse();
   closeFuzzySearchDm();
+
   // checkVcStatus();
 });
 
@@ -1685,7 +1721,6 @@ const displayHouseMessage = async (
   }
 
   message = finalMsg.join(" ");
-  // console.log(time);
 
   if (type === "reply") {
     html = `<div class="reply_message" data-message-id="${messageId}" data-user-id="${userId}">
@@ -1827,7 +1862,6 @@ const displayHouseMessage = async (
       return;
     }
   } else if (type === "house-join") {
-    console.log(message);
     html = `
     <div class="joinHouseMessage" data-message-id="${messageId}" data-user-id="${userId}">
                 <span class="joinHouseMessage_cont"
@@ -2278,7 +2312,6 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
       }
 
       messageObj.page = page;
-      console.log(messageObj);
       messageObj.messages = messageObj.messages.concat(newPage.result);
       dm = newPage.result;
 
@@ -2470,7 +2503,22 @@ async function clearAllStreams() {
     }
   });
 }
-function insertVcMembers(id, name, image, from) {
+function insertVcMembers(id, name, image, from, target, muteStatus) {
+  const html = `
+  <div class="user" data-id="${id}" data-user-id = "${from}">
+  <div class="img_cont">
+    <img src="./../img/${image}" alt="" />
+  </div>
+  <span class="user-name" >${name}</span>
+  <i class="ph-microphone-slash-bold ${muteStatus ? "userMute" : ""}"></i>
+</div>`;
+
+  const t = target.querySelector(".el-main");
+  t.insertAdjacentHTML("beforeend", html);
+  t.style.display = "flex";
+}
+
+function insertCallMembers(id, name, image, from) {
   const html = `<p data-id="${id}" data-user-id = "${from}" >
   <img src="./../img/${image}" alt="" />
   <span>${name}</span>
@@ -2483,16 +2531,8 @@ function insertVcMembers(id, name, image, from) {
 async function remoteConnection() {
   // SOCKETS
 
-  // socket.on("connect", () => {
-  //   socket.emit("global-socket", user.id);
-  // });
-
   socket.emit("global-socket", user.id);
   socket.emit("update-dms", "6291c0fb6ed7f16cafbb6d55");
-
-  // socket.on("check", () => {
-  //   console.log("check");
-  // });
 
   // SOCKETS
 
@@ -2577,7 +2617,7 @@ async function remoteConnection() {
           socket.emit("joined-call", room, user.id, user.name, user.image);
 
           vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-          insertVcMembers("mine", user.name, user.image, user.id);
+          insertCallMembers("mine", user.name, user.image, user.id);
 
           call_status_text.textContent = `${incomingCallData.name} VC Connected`;
           call_status_text.setAttribute("data-name", incomingCallData.name);
@@ -2592,11 +2632,24 @@ async function remoteConnection() {
           if (muteBtn.style.color === "var(--primary-red)") {
             socket.emit("muteBtn", activeCall.room, user.id);
 
-            const allUsers = vc_members_cont.querySelectorAll("p");
-            allUsers.forEach(async (user2) => {
-              if (user2.getAttribute("data-user-id") === user.id) {
-                const i = user2.querySelector("i");
-                i.classList.toggle("userMute");
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                el.querySelectorAll(".user").forEach((elUser) => {
+                  if (elUser.getAttribute("data-user-id") == user.id) {
+                    let x = elUser.querySelector("i");
+                    x.classList.toggle("userMute");
+
+                    for (let el of activeVcDetails) {
+                      if (el.id === user.id) {
+                        if (x.classList.contains("userMute")) {
+                          el.muteStatus = true;
+                        } else {
+                          el.muteStatus = false;
+                        }
+                      }
+                    }
+                  }
+                });
               }
             });
           }
@@ -2662,7 +2715,7 @@ async function remoteConnection() {
               video.setAttribute("data-id", userVideoStream.id);
               video.setAttribute("data-user-id", id);
               addVideoStream(video, userVideoStream);
-              insertVcMembers(userVideoStream.id, name, image, id);
+              insertCallMembers(userVideoStream.id, name, image, id);
               socket.emit("checkMute", activeCall.room, user.id);
             } else {
               updateVideoCont(id, userVideoStream);
@@ -2671,7 +2724,6 @@ async function remoteConnection() {
 
           call.on("close", () => {
             video.remove();
-            // console.log(`${user.name} left`);
           });
         }
       });
@@ -2680,47 +2732,12 @@ async function remoteConnection() {
       let checkStatusInterval;
       let checkStatusIntervalArray;
 
-      join_house_vc.addEventListener("click", async () => {
-        if (call) {
-          call.close();
-        }
-
-        screenShareBtnCont.style.animation = "popup_btn 0.3s forwards ease";
-
-        activeCall.status = true;
-        activeCall.room = activeCont;
-
-        sound_callJoin.play();
-        socket.emit("joined-vc", activeCont, user.id, user.name, user.image);
-
-        vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-        insertVcMembers("mine", user.name, user.image, user.id);
-
-        // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-        // await wait(0.2);
-        call_status_text.textContent = `${houseHeader.textContent} VC Connected`;
-        call_status_text.setAttribute("data-name", houseHeader.textContent);
-        call_status.style.animation = "popup_btn 0.3s forwards ease";
-
-        leave_house_vc.style.animation = "popup_btn 0.3s forwards ease";
-
-        if (muteBtn.style.color === "var(--primary-red)") {
-          socket.emit("muteBtn", activeCall.room, user.id);
-
-          const allUsers = vc_members_cont.querySelectorAll("p");
-          allUsers.forEach(async (user2) => {
-            if (user2.getAttribute("data-user-id") === user.id) {
-              const i = user2.querySelector("i");
-              i.classList.toggle("userMute");
-            }
-          });
-        }
-      });
-
       leave_house_vc.addEventListener("click", async () => {
         if (call) {
           call.close();
         }
+
+        activeVcDetails = [];
 
         clearVideoStreams();
 
@@ -2730,7 +2747,32 @@ async function remoteConnection() {
 
         clearAllStreams();
 
-        vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+        // vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+
+        voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+          if (el.getAttribute("data-id") === activeCall.room) {
+            let y = el.querySelectorAll(".user");
+            if (y.length === 1) {
+              const x = el.querySelector(".el-main");
+              x.innerHTML = "";
+              x.style.display = "none";
+            } else {
+              el.querySelectorAll(".user").forEach((elUser) => {
+                if (elUser.getAttribute("data-user-id") === user.id) {
+                  elUser.remove();
+                }
+              });
+            }
+          }
+        });
+
+        voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+          if (el.getAttribute("data-id") === activeCall.room) {
+            el.querySelectorAll(".user").forEach((user) => {
+              user.querySelector("i").classList.remove("userMute");
+            });
+          }
+        });
 
         if (screenShareBtn.getAttribute("data-active") == "true") {
           screenShareBtn.setAttribute("data-active", false);
@@ -2760,14 +2802,7 @@ async function remoteConnection() {
           el.classList.remove("active");
         });
 
-        // await wait(0.2);
-        // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
-        call_status.style.animation = "popdown_btn 0.3s forwards ease";
-        leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-
-        if (activeCont === "friendsList") {
-          join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-        }
+        leave_house_vc_cont.style.animation = "popdown_btn 0.3s forwards ease";
 
         await wait(0.2);
         vc_members_cont.innerHTML = "";
@@ -2805,7 +2840,20 @@ async function remoteConnection() {
               video.setAttribute("data-id", userVideoStream.id);
               video.setAttribute("data-user-id", id);
               addVideoStream(video, userVideoStream);
-              insertVcMembers(userVideoStream.id, name, image, id);
+
+              voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+                if (el.getAttribute("data-id") === activeCall.room) {
+                  activeVcDetails.push({
+                    user: userVideoStream.id,
+                    name,
+                    image,
+                    id,
+                    parentCont: el.getAttribute("data-id"),
+                  });
+
+                  insertVcMembers(userVideoStream.id, name, image, id, el);
+                }
+              });
               socket.emit("checkMute", room, user.id);
             } else {
               updateVideoCont(id, userVideoStream);
@@ -2813,8 +2861,13 @@ async function remoteConnection() {
           });
 
           call.on("close", () => {
-            // console.log(`${name} left`);
             video.remove();
+          });
+        } else {
+          voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+            if (el.getAttribute("data-id") === room) {
+              insertVcMembers("tempId", name, image, id, el);
+            }
           });
         }
       });
@@ -2835,7 +2888,6 @@ async function remoteConnection() {
           const allUsers = vc_members_cont.querySelectorAll("p");
 
           allUsers.forEach((user) => {
-            // console.log(user);
             if (user.getAttribute("data-user-id") === from) {
               user.remove();
             }
@@ -2853,47 +2905,80 @@ async function remoteConnection() {
             }
           });
 
-          const allUsers = vc_members_cont.querySelectorAll("p");
-
-          allUsers.forEach((user) => {
-            if (user.getAttribute("data-user-id") === from) {
-              user.remove();
+          voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+            if (el.getAttribute("data-id") === room) {
+              el.querySelectorAll(".user").forEach((user) => {
+                if (user.getAttribute("data-user-id") === from) {
+                  user.remove();
+                }
+              });
             }
           });
-        } else if (activeCont === room) {
-          const allUsers = vc_members_cont.querySelectorAll("p");
 
-          if (allUsers.length === 1) {
-            vc_members_cont.style.animation =
-              "popdownMembers 0.2s forwards ease";
-            await wait(0.2);
-            vc_members_cont.innerHTML = "";
-          } else {
-            allUsers.forEach((user) => {
-              if (user.getAttribute("data-user-id") === from) {
-                user.remove();
+          for (let i = 0; i < activeVcDetails.length; i++) {
+            if (activeVcDetails[i].id === from) {
+              activeVcDetails.splice(i, 1);
+            }
+          }
+        } else {
+          voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+            if (el.getAttribute("data-id") === room) {
+              let y = el.querySelectorAll(".user");
+              if (y.length === 1) {
+                const x = el.querySelector(".el-main");
+                x.innerHTML = "";
+                x.style.display = "none";
+              } else {
+                el.querySelectorAll(".user").forEach((elUser) => {
+                  if (elUser.getAttribute("data-user-id") === from) {
+                    elUser.remove();
+                  }
+                });
+              }
+            }
+          });
+
+          voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+            if (el.getAttribute("data-id") === room) {
+              el.querySelectorAll(".user").forEach((user) => {
+                user.querySelector("i").classList.remove("userMute");
+              });
+            }
+          });
+        }
+      });
+
+      socket.on(
+        "user-vc-calling-id",
+        async (to, Videoid, name, image, from) => {
+          if (to === user.id) {
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                activeVcDetails.push({
+                  user: Videoid,
+                  name,
+                  image,
+                  id: from,
+                  parentCont: el.getAttribute("data-id"),
+                });
+
+                insertVcMembers(Videoid, name, image, from, el);
+              }
+            });
+            await wait(1);
+            const allVids = Array.from(videoCont.querySelectorAll("audio"));
+            allVids.forEach((vid) => {
+              if (vid.getAttribute("data-id") === Videoid) {
+                vid.setAttribute("data-user-id", from);
               }
             });
           }
         }
-      });
-
-      socket.on("user-vc-calling-id", async (to, id, name, image, from) => {
-        if (to === user.id) {
-          insertVcMembers(id, name, image, from);
-          await wait(1);
-          const allVids = Array.from(videoCont.querySelectorAll("audio"));
-          allVids.forEach((vid) => {
-            if (vid.getAttribute("data-id") === id) {
-              vid.setAttribute("data-user-id", from);
-            }
-          });
-        }
-      });
+      );
 
       socket.on("user-call-calling-id", async (to, id, name, image, from) => {
         if (to === user.id) {
-          insertVcMembers(id, name, image, from);
+          insertCallMembers(id, name, image, from);
           await wait(1);
           const allVids = Array.from(videoCont.querySelectorAll("audio"));
           allVids.forEach((vid) => {
@@ -2936,11 +3021,24 @@ async function remoteConnection() {
             if (activeCall.status) {
               socket.emit("muteBtn", activeCall.room, user.id);
 
-              const allUsers = vc_members_cont.querySelectorAll("p");
-              allUsers.forEach(async (user2) => {
-                if (user2.getAttribute("data-user-id") === user.id) {
-                  const i = user2.querySelector("i");
-                  i.classList.toggle("userMute");
+              voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+                if (el.getAttribute("data-id") === activeCall.room) {
+                  el.querySelectorAll(".user").forEach((elUser) => {
+                    if (elUser.getAttribute("data-user-id") == user.id) {
+                      let x = elUser.querySelector("i");
+                      x.classList.toggle("userMute");
+
+                      for (let el of activeVcDetails) {
+                        if (el.id === user.id) {
+                          if (x.classList.contains("userMute")) {
+                            el.muteStatus = true;
+                          } else {
+                            el.muteStatus = false;
+                          }
+                        }
+                      }
+                    }
+                  });
                 }
               });
             }
@@ -2951,11 +3049,24 @@ async function remoteConnection() {
             muteBtnVideoSharing.style.color = "var(--primary-green)";
             socket.emit("muteBtn", activeCall.room, user.id);
 
-            const allUsers = vc_members_cont.querySelectorAll("p");
-            allUsers.forEach(async (user2) => {
-              if (user2.getAttribute("data-user-id") === user.id) {
-                const i = user2.querySelector("i");
-                i.classList.toggle("userMute");
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                el.querySelectorAll(".user").forEach((elUser) => {
+                  if (elUser.getAttribute("data-user-id") == user.id) {
+                    let x = elUser.querySelector("i");
+                    x.classList.toggle("userMute");
+
+                    for (let el of activeVcDetails) {
+                      if (el.id === user.id) {
+                        if (x.classList.contains("userMute")) {
+                          el.muteStatus = true;
+                        } else {
+                          el.muteStatus = false;
+                        }
+                      }
+                    }
+                  }
+                });
               }
             });
           }
@@ -2968,12 +3079,24 @@ async function remoteConnection() {
             muteBtn.style.color = "var(--primary-red)";
             if (activeCall.status) {
               socket.emit("muteBtn", activeCall.room, user.id);
+              voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+                if (el.getAttribute("data-id") === activeCall.room) {
+                  el.querySelectorAll(".user").forEach((elUser) => {
+                    if (elUser.getAttribute("data-user-id") == user.id) {
+                      let x = elUser.querySelector("i");
+                      x.classList.toggle("userMute");
 
-              const allUsers = vc_members_cont.querySelectorAll("p");
-              allUsers.forEach(async (user2) => {
-                if (user2.getAttribute("data-user-id") === user.id) {
-                  const i = user2.querySelector("i");
-                  i.classList.toggle("userMute");
+                      for (let el of activeVcDetails) {
+                        if (el.id === user.id) {
+                          if (x.classList.contains("userMute")) {
+                            el.muteStatus = true;
+                          } else {
+                            el.muteStatus = false;
+                          }
+                        }
+                      }
+                    }
+                  });
                 }
               });
             }
@@ -2983,11 +3106,24 @@ async function remoteConnection() {
             muteBtn.style.color = "var(--primary-green)";
             socket.emit("muteBtn", activeCall.room, user.id);
 
-            const allUsers = vc_members_cont.querySelectorAll("p");
-            allUsers.forEach(async (user2) => {
-              if (user2.getAttribute("data-user-id") === user.id) {
-                const i = user2.querySelector("i");
-                i.classList.toggle("userMute");
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                el.querySelectorAll(".user").forEach((elUser) => {
+                  if (elUser.getAttribute("data-user-id") == user.id) {
+                    let x = elUser.querySelector("i");
+                    x.classList.toggle("userMute");
+
+                    for (let el of activeVcDetails) {
+                      if (el.id === user.id) {
+                        if (x.classList.contains("userMute")) {
+                          el.muteStatus = true;
+                        } else {
+                          el.muteStatus = false;
+                        }
+                      }
+                    }
+                  }
+                });
               }
             });
           }
@@ -3004,6 +3140,27 @@ async function remoteConnection() {
 
       socket.on("UserMuted", (room, id) => {
         if (activeCall.room === room) {
+          voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+            if (el.getAttribute("data-id") === room) {
+              el.querySelectorAll(".user").forEach((elUser) => {
+                if (elUser.getAttribute("data-user-id") == id) {
+                  let x = elUser.querySelector("i");
+                  x.classList.toggle("userMute");
+
+                  for (let el of activeVcDetails) {
+                    if (el.id === id) {
+                      if (x.classList.contains("userMute")) {
+                        el.muteStatus = true;
+                      } else {
+                        el.muteStatus = false;
+                      }
+                    }
+                  }
+                }
+              });
+            }
+          });
+
           const allUsers = vc_members_cont.querySelectorAll("p");
           allUsers.forEach(async (user) => {
             if (user.getAttribute("data-user-id") === id) {
@@ -3029,11 +3186,24 @@ async function remoteConnection() {
             muteBtnVideoSharing.style.color = "var(--primary-red)";
             socket.emit("muteBtn", activeCall.room, user.id);
 
-            const allUsers = vc_members_cont.querySelectorAll("p");
-            allUsers.forEach(async (user2) => {
-              if (user2.getAttribute("data-user-id") === user.id) {
-                const i = user2.querySelector("i");
-                i.classList.toggle("userMute");
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                el.querySelectorAll(".user").forEach((elUser) => {
+                  if (elUser.getAttribute("data-user-id") == user.id) {
+                    let x = elUser.querySelector("i");
+                    x.classList.toggle("userMute");
+
+                    for (let el of activeVcDetails) {
+                      if (el.id === user.id) {
+                        if (x.classList.contains("userMute")) {
+                          el.muteStatus = true;
+                        } else {
+                          el.muteStatus = false;
+                        }
+                      }
+                    }
+                  }
+                });
               }
             });
           }
@@ -3063,11 +3233,24 @@ async function remoteConnection() {
             muteBtn.style.color = "var(--primary-red)";
             socket.emit("muteBtn", activeCall.room, user.id);
 
-            const allUsers = vc_members_cont.querySelectorAll("p");
-            allUsers.forEach(async (user2) => {
-              if (user2.getAttribute("data-user-id") === user.id) {
-                const i = user2.querySelector("i");
-                i.classList.toggle("userMute");
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                el.querySelectorAll(".user").forEach((elUser) => {
+                  if (elUser.getAttribute("data-user-id") == user.id) {
+                    let x = elUser.querySelector("i");
+                    x.classList.toggle("userMute");
+
+                    for (let el of activeVcDetails) {
+                      if (el.id === user.id) {
+                        if (x.classList.contains("userMute")) {
+                          el.muteStatus = true;
+                        } else {
+                          el.muteStatus = false;
+                        }
+                      }
+                    }
+                  }
+                });
               }
             });
           }
@@ -3098,10 +3281,8 @@ async function remoteConnection() {
         socket.emit("joined-call", activeCont, user.id, user.name, user.image);
 
         vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-        insertVcMembers("mine", user.name, user.image, user.id);
+        insertCallMembers("mine", user.name, user.image, user.id);
 
-        // join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-        // await wait(0.2);
         call_status_text.textContent = `${dmHeader.textContent} VC Connected`;
         call_status_text.setAttribute("data-name", dmHeader.textContent);
         call_status.style.animation = "popup_btn 0.3s forwards ease";
@@ -3111,11 +3292,24 @@ async function remoteConnection() {
         if (muteBtn.style.color === "var(--primary-red)") {
           socket.emit("muteBtn", activeCall.room, user.id);
 
-          const allUsers = vc_members_cont.querySelectorAll("p");
-          allUsers.forEach(async (user2) => {
-            if (user2.getAttribute("data-user-id") === user.id) {
-              const i = user2.querySelector("i");
-              i.classList.toggle("userMute");
+          voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+            if (el.getAttribute("data-id") === activeCall.room) {
+              el.querySelectorAll(".user").forEach((elUser) => {
+                if (elUser.getAttribute("data-user-id") == user.id) {
+                  let x = elUser.querySelector("i");
+                  x.classList.toggle("userMute");
+
+                  for (let el of activeVcDetails) {
+                    if (el.id === user.id) {
+                      if (x.classList.contains("userMute")) {
+                        el.muteStatus = true;
+                      } else {
+                        el.muteStatus = false;
+                      }
+                    }
+                  }
+                }
+              });
             }
           });
         }
@@ -3164,12 +3358,15 @@ async function remoteConnection() {
         sound_callLeave.play();
 
         decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
-        // await wait(0.2);
-        // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
-        call_btn.animation = "popdown_btn 0.3s forwards ease";
         call_status.style.animation = "popdown_btn 0.3s forwards ease";
 
-        if (activeCont === "friendsList") {
+        if (
+          activeCont === "settings" ||
+          activeCont === "friendslist-all" ||
+          activeCont === "friendslist-online" ||
+          activeCont === "friendslist-pending" ||
+          activeCont === "friendslist-online"
+        ) {
           call_btn.style.animation = "popdown_btn 0.3s forwards ease";
         }
 
@@ -3304,15 +3501,6 @@ dmsCont.addEventListener("contextmenu", async (e) => {
   });
 });
 
-// const checkCallAndCloseVcCont = async () => {
-//   if (!activeCall.status) {
-//     console.log(vc_members_cont.style.animation);
-//     vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
-//     await wait(0.2);
-//     vc_members_cont.innerHTML = "";
-//   }
-// };
-
 const closeReplyBarFunction = async () => {
   const spanText = dm_replyBar.querySelector("span");
   spanText.textContent = `Replying to `;
@@ -3383,7 +3571,6 @@ houseMessageCont.addEventListener("contextmenu", async (e) => {
   });
 
   house_MessageContextMenu_reply.addEventListener("click", async () => {
-    // console.log(target);
     const userCont = target.querySelector(".message_user");
     let message = target.querySelector(".message_cont");
     if (!message) message = target.querySelector(".message_cont-link");
@@ -3464,11 +3651,9 @@ messageMain.addEventListener("contextmenu", async (e) => {
   });
 
   dm_MessageContextMenu_reply.addEventListener("click", async () => {
-    // console.log(target);
     const userCont = target.querySelector(".message_user");
     let message = target.querySelector(".message_cont");
     if (!message) message = target.querySelector(".message_cont-link");
-    // console.log(userCont);
     const user = userCont.querySelector("span");
 
     closeDmEditBarFunction();
@@ -3731,7 +3916,7 @@ const closeAllContextMenus = async () => {
   house_MessageContextMenu.style.opacity = "0";
   house_members_usersCopyId.style.opacity = "0";
   friendsListContextMenu.style.opacity = "0";
-  mainVideo_context.style.opacity = "0";
+  // mainVideo_context.style.opacity = "0";
   messageUserContextMenu.style.opacity = "0";
   await wait(0.1);
   dmContextMenu.style.visibility = "hidden";
@@ -3740,7 +3925,7 @@ const closeAllContextMenus = async () => {
   house_MessageContextMenu.style.visibility = "hidden";
   house_members_usersCopyId.style.visibility = "hidden";
   friendsListContextMenu.style.visibility = "hidden";
-  mainVideo_context.style.visibility = "hidden";
+  // mainVideo_context.style.visibility = "hidden";
   messageUserContextMenu.style.visibility = "hidden";
 };
 
@@ -3799,7 +3984,6 @@ socket.on("user-left-server_check-vc", (room, id) => {
     const allUsers = vc_members_cont.querySelectorAll("p");
 
     allUsers.forEach((user) => {
-      // console.log(user);
       if (user.getAttribute("data-user-id") === id) {
         user.remove();
       }
@@ -4955,93 +5139,6 @@ onlineFriendsCont.addEventListener("contextmenu", async (e) => {
 
 //FRIENDS LIST
 
-// VIDEO REQUEST CONTROL
-
-let videoRequestControlPeer;
-
-const mainVideo_context = document.querySelector(".mainVideo-contextMenu");
-const mainVideo_context_Video = videoSharing_MainCont.querySelector("video");
-async function videoRequestControl() {
-  mainVideo_context_Video.addEventListener("contextmenu", async (e) => {
-    e.preventDefault();
-
-    if (mainVideo_context_Video.getAttribute("data-user-id") === user.id)
-      return;
-
-    await closeAllContextMenus();
-
-    let x = e.pageX,
-      y = e.pageY,
-      winWidth = window.innerWidth,
-      cmwidth = dmContextMenu.offsetWidth,
-      winHeight = window.innerHeight,
-      cmHeight = dmContextMenu.offsetHeight;
-
-    x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
-    y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
-
-    mainVideo_context.style.left = `${x}px`;
-    mainVideo_context.style.top = `${y}px`;
-
-    mainVideo_context.style.visibility = "visible";
-    mainVideo_context.style.opacity = "1";
-
-    const requestControlBtn = mainVideo_context.querySelector(
-      ".context_requestControl"
-    );
-
-    requestControlBtn.addEventListener("click", async (e) => {
-      e.stopImmediatePropagation();
-      await closeAllContextMenus();
-
-      videoRequestControlPeer = videoStreamPeer.connect(
-        mainVideo_context_Video.getAttribute("data-user-id")
-      );
-
-      videoRequestControlPeer.on("open", () => {
-        mainVideo_context_Video.addEventListener("click", (e) => {
-          videoRequestControlPeer.send("mouseclick");
-        });
-
-        mainVideo_context_Video.addEventListener("mousemove", (e) => {
-          // const posX = this.offset().left;
-          // const posY = this.offset().left;
-
-          // console.log(posX, posY);
-
-          const x = e.pageX;
-          const Y = e.pageY;
-
-          const obj = {
-            x,
-            y,
-          };
-
-          videoRequestControlPeer.send(obj);
-        });
-
-        mainVideo_context_Video.addEventListener("keyup", (e) => {
-          videoRequestControlPeer.send({
-            key: e.key,
-          });
-        });
-      });
-    });
-  });
-
-  videoStreamPeer.on("connection", (conn) => {
-    videoRequestControlPeer = conn;
-
-    videoRequestControlPeer.on("open", () => {
-      videoRequestControlPeer.on("data", (data) => {
-        console.log(data);
-      });
-    });
-  });
-}
-
-// VIDEO REQUEST CONTROL
-
 //FUZZY SEARCH
 const fuzzySearchCont_dm = document.querySelector(".fuzzySearchCont-dm");
 const fuzzySearchCont_dm_main = fuzzySearchCont_dm.querySelector(
@@ -5366,9 +5463,6 @@ settingsTrigger.addEventListener("click", async (e) => {
   if (!activeCall.status) {
     if (call_btn.style.animation.includes("popup_btn")) {
       call_btn.style.animation = "popdown_btn 0.3s forwards ease";
-    }
-    if (join_house_vc.style.animation.includes("popup_btn")) {
-      join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
     }
   }
 
@@ -5967,29 +6061,14 @@ voiceChannelHeader.addEventListener("click", async (e) => {
       ).json();
       house = house.result;
       await loadChannels(house);
-
-      // voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
-      //   if (el.textContent === name) {
-      //     el.classList.add("active");
-      //     houseTextChannelHeader.innerHTML = `<span>#</span>${el.textContent}`;
-      //     houseTextChannelHeader.setAttribute(
-      //       "data-id",
-      //       el.getAttribute("data-id")
-      //     );
-
-      //     houseMessageCont.innerHTML = "";
-      //     currentDmPage = 1;
-      //     lazyLoadHouseMessages(activeCont, currentDmPage);
-      //   } else {
-      //     el.classList.remove("active");
-      //   }
-      // });
     }
   });
 });
 
 voiceChannel_mainCont.addEventListener("click", async (e) => {
   e.stopImmediatePropagation();
+
+  const parentTarget = e.target.closest(".el");
 
   const target = e.target.closest("span");
   if (!target) return;
@@ -6004,6 +6083,8 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
         call.close();
       }
 
+      activeVcDetails = [];
+
       clearVideoStreams();
 
       screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
@@ -6012,7 +6093,21 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
 
       clearAllStreams();
 
-      vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+      voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+        if (el.getAttribute("data-id") === activeCall.room) {
+          const x = el.querySelector(".el-main");
+          x.innerHTML = "";
+          x.style.display = "none";
+        }
+      });
+
+      // vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+
+      if (decline_btn.style.animation.includes("popup_btn")) {
+        vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+        decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+        call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+      }
 
       if (screenShareBtn.getAttribute("data-active") == "true") {
         screenShareBtn.setAttribute("data-active", false);
@@ -6042,19 +6137,15 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
         el.classList.remove("active");
       });
 
-      // await wait(0.2);
-      // join_house_vc.style.animation = "popup_btn 0.3s forwards ease";
       call_status.style.animation = "popdown_btn 0.3s forwards ease";
-      leave_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-
-      if (activeCont === "friendsList") {
-        join_house_vc.style.animation = "popdown_btn 0.3s forwards ease";
-      }
+      leave_house_vc_cont.style.animation = "popdown_btn 0.3s forwards ease";
 
       await wait(0.2);
       vc_members_cont.innerHTML = "";
       await wait(0.3);
     }
+
+    // BEFORE THIS : IF CALL, THEN CUT CALL
 
     voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
       el.classList.remove("active");
@@ -6070,25 +6161,56 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
     sound_callJoin.play();
     socket.emit("joined-vc", activeVC, user.id, user.name, user.image);
 
-    vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
-    insertVcMembers("mine", user.name, user.image, user.id);
+    // vc_members_cont.style.animation = "popupMembers 0.2s forwards ease";
+    parentTarget.querySelector(".el-main").innerHTML = "";
 
-    call_status_text.textContent = `${target.textContent} VC Connected`;
-    call_status_text.setAttribute("data-name", houseHeader.textContent);
-    call_status.style.animation = "popup_btn 0.3s forwards ease";
+    // SAVE CALL DETAILS IN A VAR
+    activeVcDetails = [];
+    activeVcDetails.push({
+      user: "mine",
+      name: user.name,
+      image: user.image,
+      id: user.id,
+      parentCont: activeVC,
+    });
 
-    leave_house_vc.style.animation = "popup_btn 0.3s forwards ease";
+    insertVcMembers("mine", user.name, user.image, user.id, parentTarget);
+
+    call_status_text.setAttribute("data-name", target.textContent);
+
+    leave_house_vc_cont.style.animation = "popup_btn 0.3s forwards ease";
 
     if (muteBtn.style.color === "var(--primary-red)") {
       socket.emit("muteBtn", activeCall.room, user.id);
 
-      const allUsers = vc_members_cont.querySelectorAll("p");
-      allUsers.forEach(async (user2) => {
-        if (user2.getAttribute("data-user-id") === user.id) {
-          const i = user2.querySelector("i");
-          i.classList.toggle("userMute");
+      voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+        if (el.getAttribute("data-id") === activeCall.room) {
+          el.querySelectorAll(".user").forEach((elUser) => {
+            if (elUser.getAttribute("data-user-id") == user.id) {
+              let x = elUser.querySelector("i");
+              x.classList.toggle("userMute");
+
+              for (let el of activeVcDetails) {
+                if (el.id === user.id) {
+                  if (x.classList.contains("userMute")) {
+                    el.muteStatus = true;
+                  } else {
+                    el.muteStatus = false;
+                  }
+                }
+              }
+            }
+          });
         }
       });
+    }
+  } else {
+    if (activeVC === target.getAttribute("data-id")) {
+      videoSharing_MainCont.querySelector(
+        "span"
+      ).textContent = `${target.textContent} VC`;
+      videoSharingCont.style.animation =
+        "overlayProf_UpPrompt 0.3s forwards ease";
     }
   }
 });
@@ -6100,7 +6222,9 @@ async function loadChannels(house) {
   house.textChannel.forEach((el) => {
     textChannel_mainCont.insertAdjacentHTML(
       "afterbegin",
-      `<span data-id="${el._id}" >${el.name}</span>`
+      `<div class="el" data-id="${el._id}">
+      <span data-id="${el._id}" >${el.name}</span>
+    </div>`
     );
 
     socket.emit("join-room", el._id);
@@ -6109,23 +6233,83 @@ async function loadChannels(house) {
   house.voiceChannel.forEach((el) => {
     voiceChannel_mainCont.insertAdjacentHTML(
       "afterbegin",
-      `<span data-id="${el._id}" >${el.name}</span>`
+      `<div class="el" data-id="${el._id}">
+      <span data-id="${el._id}" >${el.name}</span>
+      <div class="el-main">
+
+    </div>
+    </div>`
     );
 
     socket.emit("join-room", el._id);
   });
 }
 
-// <div class="el">
-//       <span data-id="${el._id}" >${el.name}</span>
-//       <div class="el-main">
-//         <div class="user" >
-//           <div class="img_cont">
-//             <img src="./../img/1653719291251.jpg" alt="" />
-//           </div>
-//           <span class="user-name" >Test User</span>
-//         </div>
-//     </div>
-//     </div>
+async function checkIfUserInVc() {
+  voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+    if (activeCall.status) {
+      if (activeCall.room !== el.getAttribute("data-id")) {
+        socket.emit("checkIfUserInVc", el.getAttribute("data-id"), user.id);
+      }
+    } else {
+      socket.emit("checkIfUserInVc", el.getAttribute("data-id"), user.id);
+    }
+  });
+}
+
+socket.on("areYouInVc", (room, og) => {
+  if (activeCall.status && activeCall.room === room) {
+    socket.emit("yesIamInVc", room, user.name, user.image, user.id, og);
+  }
+});
+
+socket.on("areYouInVc_final", (room, name, image, id, og) => {
+  if (og === user.id) {
+    voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+      if (el.getAttribute("data-id") === room) {
+        insertVcMembers("tempId", name, image, id, el);
+      }
+    });
+  }
+});
+
+const closeChannelsCont = document.querySelector(".closeChannelCont");
+const houseChannelModelCont = document.querySelector(
+  ".house-message-channels-cont"
+);
+const houseMainModelCont = document.querySelector(".house-message_model-cont");
+
+closeChannelsCont.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+
+  if (closeChannelsCont.getAttribute("data-active") == "false") {
+    closeChannelsCont.style.transform = "translate(-50%, -50%) rotate(180deg)";
+    houseChannelModelCont.style.overflow = "hidden";
+    houseChannelModelCont.style.width = "20%";
+    houseMainModelCont.style.width = "79%";
+
+    textChannel_modelCont.style.display = "flex";
+    voiceChannel_modelCont.style.display = "flex";
+    await wait(0.2);
+    textChannel_modelCont.style.opacity = "1";
+    voiceChannel_modelCont.style.opacity = "1";
+    houseChannelModelCont.style.overflow = "auto";
+
+    closeChannelsCont.setAttribute("data-active", true);
+  } else {
+    closeChannelsCont.style.transform = "translate(-50%, -50%) rotate(0deg)";
+    textChannel_modelCont.style.opacity = "0";
+    voiceChannel_modelCont.style.opacity = "0";
+    await wait(0.1);
+
+    houseChannelModelCont.style.width = "6rem";
+    houseMainModelCont.style.width = "100%";
+
+    textChannel_modelCont.style.display = "none";
+    voiceChannel_modelCont.style.display = "none";
+
+    closeChannelsCont.setAttribute("data-active", false);
+  }
+});
 
 // HOUSES ROOM SYSTEM
