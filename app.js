@@ -82,6 +82,10 @@ io.on("connection", async (socket) => {
     });
   });
 
+  socket.on("added-newTextChannel", (room) => {
+    socket.to(room).emit("added-newTextChannel-client", room);
+  });
+
   socket.on("disconnect", async (reason) => {
     activeSockets.forEach(async (user, i) => {
       if (user.id === socket.id) {

@@ -2509,8 +2509,10 @@ function insertVcMembers(id, name, image, from, target, muteStatus) {
   <div class="img_cont">
     <img src="./../img/${image}" alt="" />
   </div>
-  <span class="user-name" >${name}</span>
-  <i class="ph-microphone-slash-bold ${muteStatus ? "userMute" : ""}"></i>
+  <span class="user-name" >${name}<i class="ph-microphone-slash-bold ${
+    muteStatus ? "userMute" : ""
+  }"></i></span>
+  
 </div>`;
 
   const t = target.querySelector(".el-main");
@@ -2532,7 +2534,7 @@ async function remoteConnection() {
   // SOCKETS
 
   socket.emit("global-socket", user.id);
-  socket.emit("update-dms", "6291c0fb6ed7f16cafbb6d55");
+  // socket.emit("update-dms", "6291c0fb6ed7f16cafbb6d55");
 
   // SOCKETS
 
@@ -4865,7 +4867,7 @@ friendsListOptions.addEventListener("click", async (e) => {
 
 socket.on("receiveFriendRequest-Standalone", (id, from) => {
   if (id === user.id) {
-    if (activeCont === "pendingRequestsFriends") {
+    if (activeCont === "friendslist-pending") {
       loadFriendsPending();
     }
   }
@@ -5921,6 +5923,61 @@ const createVoiceChannel = document.querySelector(
   ".createVoiceChannel_input_field"
 );
 
+socket.on("added-newTextChannel-client", async (room) => {
+  if (activeCont === room) {
+    let house = await (
+      await fetch("/api/getHouse", {
+        method: "POST",
+        body: JSON.stringify({
+          id: activeCont,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+    house = house.result;
+    let name = houseTextChannelHeader.getAttribute("data-id");
+
+    await loadChannels(house);
+
+    if (activeCall.status) {
+      house.voiceChannel.forEach((x) => {
+        if (x._id === activeCall.room) {
+          for (let el of activeVcDetails) {
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((y) => {
+              if (y.getAttribute("data-id") === el.parentCont) {
+                y.querySelector(".channel-name").classList.add("active");
+                insertVcMembers(
+                  el.user,
+                  el.name,
+                  el.image,
+                  el.id,
+                  y,
+                  el.muteStatus
+                );
+              }
+            });
+          }
+        }
+      });
+    }
+
+    textChannel_mainCont.querySelectorAll("span").forEach((el) => {
+      if (el.getAttribute("data-id") === name) {
+        el.classList.add("active");
+        houseTextChannelHeader.innerHTML = `<span>#</span>${el.textContent}`;
+        houseTextChannelHeader.setAttribute(
+          "data-id",
+          el.getAttribute("data-id")
+        );
+      } else {
+        el.classList.remove("active");
+      }
+    });
+  }
+});
+
 textChannelHeader.addEventListener("click", async (e) => {
   const target = e.target.closest(".ph-plus-bold");
 
@@ -5963,6 +6020,7 @@ textChannelHeader.addEventListener("click", async (e) => {
         await popupError("Something Went Wrong");
       }
     } else {
+      socket.emit("added-newTextChannel", activeCont);
       inputField.value = "";
       createTextChannel.style.animation =
         "overlayProf_DownPrompt 0.3s forwards ease";
@@ -5980,6 +6038,30 @@ textChannelHeader.addEventListener("click", async (e) => {
       ).json();
       house = house.result;
       await loadChannels(house);
+
+      checkIfUserInVc();
+
+      if (activeCall.status) {
+        house.voiceChannel.forEach((x) => {
+          if (x._id === activeCall.room) {
+            for (let el of activeVcDetails) {
+              voiceChannel_mainCont.querySelectorAll(".el").forEach((y) => {
+                if (y.getAttribute("data-id") === el.parentCont) {
+                  y.querySelector(".channel-name").classList.add("active");
+                  insertVcMembers(
+                    el.user,
+                    el.name,
+                    el.image,
+                    el.id,
+                    y,
+                    el.muteStatus
+                  );
+                }
+              });
+            }
+          }
+        });
+      }
 
       textChannel_mainCont.querySelectorAll("span").forEach((el) => {
         if (el.textContent === name) {
@@ -6044,6 +6126,9 @@ voiceChannelHeader.addEventListener("click", async (e) => {
         await popupError("Something Went Wrong");
       }
     } else {
+      let name2 = houseTextChannelHeader.getAttribute("data-id");
+
+      socket.emit("added-newTextChannel", activeCont);
       inputField.value = "";
       createVoiceChannel.style.animation =
         "overlayProf_DownPrompt 0.3s forwards ease";
@@ -6061,6 +6146,43 @@ voiceChannelHeader.addEventListener("click", async (e) => {
       ).json();
       house = house.result;
       await loadChannels(house);
+
+      checkIfUserInVc();
+
+      if (activeCall.status) {
+        house.voiceChannel.forEach((x) => {
+          if (x._id === activeCall.room) {
+            for (let el of activeVcDetails) {
+              voiceChannel_mainCont.querySelectorAll(".el").forEach((y) => {
+                if (y.getAttribute("data-id") === el.parentCont) {
+                  y.querySelector(".channel-name").classList.add("active");
+                  insertVcMembers(
+                    el.user,
+                    el.name,
+                    el.image,
+                    el.id,
+                    y,
+                    el.muteStatus
+                  );
+                }
+              });
+            }
+          }
+        });
+      }
+
+      textChannel_mainCont.querySelectorAll("span").forEach((el) => {
+        if (el.getAttribute("data-id") === name2) {
+          el.classList.add("active");
+          houseTextChannelHeader.innerHTML = `<span>#</span>${el.textContent}`;
+          houseTextChannelHeader.setAttribute(
+            "data-id",
+            el.getAttribute("data-id")
+          );
+        } else {
+          el.classList.remove("active");
+        }
+      });
     }
   });
 });
@@ -6070,7 +6192,7 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
 
   const parentTarget = e.target.closest(".el");
 
-  const target = e.target.closest("span");
+  const target = e.target.closest(".channel-name");
   if (!target) return;
 
   if (!target.classList.contains("active")) {
@@ -6223,7 +6345,7 @@ async function loadChannels(house) {
     textChannel_mainCont.insertAdjacentHTML(
       "afterbegin",
       `<div class="el" data-id="${el._id}">
-      <span data-id="${el._id}" >${el.name}</span>
+      <span class="channel-name" data-id="${el._id}" >${el.name}</span>
     </div>`
     );
 
@@ -6234,7 +6356,7 @@ async function loadChannels(house) {
     voiceChannel_mainCont.insertAdjacentHTML(
       "afterbegin",
       `<div class="el" data-id="${el._id}">
-      <span data-id="${el._id}" >${el.name}</span>
+      <span class="channel-name" data-id="${el._id}" >${el.name}</span>
       <div class="el-main">
 
     </div>
