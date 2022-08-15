@@ -272,7 +272,7 @@ const openADm = async function (room, target) {
   headerMainCont.style.transform = "translateX(0)";
 
   dmUserId.setAttribute("data-id", target.getAttribute("data-user-id"));
-  dmUserId.textContent = `@${target.getAttribute("data-user-id")}`;
+  dmUserId.textContent = `${target.getAttribute("data-user-id")}`;
 
   call_btn.style.animation = "popup_btn 0.3s forwards ease";
 
@@ -1275,7 +1275,11 @@ const saveMessage = async (
         })
       ).json();
 
-      res(dm.obj);
+      if (dm.status === "fail") {
+        location.reload();
+      } else {
+        res(dm.obj);
+      }
     }
   });
 };
@@ -1373,9 +1377,22 @@ const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
   }
 
   const finalArray = [];
+  const userData = [];
 
   for (let el of dm) {
-    const user = await getSomeOtherUserData(el.userId);
+    let found = false;
+    let user;
+    for (let userDetails of userData) {
+      if (userDetails._id === el.userId) {
+        found = true;
+        user = userDetails;
+      }
+    }
+    if (!found) {
+      user = await getSomeOtherUserData(el.userId);
+      user._id = el.userId;
+      userData.push(user);
+    }
 
     const dateSent = new Date(el.createdAt);
     let hours =
@@ -1688,7 +1705,7 @@ const checkHouseMessage = async function (str) {
 
       if (house.includes(userId)) {
         const getData = await getSomeOtherUserData(userId);
-        const newString = `<span class="ping-cont" >@${getData.name}</span>`;
+        const newString = `<span class="ping-cont" data-id="${userId}" >@${getData.name}</span>`;
         res(newString);
       } else {
         res(str);
@@ -2233,7 +2250,11 @@ const saveHouseMessage = async (
         })
       ).json();
 
-      res(dm.obj);
+      if (dm.status === "fail") {
+        location.reload();
+      } else {
+        res(dm.obj);
+      }
     } else if (type === "house-join") {
       const dm = await (
         await fetch("/api/saveHouseMessage", {
@@ -2357,9 +2378,22 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
   }
 
   const finalArray = [];
+  const userData = [];
 
   for (let el of dm) {
-    const user = await getSomeOtherUserData(el.userId);
+    let found = false;
+    let user;
+    for (let userDetails of userData) {
+      if (userDetails._id === el.userId) {
+        found = true;
+        user = userDetails;
+      }
+    }
+    if (!found) {
+      user = await getSomeOtherUserData(el.userId);
+      user._id = el.userId;
+      userData.push(user);
+    }
 
     const dateSent = new Date(el.createdAt);
     let hours =
@@ -3043,6 +3077,13 @@ async function remoteConnection() {
                   });
                 }
               });
+
+              vc_members_cont.querySelectorAll("p").forEach((el) => {
+                if (el.getAttribute("data-user-id") === user.id) {
+                  let x = el.querySelector("i");
+                  x.classList.toggle("userMute");
+                }
+              });
             }
             // muteBtn.style.backgroundColor = "var(--primary-bg)";
           } else {
@@ -3069,6 +3110,13 @@ async function remoteConnection() {
                     }
                   }
                 });
+              }
+            });
+
+            vc_members_cont.querySelectorAll("p").forEach((el) => {
+              if (el.getAttribute("data-user-id") === user.id) {
+                let x = el.querySelector("i");
+                x.classList.toggle("userMute");
               }
             });
           }
@@ -3101,6 +3149,13 @@ async function remoteConnection() {
                   });
                 }
               });
+
+              vc_members_cont.querySelectorAll("p").forEach((el) => {
+                if (el.getAttribute("data-user-id") === user.id) {
+                  let x = el.querySelector("i");
+                  x.classList.toggle("userMute");
+                }
+              });
             }
           } else {
             audio.enabled = true;
@@ -3126,6 +3181,13 @@ async function remoteConnection() {
                     }
                   }
                 });
+              }
+            });
+
+            vc_members_cont.querySelectorAll("p").forEach((el) => {
+              if (el.getAttribute("data-user-id") === user.id) {
+                let x = el.querySelector("i");
+                x.classList.toggle("userMute");
               }
             });
           }
@@ -3206,6 +3268,13 @@ async function remoteConnection() {
                     }
                   }
                 });
+              }
+            });
+
+            vc_members_cont.querySelectorAll("p").forEach((el) => {
+              if (el.getAttribute("data-user-id") === user.id) {
+                let x = el.querySelector("i");
+                x.classList.toggle("userMute");
               }
             });
           }
@@ -4060,7 +4129,7 @@ sliderBtn.addEventListener("click", async () => {
   sliderOverlay.style.visibility = "visible";
   sliderOverlay.style.opacity = "1";
 
-  headerMainCont.style.transform = "translateX(43rem)";
+  headerMainCont.style.transform = "translateX(42rem)";
 });
 
 sliderOverlay.addEventListener("click", async () => {
@@ -4673,11 +4742,7 @@ const loadFriendsPending = async () => {
     await fetch("/api/getAllPendingRequests")
   ).json();
 
-  await wait(1);
-
-  hideSpinner();
-
-  incoming.forEach(async (id) => {
+  for (let id of incoming) {
     const user = await getSomeOtherUserData(id);
 
     const html = `
@@ -4699,9 +4764,9 @@ const loadFriendsPending = async () => {
               </div>
     `;
     pendingRequestsMainCont.insertAdjacentHTML("afterbegin", html);
-  });
+  }
 
-  outgoing.forEach(async (id) => {
+  for (let id of outgoing) {
     const user = await getSomeOtherUserData(id);
     const html = `
     <div class="request" data-user-id="${id}" data-type="outgoing">
@@ -4721,7 +4786,11 @@ const loadFriendsPending = async () => {
               </div>
     `;
     pendingRequestsMainCont.insertAdjacentHTML("afterbegin", html);
-  });
+  }
+
+  await wait(0.5);
+
+  hideSpinner();
 };
 
 friendsListOptions.addEventListener("click", async (e) => {
@@ -4753,11 +4822,7 @@ friendsListOptions.addEventListener("click", async (e) => {
 
     const { friends } = await (await fetch("/api/getAllFriends")).json();
 
-    await wait(1);
-
-    hideSpinner();
-
-    friends.forEach(async (id) => {
+    for (let id of friends) {
       const user = await getSomeOtherUserData(id);
       const html = `
       <a data-user-id="${id}" class="prevent">
@@ -4771,7 +4836,11 @@ friendsListOptions.addEventListener("click", async (e) => {
       `;
 
       allFriendsCont.insertAdjacentHTML("afterbegin", html);
-    });
+    }
+
+    await wait(0.5);
+
+    hideSpinner();
   } else if (target.classList.contains("pendingRequestsFriends")) {
     if (target.classList.contains("active")) return;
 
@@ -5173,9 +5242,10 @@ fuzzySearchCont_dm_main.addEventListener("click", (e) => {
 
   if (!target) return;
 
-  messageInput.value =
-    messageInput.value.slice(0, currentAtIndex + 1) +
-    target.getAttribute("data-id");
+  // messageInput.value =
+  //   messageInput.value.slice(0, currentAtIndex + 1) +
+  //   target.getAttribute("data-id");
+  typeInTextarea(target.getAttribute("data-id"), messageInput);
 
   closeFuzzySearchDm();
 
@@ -5187,14 +5257,20 @@ fuzzySearchCont_house_main.addEventListener("click", (e) => {
 
   if (!target) return;
 
-  houseMessageInput.value =
-    houseMessageInput.value.slice(0, currentAtIndex + 1) +
-    target.getAttribute("data-id");
+  // houseMessageInput.value =
+  //   houseMessageInput.value.slice(0, currentAtIndex + 1) +
+  //   target.getAttribute("data-id");
+  typeInTextarea(target.getAttribute("data-id"), houseMessageInput);
 
   closeFuzzySearchHouse();
 
-  houseMessageInput();
+  houseMessageInput.focus();
 });
+
+function typeInTextarea(newText, el = document.activeElement) {
+  const [start, end] = [el.selectionStart, el.selectionEnd];
+  el.setRangeText(newText, start, end, "select");
+}
 
 messageInput.addEventListener("input", async (e) => {
   if (e.data === "@") {

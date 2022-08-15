@@ -38,6 +38,7 @@ body {
   height: 100vh;
   width: 100vw;
   position: relative;
+  background: linear-gradient(90deg, hsl(312deg, 66%, 76%) 0%, hsl(234deg, 93%, 67%) 100%);
 }
 
 video {
@@ -47,19 +48,6 @@ video {
   overflow: hidden;
   min-height: 100vh;
   min-width: 100vw;
-}
-
-.overlay {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-.overlayRegister {
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .drag {
@@ -96,10 +84,9 @@ video {
 }
 .register-cont .heading_main-cont .heading {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-  font-weight: 300;
+  font-weight: 400;
   font-size: 5rem;
   text-align: center;
-  color: #ddd;
   transition: all 0.3s;
   position: relative;
   width: max-content;
@@ -117,7 +104,7 @@ video {
   right: -1.5rem;
   height: 100%;
   width: 5px;
-  background-color: #fff;
+  background-color: #1a1a1a;
   z-index: -1;
   border-radius: 5px;
   animation: blinkingCursor 0.9s infinite ease;
@@ -224,6 +211,25 @@ video {
   text-align: center;
   font-size: 2rem;
   font-weight: 500;
+  position: relative;
+  padding: 1rem 3rem;
+}
+.register-cont form a::before {
+  width: 0;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #d8315b;
+  z-index: -1;
+  content: "";
+  display: inline-block;
+  border-radius: 5px;
+  transform: translate(-50%, -50%) skew(-30deg);
+  transition: all 0.3s ease-in-out;
+}
+.register-cont form a:hover::before {
+  width: 100%;
 }
 .register-cont form button {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";

@@ -65,25 +65,34 @@ exports.editHouseMessage = async (req, res) => {
     }
 
     if (user.house.includes(body.houseId)) {
-      console.log(body.messageId);
-      console.log(body);
-
-      await message.findByIdAndUpdate(
-        {
-          _id: body.messageId,
-        },
-        {
-          message: body.message,
-          type: body.type,
-        }
-      );
-
-      const messageObj = await message.findOne({ _id: body.messageId });
-
-      res.status(200).json({
-        status: "ok",
-        obj: messageObj,
+      const check = await message.findOne({
+        _id: body.messageId,
+        houseId: body.houseId,
       });
+
+      if (!check) {
+        res.status(400).json({
+          status: "fail",
+          message: "User Doesn't Have Access to this Message",
+        });
+      } else {
+        await message.findByIdAndUpdate(
+          {
+            _id: body.messageId,
+          },
+          {
+            message: body.message,
+            type: body.type,
+          }
+        );
+
+        const messageObj = await message.findOne({ _id: body.messageId });
+
+        res.status(200).json({
+          status: "ok",
+          obj: messageObj,
+        });
+      }
     } else {
       res.status(400).json({
         status: "fail",

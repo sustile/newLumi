@@ -31,18 +31,13 @@
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 56.5%;
+  // font-size: 62.5%;
 }
 
 body {
   font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
   background-color: var(--primary-bg);
-  // max-height: 100vh;
-  // max-width: 100vw;
-  // height: 100vh;
-  // width: 100vw;
-  // padding: 2rem;
-  // overflow: hidden;
   font-variant: no-common-ligatures !important;
   font-weight: 500 !important;
 
@@ -214,181 +209,196 @@ body {
   .dms {
     // padding: 1.5rem 1rem;
     //background-color: rgb(65, 65, 65);
-    background-color: var(--secondary-bg);
+    background-color: var(--primary-bg);
+
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     box-sizing: content-box;
-    width: 17vw;
+    width: 15vw;
     padding-bottom: 0;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
 
-    &_main-cont {
-      padding: 1.5rem 1rem;
+    .createDm_cont {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      // width: 25rem;
-      overflow-y: auto;
-      height: 82vh;
-      justify-content: flex-start;
-      // margin-top: 1rem;
-      // background-color: red;
+      justify-content: center;
+      align-items: center;
       width: 100%;
-      a {
-        width: 100%;
-        position: relative;
+      gap: 2.5rem;
+      padding: 1rem 0 0 0;
+      border-top-right-radius: 1rem;
+      background-color: var(--primary-bg);
+      .createDm {
+        width: 90%;
         text-decoration: none;
+        padding: 0.5rem 3rem;
+        // border-radius: 50%;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.4s ease;
         display: flex;
+        justify-content: center;
         align-items: center;
-        justify-content: flex-start;
         gap: 1.5rem;
+        position: relative;
         z-index: 1;
-        padding: 0.6rem 2rem;
-        border-radius: 1rem;
-
-        .img_cont {
-          width: 5.5rem;
-          height: 4.1rem;
-          transform: scale(1.1);
-          position: relative;
-          // background-color: red;
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            clip-path: circle(50% at 50% 50%);
-          }
-
-          .user-status-indicator {
-            // background-color: var(--primary-green);
-            background-color: rgb(102, 102, 102);
-            padding: 0.5rem;
-            border: 3px solid var(--secondary-bg);
-            border-radius: 10rem;
-            transition: all 0.2s ease;
-            position: absolute;
-            right: 0;
-            bottom: 0;
-          }
-        }
-
-        .text_main {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-
-          &_user {
-            color: #ddd;
-            font-size: 1.8rem;
-            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-            font-weight: 500;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: pre;
-          }
-
-          &_notis {
-            background-color: var(--primary-green);
-            padding: 0.5rem;
-            border-radius: 10rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #333;
-            transition: all 0.2s ease;
-
-            text-align: center;
-          }
-        }
+        color: #d8315b;
+        transition: all 0.5s ease;
+        font-weight: 400;
 
         &::before {
           content: "";
           display: inline-block;
-          position: absolute;
-          top: 0;
-          border-radius: 1rem;
-          left: 0;
-          // background-color: var(--primary-red);
-          // background-image: linear-gradient(
-          //   70deg,
-          //   var(--primary-red) 0%,
-          //   var(--primary-red) 50%,
-          //   transparent 50%
-          // );
-          color: #161b22;
-          background-image: linear-gradient(
-            70deg,
-            var(--primary-red) 0%,
-            var(--primary-red) 50%,
-            transparent 50%
-          );
-          background-size: 0%;
-          background-repeat: no-repeat;
+          width: 0;
           height: 100%;
-          width: 100%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          border-radius: 5px;
           z-index: -1;
+          background-color: #d8315b;
           transition: all 0.4s ease;
+          transform-origin: center;
         }
 
         &:hover::before {
-          background-size: 210%;
+          width: 100%;
+        }
+
+        &:hover {
+          color: #333;
+          font-weight: 600;
+        }
+
+        i {
+          font-size: 3rem;
+        }
+
+        span {
+          font-size: 1.8rem;
+          font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
         }
       }
     }
 
-    .nav_details {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      width: 95%;
-      margin: 0 auto;
-      margin-bottom: 0.5rem;
-      border-radius: 5px;
-      background-color: var(--primary-bg);
-      border: 3px solid var(--primary-green);
-      // border-bottom: 3px solid var(--primary-green);
-      padding: 2rem 0rem;
+    &_model-cont {
+      width: 100%;
+      height: 85vh;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      background-color: var(--secondary-bg);
+      padding-top: 1rem;
 
-      .createDm_cont {
+      &-header {
+        font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+        font-weight: bolder;
+        font-size: 1.7rem;
+        color: rgb(65, 65, 65);
+        text-transform: capitalize;
+        margin-left: 2.5rem;
+        height: 2.5rem;
+        display: block;
+      }
+
+      .dms_main-cont {
+        padding: 1.5rem 1rem;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+        // width: 25rem;
+        overflow-y: auto;
+        height: calc(100% - 2.5rem);
+        justify-content: flex-start;
+        // margin-top: 1rem;
         width: 100%;
-        gap: 2rem;
-        .createDm {
-          text-decoration: none;
-          background-color: var(--secondary-bg);
-          padding: 0.5rem 3rem;
-          // border-radius: 50%;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: all 0.4s ease;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 1.5rem;
+
+        a {
+          width: 100%;
           position: relative;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 1.5rem;
           z-index: 1;
-          color: #d8315b;
-          transition: all 0.5s ease;
-          font-weight: 400;
+          padding: 0.6rem 2rem;
+          border-radius: 1rem;
+
+          .img_cont {
+            width: 5.5rem;
+            height: 4.1rem;
+            transform: scale(1.1);
+            position: relative;
+            // background-color: red;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+              clip-path: circle(50% at 50% 50%);
+            }
+
+            .user-status-indicator {
+              // background-color: var(--primary-green);
+              background-color: rgb(102, 102, 102);
+              padding: 0.5rem;
+              border: 3px solid var(--secondary-bg);
+              border-radius: 10rem;
+              transition: all 0.2s ease;
+              position: absolute;
+              right: 0;
+              bottom: 0;
+            }
+          }
+
+          .text_main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            &_user {
+              color: #ddd;
+              font-size: 1.8rem;
+              font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+              font-weight: 500;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: pre;
+            }
+
+            &_notis {
+              background-color: var(--primary-green);
+              padding: 0.5rem;
+              border-radius: 10rem;
+              font-size: 1.5rem;
+              font-weight: 600;
+              color: #333;
+              transition: all 0.2s ease;
+
+              text-align: center;
+            }
+          }
 
           &::before {
             content: "";
             display: inline-block;
-            width: 100%;
-            height: 100%;
             position: absolute;
             top: 0;
+            border-radius: 1rem;
             left: 0;
-            border-radius: 5px;
-            z-index: -1;
-            color: #d8315b;
+            // background-color: var(--primary-red);
+            // background-image: linear-gradient(
+            //   70deg,
+            //   var(--primary-red) 0%,
+            //   var(--primary-red) 50%,
+            //   transparent 50%
+            // );
+            color: #161b22;
             background-image: linear-gradient(
               70deg,
               #d8315b 0%,
@@ -397,55 +407,65 @@ body {
             );
             background-size: 0%;
             background-repeat: no-repeat;
+            height: 100%;
+            width: 100%;
+            z-index: -1;
             transition: all 0.4s ease;
           }
 
           &:hover::before {
             background-size: 210%;
           }
-
-          &:hover {
-            color: #333;
-          }
-
-          i {
-            font-size: 3rem;
-          }
-
-          span {
-            font-size: 1.8rem;
-            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-          }
         }
-        .settingsTrigger {
-          color: #ddd;
-          font-size: 2rem;
-          padding: 0.8rem;
-          background-color: var(--secondary-bg);
-          border-radius: 10rem;
-          border: 3px solid var(--primary-green);
-          cursor: pointer;
-          transition: all 1s ease;
+      }
+    }
 
-          &:hover {
-            transform: rotate(180deg);
-          }
+    .nav_details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 1rem;
+      margin: 0 auto;
+      margin-bottom: 0.5rem;
+      border-radius: 5px;
+      background-color: var(--primary-bg);
+      padding: 1rem;
+
+      .settingsTrigger {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ddd;
+        font-size: 2.3rem;
+        border-radius: 50%;
+        // border: 2px solid var(--primary-green);
+        cursor: pointer;
+        transition: all 1s;
+        padding-top: 2px;
+        padding-right: 1px;
+        margin-right: 1rem;
+
+        &:hover {
+          transform: rotate(180deg);
+          color: var(--primary-red);
         }
       }
 
       .nav_acc {
         display: flex;
         justify-content: flex-start;
-        padding: 1rem 2rem;
-        width: 100%;
+        padding: 1rem;
         align-items: center;
         gap: 1rem;
-        width: 100%;
-        // background-color: red;
+        max-width: 80%;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+        background-color: var(--primary-messsage-cont);
 
         .img_cont {
-          width: 5rem;
-          height: 5rem;
+          min-width: 4rem;
+          min-height: 4rem;
           position: relative;
           img {
             width: 100%;
@@ -462,13 +482,13 @@ body {
           justify-content: flex-start;
           align-items: flex-start;
           gap: 0.3rem;
-          // background-color: red;
+          width: 80%;
 
           span {
-            width: 20rem;
+            max-width: 100%;
             font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             color: var(--primary-red);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 500;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -476,8 +496,8 @@ body {
           }
 
           a {
-            font-size: 1.1rem;
-            width: 20rem;
+            font-size: 1.2rem;
+            max-width: 100%;
             text-decoration: none;
             color: #ddd;
             font-weight: bolder;
@@ -505,10 +525,9 @@ body {
   transition: all 0.5s ease;
 
   .side-bar {
-    width: 9rem;
+    width: 10rem;
     height: 100vh;
     background-color: var(--primary-bg);
-    //background-color: rgb(41, 41, 41);
     position: relative;
 
     .nav_headers {
@@ -541,8 +560,14 @@ body {
       }
 
       i {
-        color: var(--primary-red);
+        color: #161b22;
         font-size: 6rem;
+        transition: all 0.7s ease-in-out;
+
+        &:hover {
+          transform: rotate(720deg);
+          color: var(--primary-red);
+        }
       }
 
       .dev {
@@ -568,7 +593,7 @@ body {
       align-items: center;
       gap: 2.5rem;
       position: absolute;
-      top: 45%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       padding: 1rem 2rem;
@@ -629,7 +654,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 5;
-    color: var(--primary-red);
+    color: #d8315b;
     // padding: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -972,13 +997,25 @@ body {
           font-weight: 400;
           font-size: 2.2rem;
         }
+        div {
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
-        span {
-          color: #d8315b;
-          font-size: 1.5rem;
-          font-weight: 500;
-          cursor: pointer;
-          position: relative;
+          span {
+            color: #9578d3;
+            font-size: 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+          }
+
+          p {
+            color: var(--primary-red);
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-right: 2px;
+          }
         }
       }
 
@@ -1094,7 +1131,7 @@ body {
             }
 
             &:hover {
-              background-color: rgb(65, 65, 65);
+              background-color: rgb(32, 32, 32);
             }
           }
 
@@ -1512,32 +1549,30 @@ body {
         align-items: center;
         div {
           display: flex;
-          align-items: center;
+          align-items: baseline;
           .colon {
-            padding: 1rem 0;
+            // padding: 1rem 0;
             padding-right: 1.5rem;
-            color: #ddd;
-            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
-            font-weight: 400;
-            font-size: 1.5rem;
-            padding-bottom: 5px;
-          }
-          h2 {
-            padding: 1rem 3rem;
-            padding-right: 1.5rem;
-            // padding-left: 3rem;
             color: #ddd;
             font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 400;
             font-size: 2.2rem;
+            background-color: red;
           }
-          p {
-            padding: 1rem 0;
+          h2 {
+            padding: 1rem 3rem;
             color: #ddd;
             font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
             font-weight: 400;
-            font-size: 1.7rem;
-            padding-bottom: 9px;
+            border-right: 2px solid var(--primary-red);
+            font-size: 2.2rem;
+          }
+          p {
+            padding: 1rem 3rem;
+            color: #ddd;
+            font-family: "Roboto Mono", "Roboto Mono", "Vazirmatn";
+            font-weight: 400;
+            font-size: 1.9rem;
 
             span {
               color: var(--primary-red);
@@ -1588,7 +1623,7 @@ body {
               position: absolute;
               right: 0;
               top: 50%;
-              transform: translate(-50%, -50%) rotate(0deg);
+              transform: translate(-50%, -50%) rotate(180deg);
               cursor: pointer;
               display: flex !important;
 
@@ -1984,7 +2019,7 @@ body {
                 }
 
                 &:hover {
-                  background-color: rgb(65, 65, 65);
+                  background-color: rgb(32, 32, 32);
                 }
               }
 
@@ -3913,11 +3948,11 @@ body {
 
   @keyframes moveDown {
     0% {
-      transform: translate(-100%, -20%);
+      transform: translate(-110%, -20%);
     }
 
     80% {
-      transform: translate(15%, -20%);
+      transform: translate(10%, -20%);
     }
 
     100% {
@@ -3930,12 +3965,12 @@ body {
       transform: translate(5%, -20%);
     }
 
-    20% {
-      transform: translate(15%, -20%);
-    }
+    // 20% {
+    //   transform: translate(10%, -20%);
+    // }
 
     100% {
-      transform: translate(-100%, -20%);
+      transform: translate(-110%, -20%);
     }
   }
 }
@@ -4211,7 +4246,7 @@ body {
     border: 10px solid transparent;
     border-top-color: var(--primary-red);
     margin-left: -9.5rem;
-    margin-top: -1rem;
+    margin-top: -1.3rem;
     transform-origin: top center;
   }
 
@@ -4403,7 +4438,8 @@ body {
     border: 10px solid transparent;
     border-bottom-color: var(--primary-red);
     transform-origin: top center;
-    bottom: -1.5rem;
+    bottom: -1.6rem;
+    transform: translate(-50%, 100%) scale(0);
   }
 
   &:hover::before {

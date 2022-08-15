@@ -568,3 +568,52 @@ exports.acceptRequest = async (req, res) => {
     });
   }
 };
+
+exports.changeCoverImage = async (req, res) => {
+  try {
+    const user = req.user;
+    const file = req.file;
+
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "No User was Found",
+      });
+    } else {
+      if (file) {
+        if (user.coverImage === undefined) {
+          await account.findOneAndUpdate(
+            { _id: user.id },
+            { coverImage: file.filename }
+          );
+          res.status(200).json({
+            status: "ok",
+          });
+        } else {
+          let imgPath = path.join(
+            __dirname,
+            `./../public/img/${user.coverImage}`
+          );
+          try {
+            fs.unlinkSync(imgPath);
+
+            await account.findOneAndUpdate(
+              { _id: user.id },
+              { coverImage: file.filename }
+            );
+            res.status(200).json({
+              status: "ok",
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};

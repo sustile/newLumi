@@ -70,22 +70,34 @@ exports.editMessage = async (req, res) => {
     }
 
     if (user.dms.includes(body.dmId)) {
-      await message.findByIdAndUpdate(
-        {
-          _id: body.messageId,
-        },
-        {
-          message: body.message,
-          type: body.type,
-        }
-      );
-
-      const messageObj = await message.findOne({ _id: body.messageId });
-
-      res.status(200).json({
-        status: "ok",
-        obj: messageObj,
+      const check = await message.findOne({
+        _id: body.messageId,
+        dmId: body.dmId,
       });
+
+      if (!check) {
+        res.status(400).json({
+          status: "fail",
+          message: "User Doesn't Have Access to this Message",
+        });
+      } else {
+        await message.findByIdAndUpdate(
+          {
+            _id: body.messageId,
+          },
+          {
+            message: body.message,
+            type: body.type,
+          }
+        );
+
+        const messageObj = await message.findOne({ _id: body.messageId });
+
+        res.status(200).json({
+          status: "ok",
+          obj: messageObj,
+        });
+      }
     } else {
       res.status(400).json({
         status: "fail",
@@ -113,7 +125,7 @@ exports.lazyLoadMessages = async (req, res) => {
       return;
     }
 
-    const limit = 15;
+    const limit = 30;
     const page = (body.page - 1) * limit;
 
     const result = await message
