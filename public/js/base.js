@@ -43,11 +43,7 @@ const call_prompt = document.querySelector(".call_prompt_call");
 const call_prompt_attend = call_prompt.querySelector(".call_prompt_accept");
 const call_prompt_decline = call_prompt.querySelector(".call_prompt_decline");
 
-const message_load_trigger = document.querySelector(".message_load_trigger");
-
 const house_scroll = document.querySelector(".house-message_main-cont");
-const house_main_cont = document.querySelector(".house_main-cont");
-const dm_main_cont = document.querySelector(".messages_model-cont");
 const houseMessageCont = document.querySelector(".house-message_main-cont");
 const houseMessageForm = document.querySelector(".house-message_form");
 const houseMessageInput = houseMessageForm.querySelector(".message-input");
@@ -72,7 +68,6 @@ const emoji_btn_house = document.querySelector(".emoji_btn_house");
 //WRAPPERS AND HEADERS
 const dmHeader = document.querySelector(".message-header_content_main-header");
 const houseHeader = document.querySelector(".house-header_content_main-header");
-const friendHeader = document.querySelector(".friend-list_content_main-header");
 
 const houseWrapper = document.querySelector(".house-wrapper");
 const friendListWrapper = document.querySelector(".friend-list-wrapper");
@@ -96,6 +91,31 @@ async function hideSpinner() {
   spinner.style.opacity = "0";
   spinner.style.visibility = "none";
   spinner.style.zIndex = "-1";
+}
+
+async function createDateString(dateSent) {
+  let hours =
+    dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
+  let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+
+  let day = dateSent.getDate();
+  if (day[-1] === "1") {
+    day = `${dateSent.getDate()}st`;
+  } else if (day[-1] === "2") {
+    day = `${dateSent.getDate()}nd`;
+  } else if (day[-1] === "3") {
+    day = `${dateSent.getDate()}rd`;
+  } else if (day == "11" || day == "12" || day == "13") {
+    day = `${dateSent.getDate()}th`;
+  } else {
+    day = `${dateSent.getDate()}th`;
+  }
+  return `${hours}:${String(dateSent.getMinutes()).padStart(
+    2,
+    "0"
+  )} ${pmAm}, ${day} ${
+    monthLoadList[dateSent.getMonth()]
+  }, ${dateSent.getFullYear()}`;
 }
 
 //WRAPPERS AND HEADERS
@@ -316,12 +336,6 @@ dmsCont.addEventListener("click", (e) => {
   openADm(target.getAttribute("data-dm"), target);
 });
 
-houseCont.addEventListener("click", (e) => {
-  const target = e.target.closest("a");
-  if (!target) return;
-  e.preventDefault();
-});
-
 const loadServers = async () => {
   return new Promise(async (res) => {
     const result = (await (await fetch("/api/house")).json()).houses;
@@ -361,6 +375,7 @@ const loadServers = async () => {
       <img
         src="./../img/${house.result.image}"
         alt=""
+        loading="lazy"
         class="house_image"
       />
       </div>
@@ -401,7 +416,7 @@ const loadDms = async () => {
 
     const html = `<a href="" data-dm = "${dm.dmId}" data-user-id=${dm.toId} class="closeOverlayTrigger"
   ><div class="img_cont">
-    <img src="./../img/${dm.image}" alt="" />
+    <img src="./../img/${dm.image}" loading="lazy" alt="" />
     <span class="user-status-indicator"></span>
   </div>
   <span class="text_main"
@@ -446,8 +461,6 @@ createDM.addEventListener("click", async (e) => {
     }
   }
 });
-
-socket.on("end_update-dms");
 
 createHouse.addEventListener("click", async (e) => {
   askHouseOptions.style.animation = "overlayProf_UpPrompt 0.3s forwards ease";
@@ -558,30 +571,30 @@ createHouse.addEventListener("click", async (e) => {
       } else {
         await loadServers();
 
-        const dateSent = new Date();
-        let hours =
-          dateSent.getHours() > 12
-            ? dateSent.getHours() - 12
-            : dateSent.getHours();
-        let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
+        // const dateSent = new Date();
+        // let hours =
+        //   dateSent.getHours() > 12
+        //     ? dateSent.getHours() - 12
+        //     : dateSent.getHours();
+        // let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
 
-        let day = dateSent.getDate();
-        if (day[-1] === "1") {
-          day = `${dateSent.getDate()}st`;
-        } else if (day[-1] === "2") {
-          day = `${dateSent.getDate()}nd`;
-        } else if (day[-1] === "3") {
-          day = `${dateSent.getDate()}rd`;
-        } else if (day == "11" || day == "12" || day == "13") {
-          day = `${dateSent.getDate()}th`;
-        } else {
-          day = `${dateSent.getDate()}th`;
-        }
-        const finalDateString = `${hours}:${String(
-          dateSent.getMinutes()
-        ).padStart(2, "0")} ${pmAm}, ${day} ${
-          monthLoadList[dateSent.getMonth()]
-        }, ${dateSent.getFullYear()}`;
+        // let day = dateSent.getDate();
+        // if (day[-1] === "1") {
+        //   day = `${dateSent.getDate()}st`;
+        // } else if (day[-1] === "2") {
+        //   day = `${dateSent.getDate()}nd`;
+        // } else if (day[-1] === "3") {
+        //   day = `${dateSent.getDate()}rd`;
+        // } else if (day == "11" || day == "12" || day == "13") {
+        //   day = `${dateSent.getDate()}th`;
+        // } else {
+        //   day = `${dateSent.getDate()}th`;
+        // }
+        // const finalDateString = `${hours}:${String(
+        //   dateSent.getMinutes()
+        // ).padStart(2, "0")} ${pmAm}, ${day} ${
+        //   monthLoadList[dateSent.getMonth()]
+        // }, ${dateSent.getFullYear()}`;
 
         let x = houseCont.querySelectorAll("a");
 
@@ -620,8 +633,6 @@ createHouse.addEventListener("click", async (e) => {
   });
 });
 
-userData_image.addEventListener("click", () => {});
-
 const getBasicData = async () => {
   const data = await (await fetch("/api/getBasicData")).json();
   user = data.user;
@@ -643,29 +654,7 @@ messageFrom.addEventListener("submit", async (e) => {
     isLink = true;
   }
 
-  const dateSent = new Date();
-  let hours =
-    dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
-  let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-  let day = dateSent.getDate();
-  if (day[-1] === "1") {
-    day = `${dateSent.getDate()}st`;
-  } else if (day[-1] === "2") {
-    day = `${dateSent.getDate()}nd`;
-  } else if (day[-1] === "3") {
-    day = `${dateSent.getDate()}rd`;
-  } else if (day == "11" || day == "12" || day == "13") {
-    day = `${dateSent.getDate()}th`;
-  } else {
-    day = `${dateSent.getDate()}th`;
-  }
-  const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
-    2,
-    "0"
-  )} ${pmAm}, ${day} ${
-    monthLoadList[dateSent.getMonth()]
-  }, ${dateSent.getFullYear()}`;
+  const finalDateString = await createDateString(new Date());
 
   if (dm_replyBar.style.visibility === "visible") {
     const replyTo = dm_replyBar.getAttribute("data-replyTo");
@@ -898,30 +887,7 @@ socket.on(
     userId,
     obj
   ) => {
-    const dateSent = new Date();
-    let hours =
-      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
-    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-    let day = dateSent.getDate();
-    if (day[-1] === "1") {
-      day = `${dateSent.getDate()}st`;
-    } else if (day[-1] === "2") {
-      day = `${dateSent.getDate()}nd`;
-    } else if (day[-1] === "3") {
-      day = `${dateSent.getDate()}rd`;
-    } else if (day == "11" || day == "12" || day == "13") {
-      day = `${dateSent.getDate()}th`;
-    } else {
-      day = `${dateSent.getDate()}th`;
-    }
-    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
-      2,
-      "0"
-    )} ${pmAm}, ${day} ${
-      monthLoadList[dateSent.getMonth()]
-    }, ${dateSent.getFullYear()}`;
-
+    const finalDateString = await createDateString(new Date());
     updateMessageInList(room, obj);
 
     if (message.includes("@")) {
@@ -1037,7 +1003,7 @@ const displayMessage = async (
     <div class="message">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1049,7 +1015,7 @@ const displayMessage = async (
     html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
     <div class="img_cont">
-      <img src="./../img/${image}" alt="" />
+      <img src="./../img/${image}" loading="lazy" alt="" />
     </div>
     <span>${name}</span>
     <p>${time}</p>
@@ -1071,7 +1037,7 @@ const displayMessage = async (
     <div class="message">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1083,7 +1049,7 @@ const displayMessage = async (
     html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1094,7 +1060,7 @@ const displayMessage = async (
     html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1120,7 +1086,7 @@ const displayMessage = async (
         el.innerHTML = `
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1136,7 +1102,7 @@ const displayMessage = async (
       html = `<div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1154,7 +1120,7 @@ const displayMessage = async (
         el.innerHTML = `
   <div class="message_user">
     <div class="img_cont">
-      <img src="./../img/${image}" alt="" />
+      <img src="./../img/${image}" loading="lazy" alt="" />
     </div>
     <span>${name}</span>
     <p>${time}</p>
@@ -1171,7 +1137,7 @@ const displayMessage = async (
       <div class="message"  data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
     <div class="img_cont">
-      <img src="./../img/${image}" alt="" />
+      <img src="./../img/${image}" loading="lazy" alt="" />
     </div>
     <span>${name}</span>
     <p>${time}</p>
@@ -1394,29 +1360,7 @@ const lazyLoadMessages = async (dmId, page, checkScroll = false) => {
       userData.push(user);
     }
 
-    const dateSent = new Date(el.createdAt);
-    let hours =
-      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
-    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-    let day = dateSent.getDate();
-    if (day[-1] === "1") {
-      day = `${dateSent.getDate()}st`;
-    } else if (day[-1] === "2") {
-      day = `${dateSent.getDate()}nd`;
-    } else if (day[-1] === "3") {
-      day = `${dateSent.getDate()}rd`;
-    } else if (day == "11" || day == "12" || day == "13") {
-      day = `${dateSent.getDate()}th`;
-    } else {
-      day = `${dateSent.getDate()}th`;
-    }
-    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
-      2,
-      "0"
-    )} ${pmAm}, ${day} ${
-      monthLoadList[dateSent.getMonth()]
-    }, ${dateSent.getFullYear()}`;
+    const finalDateString = await createDateString(new Date(el.createdAt));
 
     finalArray.push([
       el.type,
@@ -1540,8 +1484,8 @@ houseCont.addEventListener("click", async (e) => {
 
   closeDmEditBarFunction();
   closeHouseEditBarFunction();
-  closeAllWarppers();
-  houseWrapper.style.display = "flex";
+
+  await closeAllContextMenus();
 
   if (target.getAttribute("data-id") == activeCont) return;
 
@@ -1559,6 +1503,7 @@ houseCont.addEventListener("click", async (e) => {
   house = house.result;
 
   loadChannels(house);
+  loadMembersCont(house);
 
   if (!housesOwned.includes(target.getAttribute("data-id"))) {
     textChannelHeader.querySelector(".ph-plus-bold").style.display = "none";
@@ -1672,6 +1617,10 @@ houseCont.addEventListener("click", async (e) => {
 
   // checkCallAndCloseVcCont();
 
+  closeAllWarppers();
+
+  houseWrapper.style.display = "flex";
+
   currentDmPage = 1;
   closeReplyBarFunction();
   closeHouseReplyBarFunction();
@@ -1754,7 +1703,7 @@ const displayHouseMessage = async (
     <div class="message">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1766,7 +1715,7 @@ const displayHouseMessage = async (
     html = `<div class="message" data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
     <div class="img_cont">
-      <img src="./../img/${image}" alt="" />
+      <img src="./../img/${image}" loading="lazy" alt="" />
     </div>
     <span>${name}</span>
     <p>${time}</p>
@@ -1788,7 +1737,7 @@ const displayHouseMessage = async (
     <div class="message">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1800,7 +1749,7 @@ const displayHouseMessage = async (
     html = `<div class="message" data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1815,7 +1764,7 @@ const displayHouseMessage = async (
         el.innerHTML = `
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1831,7 +1780,7 @@ const displayHouseMessage = async (
       html = `<div class="message" data-message-id="${messageId}" data-user-id="${userId}">
     <div class="message_user">
       <div class="img_cont">
-        <img src="./../img/${image}" alt="" />
+        <img src="./../img/${image}" loading="lazy" alt="" />
       </div>
       <span>${name}</span>
       <p>${time}</p>
@@ -1849,7 +1798,7 @@ const displayHouseMessage = async (
         el.innerHTML = `
   <div class="message_user">
     <div class="img_cont">
-      <img src="./../img/${image}" alt="" />
+      <img src="./../img/${image}" loading="lazy" alt="" />
     </div>
     <span>${name}</span>
     <p>${time}</p>
@@ -1866,7 +1815,7 @@ const displayHouseMessage = async (
       <div class="message" data-message-id="${messageId}" data-user-id="${userId}">
   <div class="message_user">
     <div class="img_cont">
-      <img src="./../img/${image}" alt="" />
+      <img src="./../img/${image}" loading="lazy" alt="" />
     </div>
     <span>${name}</span>
     <p>${time}</p>
@@ -1911,29 +1860,7 @@ houseMessageForm.addEventListener("submit", async (e) => {
     isLink = true;
   }
 
-  const dateSent = new Date();
-  let hours =
-    dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
-  let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-  let day = dateSent.getDate();
-  if (day[-1] === "1") {
-    day = `${dateSent.getDate()}st`;
-  } else if (day[-1] === "2") {
-    day = `${dateSent.getDate()}nd`;
-  } else if (day[-1] === "3") {
-    day = `${dateSent.getDate()}rd`;
-  } else if (day == "11" || day == "12" || day == "13") {
-    day = `${dateSent.getDate()}th`;
-  } else {
-    day = `${dateSent.getDate()}th`;
-  }
-  const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
-    2,
-    "0"
-  )} ${pmAm}, ${day} ${
-    monthLoadList[dateSent.getMonth()]
-  }, ${dateSent.getFullYear()}`;
+  const finalDateString = await createDateString(new Date());
 
   if (house_replyBar.style.visibility === "visible") {
     const replyTo = house_replyBar.getAttribute("data-replyTo");
@@ -2395,29 +2322,7 @@ const lazyLoadHouseMessages = async (houseId, page, checkScroll) => {
       userData.push(user);
     }
 
-    const dateSent = new Date(el.createdAt);
-    let hours =
-      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
-    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-    let day = dateSent.getDate();
-    if (day[-1] === "1") {
-      day = `${dateSent.getDate()}st`;
-    } else if (day[-1] === "2") {
-      day = `${dateSent.getDate()}nd`;
-    } else if (day[-1] === "3") {
-      day = `${dateSent.getDate()}rd`;
-    } else if (day == "11" || day == "12" || day == "13") {
-      day = `${dateSent.getDate()}th`;
-    } else {
-      day = `${dateSent.getDate()}th`;
-    }
-    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
-      2,
-      "0"
-    )} ${pmAm}, ${day} ${
-      monthLoadList[dateSent.getMonth()]
-    }, ${dateSent.getFullYear()}`;
+    const finalDateString = await createDateString(new Date(el.createdAt));
 
     finalArray.push([
       el.type,
@@ -2458,29 +2363,7 @@ socket.on(
     obj,
     channelId
   ) => {
-    const dateSent = new Date();
-    let hours =
-      dateSent.getHours() > 12 ? dateSent.getHours() - 12 : dateSent.getHours();
-    let pmAm = dateSent.getHours() > 12 ? "pm" : "am";
-
-    let day = dateSent.getDate();
-    if (day[-1] === "1") {
-      day = `${dateSent.getDate()}st`;
-    } else if (day[-1] === "2") {
-      day = `${dateSent.getDate()}nd`;
-    } else if (day[-1] === "3") {
-      day = `${dateSent.getDate()}rd`;
-    } else if (day == "11" || day == "12" || day == "13") {
-      day = `${dateSent.getDate()}th`;
-    } else {
-      day = `${dateSent.getDate()}th`;
-    }
-    const finalDateString = `${hours}:${String(dateSent.getMinutes()).padStart(
-      2,
-      "0"
-    )} ${pmAm}, ${day} ${
-      monthLoadList[dateSent.getMonth()]
-    }, ${dateSent.getFullYear()}`;
+    const finalDateString = await createDateString(new Date());
 
     if (message.includes("@")) {
       const wholeMessage = message.split(" ");
@@ -2647,6 +2530,7 @@ async function remoteConnection() {
 
           activeCall.status = true;
           activeCall.room = room;
+          activeCall.type = "dm";
 
           sound_callJoin.play();
 
@@ -2715,6 +2599,7 @@ async function remoteConnection() {
             activeCall.with = undefined;
             activeCall.status = false;
             activeCall.room = undefined;
+            activeCall.type = undefined;
           }
         } catch (err) {}
       });
@@ -2831,6 +2716,7 @@ async function remoteConnection() {
         activeCall.with = undefined;
         activeCall.room = undefined;
         activeCall.status = false;
+        activeCall.type = undefined;
 
         sound_callLeave.play();
 
@@ -3336,9 +3222,151 @@ async function remoteConnection() {
         }
       });
 
-      call_btn.addEventListener("click", (e) => {
-        if (call) {
-          call.close();
+      call_btn.addEventListener("click", async (e) => {
+        if (activeCall.status) {
+          if (activeCall.type === "dm") {
+            if (call) {
+              call.close();
+            }
+
+            clearVideoStreams();
+
+            call = undefined;
+
+            screenShareBtnCont.style.animation =
+              "popdown_btn 0.3s forwards ease";
+
+            socket.emit(
+              "leave-call_dm",
+              activeCall.room,
+              audioStream.id,
+              user.id
+            );
+
+            clearAllStreams();
+
+            vc_members_cont.style.animation =
+              "popdownMembers 0.2s forwards ease";
+
+            if (screenShareBtn.getAttribute("data-active") == "true") {
+              screenShareBtn.setAttribute("data-active", false);
+              screenShareBtn.style.color = "var(--primary-red)";
+
+              const vid = videoStream.getTracks()[0];
+              vid.stop();
+              videoStream = "";
+
+              socket.emit("stop-video-stream", activeCall.room, user.id);
+
+              videoSharing_MainCont.innerHTML = "";
+              const html = `<span>${call_status_text.getAttribute(
+                "data-name"
+              )} VC</span>
+          <video></video>`;
+              videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+            }
+
+            activeCall.with = undefined;
+            activeCall.room = undefined;
+            activeCall.status = false;
+            incomingCallData = undefined;
+            activeCall.type = undefined;
+
+            sound_callLeave.play();
+
+            decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+            call_status.style.animation = "popdown_btn 0.3s forwards ease";
+
+            if (
+              activeCont === "settings" ||
+              activeCont === "friendslist-all" ||
+              activeCont === "friendslist-online" ||
+              activeCont === "friendslist-pending" ||
+              activeCont === "friendslist-online"
+            ) {
+              call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+            }
+
+            await wait(0.2);
+            vc_members_cont.innerHTML = "";
+          } else if (activeCall.type === "house") {
+            if (call) {
+              call.close();
+            }
+
+            activeVcDetails = [];
+
+            clearVideoStreams();
+
+            screenShareBtnCont.style.animation =
+              "popdown_btn 0.3s forwards ease";
+
+            socket.emit("leave-vc", activeCall.room, audioStream.id, user.id);
+
+            clearAllStreams();
+
+            // vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                let y = el.querySelectorAll(".user");
+                if (y.length === 1) {
+                  const x = el.querySelector(".el-main");
+                  x.innerHTML = "";
+                  x.style.display = "none";
+                } else {
+                  el.querySelectorAll(".user").forEach((elUser) => {
+                    if (elUser.getAttribute("data-user-id") === user.id) {
+                      elUser.remove();
+                    }
+                  });
+                }
+              }
+            });
+
+            voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+              if (el.getAttribute("data-id") === activeCall.room) {
+                el.querySelectorAll(".user").forEach((user) => {
+                  user.querySelector("i").classList.remove("userMute");
+                });
+              }
+            });
+
+            if (screenShareBtn.getAttribute("data-active") == "true") {
+              screenShareBtn.setAttribute("data-active", false);
+              screenShareBtn.style.color = "var(--primary-red)";
+
+              const vid = videoStream.getTracks()[0];
+              vid.stop();
+              videoStream = "";
+
+              socket.emit("stop-video-stream", activeCall.room, user.id);
+
+              videoSharing_MainCont.innerHTML = "";
+              const html = `<span>${call_status_text.getAttribute(
+                "data-name"
+              )} VC</span>
+          <video></video>`;
+              videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+            }
+
+            activeCall.with = undefined;
+            activeCall.room = undefined;
+            activeCall.status = false;
+            activeCall.type = undefined;
+
+            sound_callLeave.play();
+
+            voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
+              el.classList.remove("active");
+            });
+
+            leave_house_vc_cont.style.animation =
+              "popdown_btn 0.3s forwards ease";
+
+            await wait(0.2);
+            vc_members_cont.innerHTML = "";
+          }
         }
 
         screenShareBtnCont.style.animation = "popup_btn 0.3s forwards ease";
@@ -3347,6 +3375,7 @@ async function remoteConnection() {
 
         activeCall.status = true;
         activeCall.room = activeCont;
+        activeCall.type = "dm";
 
         sound_callJoin.play();
         socket.emit("joined-call", activeCont, user.id, user.name, user.image);
@@ -3425,6 +3454,7 @@ async function remoteConnection() {
         activeCall.room = undefined;
         activeCall.status = false;
         incomingCallData = undefined;
+        activeCall.type = undefined;
 
         sound_callLeave.play();
 
@@ -3858,9 +3888,9 @@ houseCont.addEventListener("contextmenu", async (e) => {
           return;
         }
         // check file size (< 10MB)
-        if (newImage.size > 10 * 1024 * 1024) {
+        if (newImage.size > 5 * 1024 * 1024) {
           if (!ongoingError) {
-            await popupError("File must be less than 2MB");
+            await popupError("File must be less than 5MB");
           }
           return;
         }
@@ -3886,6 +3916,10 @@ houseCont.addEventListener("contextmenu", async (e) => {
 
       if (result.status === "ok") {
         socket.emit("house-data-update", house._id);
+
+        if (newName && activeCont === house._id) {
+          houseHeader.textContent = newName;
+        }
 
         nameInput.value = "";
         house_details.style.animation =
@@ -3987,8 +4021,8 @@ const closeAllContextMenus = async () => {
   house_MessageContextMenu.style.opacity = "0";
   house_members_usersCopyId.style.opacity = "0";
   friendsListContextMenu.style.opacity = "0";
-  // mainVideo_context.style.opacity = "0";
   messageUserContextMenu.style.opacity = "0";
+  userDetails_card_Popup.style.opacity = "0";
   await wait(0.1);
   dmContextMenu.style.visibility = "hidden";
   houseContextMenu.style.visibility = "hidden";
@@ -3996,8 +4030,8 @@ const closeAllContextMenus = async () => {
   house_MessageContextMenu.style.visibility = "hidden";
   house_members_usersCopyId.style.visibility = "hidden";
   friendsListContextMenu.style.visibility = "hidden";
-  // mainVideo_context.style.visibility = "hidden";
   messageUserContextMenu.style.visibility = "hidden";
+  userDetails_card_Popup.style.visibility = "hidden";
 };
 
 document.addEventListener("click", async () => {
@@ -4173,9 +4207,6 @@ async function loadVideoStreams() {
   });
 
   let videoStreamCall;
-
-  // const streamMainContVideo = videoSharing_MainCont.querySelector("video");
-  // const streamMainContTitle = videoSharing_MainCont.querySelector("span");
 
   screenShareBtn.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -5528,6 +5559,7 @@ settingsTrigger.addEventListener("click", async (e) => {
   e.stopImmediatePropagation();
   if (activeCont === "settings") return;
 
+  await closeAllContextMenus();
   closeAllWarppers();
 
   settingsWrapper.style.display = "flex";
@@ -5544,10 +5576,22 @@ settingsTrigger.addEventListener("click", async (e) => {
     }
   }
 
-  const nameInput = account_details.querySelector("#nameChange");
-  nameInput.placeholder = user.name;
+  userNameAccountDetails.textContent = user.name;
+  userIdAccountDetails.textContent = user.id;
 
-  const imageCont = account_details.querySelector(".image_main");
+  if (user.aboutMe !== "undefined") {
+    aboutMeAreaAccountDetails.textContent = user.aboutMe;
+  }
+  if (user.coverImage === "undefined") {
+    accountCoverImageCont.style.display = "none";
+  } else {
+    accountCoverImageCont.style.display = "flex";
+    accountCoverImageCont.src = `./../img/${user.coverImage}`;
+  }
+
+  const imageCont = account_details.querySelector(
+    "#accountSettingsUserImageCont"
+  );
   imageCont.src = `./../img/${user.image}`;
 
   accountSettingsOptions.addEventListener("click", async (e) => {
@@ -5559,80 +5603,12 @@ settingsTrigger.addEventListener("click", async (e) => {
 
       accountSettings.classList.add("active");
       soundSettings.classList.remove("active");
-    } else {
+    } else if (target.classList.contains("soundSettings")) {
       accountSetings_model.style.display = "none";
       soundSettings_model.style.display = "initial";
 
       accountSettings.classList.remove("active");
       soundSettings.classList.add("active");
-    }
-  });
-
-  //ACCOUNT DETAILS TAB
-  const form = account_details.querySelector(".form");
-
-  const imageChange = form.querySelector("#image");
-
-  imageChange.addEventListener("change", () => {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(imageChange.files[0]);
-    fileReader.onload = () => {
-      imageCont.src = fileReader.result;
-    };
-  });
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    if (!nameInput.value && !imageChange.files[0]) return;
-
-    let newName = nameInput.value;
-    let newImage = imageChange.files[0];
-
-    if (newImage) {
-      if (!["image/jpeg", "image/gif", "image/png"].includes(newImage.type)) {
-        if (!ongoingError) {
-          await popupError("Only images are allowed");
-        }
-        return;
-      }
-      // check file size (< 10MB)
-      if (newImage.size > 10 * 1024 * 1024) {
-        if (!ongoingError) {
-          await popupError("File must be less than 10MB");
-        }
-        return;
-      }
-    }
-
-    const fd = new FormData();
-
-    if (!newName) {
-      fd.append("newName", "undefined");
-    } else {
-      fd.append("newName", newName);
-    }
-    fd.append("image", newImage);
-
-    const result = await (
-      await fetch("/api/changeData", {
-        method: "POST",
-        body: fd,
-      })
-    ).json();
-
-    if (result.status === "ok") {
-      nameInput.value = "";
-      getBasicData();
-      socket.emit("user-data-update", user.id);
-      // if (!ongoingError) {
-      //   await popupOk("Data Update");
-      // }
-    } else {
-      if (!ongoingError) {
-        await popupError("Something went wrong");
-      }
     }
   });
 
@@ -5818,42 +5794,60 @@ async function messsageUserDetailsContextMenu(e) {
 
   const imgTarget = e.target.closest("img");
 
-  if (!imgTarget) return;
+  if (!imgTarget) {
+    const spanTargetCont = e.target.closest(".message_user");
+
+    if (!spanTargetCont) return;
+    else {
+      const spanTarget = e.target.closest("span");
+
+      if (!spanTarget) return;
+    }
+  }
 
   let x = e.pageX,
     y = e.pageY,
     winWidth = window.innerWidth,
-    cmwidth = messageUserContextMenu.offsetWidth,
+    cmwidth = userDetails_card_Popup.offsetWidth,
     winHeight = window.innerHeight,
-    cmHeight = messageUserContextMenu.offsetHeight;
+    cmHeight = userDetails_card_Popup.offsetHeight;
 
   x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
   y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
 
-  messageUserContextMenu.style.left = `${x}px`;
-  messageUserContextMenu.style.top = `${y}px`;
+  userDetails_card_Popup.style.left = `${x}px`;
+  userDetails_card_Popup.style.top = `${y}px`;
 
-  const img = messageUserContextMenu.querySelector("img");
-  const span = messageUserContextMenu.querySelector("span");
-  const p = messageUserContextMenu.querySelector("p");
+  // p.addEventListener("click", async (e) => {
+  //   e.stopImmediatePropagation();
 
-  p.addEventListener("click", async (e) => {
-    e.stopImmediatePropagation();
-
-    navigator.clipboard.writeText(target.getAttribute("data-user-id"));
-    messageUserContextMenu.style.opacity = "0";
-    await wait(0.1);
-    messageUserContextMenu.style.visibility = "hidden";
-  });
+  //   navigator.clipboard.writeText(target.getAttribute("data-user-id"));
+  //   messageUserContextMenu.style.opacity = "0";
+  //   await wait(0.1);
+  //   messageUserContextMenu.style.visibility = "hidden";
+  // });
 
   const data = await getSomeOtherUserData(target.getAttribute("data-user-id"));
 
-  img.src = `./../img/${data.image}`;
-  span.textContent = data.name;
-  p.textContent = target.getAttribute("data-user-id");
+  userDetails_userName.textContent = data.name;
+  userDetails_userImage.src = `./../img/${data.image}`;
+  userDetails_userId.textContent = target.getAttribute("data-user-id");
 
-  messageUserContextMenu.style.visibility = "visible";
-  messageUserContextMenu.style.opacity = "1";
+  if (data.aboutMe !== "undefined") {
+    userDetails_aboutMe.textContent = data.aboutMe;
+  } else {
+    userDetails_aboutMe.textContent = "";
+  }
+
+  if (data.coverImage !== "undefined") {
+    userDetails_coverImage.style.display = "flex";
+    userDetails_coverImage.src = `./../img/${data.coverImage}`;
+  } else {
+    userDetails_coverImage.style.display = "none";
+  }
+
+  userDetails_card_Popup.style.visibility = "visible";
+  userDetails_card_Popup.style.opacity = "1";
 }
 
 async function messsagePingUserDetailsContextMenu(e) {
@@ -5866,37 +5860,46 @@ async function messsagePingUserDetailsContextMenu(e) {
   let x = e.pageX,
     y = e.pageY,
     winWidth = window.innerWidth,
-    cmwidth = messageUserContextMenu.offsetWidth,
+    cmwidth = userDetails_card_Popup.offsetWidth,
     winHeight = window.innerHeight,
-    cmHeight = messageUserContextMenu.offsetHeight;
+    cmHeight = userDetails_card_Popup.offsetHeight;
 
   x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
   y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
 
-  messageUserContextMenu.style.left = `${x}px`;
-  messageUserContextMenu.style.top = `${y}px`;
+  userDetails_card_Popup.style.left = `${x}px`;
+  userDetails_card_Popup.style.top = `${y}px`;
 
-  const img = messageUserContextMenu.querySelector("img");
-  const span = messageUserContextMenu.querySelector("span");
-  const p = messageUserContextMenu.querySelector("p");
+  // p.addEventListener("click", async (e) => {
+  //   e.stopImmediatePropagation();
 
-  p.addEventListener("click", async (e) => {
-    e.stopImmediatePropagation();
-
-    navigator.clipboard.writeText(target.getAttribute("data-id"));
-    messageUserContextMenu.style.opacity = "0";
-    await wait(0.1);
-    messageUserContextMenu.style.visibility = "hidden";
-  });
+  //   navigator.clipboard.writeText(target.getAttribute("data-id"));
+  //   messageUserContextMenu.style.opacity = "0";
+  //   await wait(0.1);
+  //   messageUserContextMenu.style.visibility = "hidden";
+  // });
 
   const data = await getSomeOtherUserData(target.getAttribute("data-id"));
 
-  img.src = `./../img/${data.image}`;
-  span.textContent = data.name;
-  p.textContent = target.getAttribute("data-id");
+  userDetails_userName.textContent = data.name;
+  userDetails_userImage.src = `./../img/${data.image}`;
+  userDetails_userId.textContent = target.getAttribute("data-id");
 
-  messageUserContextMenu.style.visibility = "visible";
-  messageUserContextMenu.style.opacity = "1";
+  if (data.aboutMe !== "undefined") {
+    userDetails_aboutMe.textContent = data.aboutMe;
+  } else {
+    userDetails_aboutMe.textContent = "";
+  }
+
+  if (data.coverImage !== "undefined") {
+    userDetails_coverImage.style.display = "flex";
+    userDetails_coverImage.src = `./../img/${data.coverImage}`;
+  } else {
+    userDetails_coverImage.style.display = "none";
+  }
+
+  userDetails_card_Popup.style.visibility = "visible";
+  userDetails_card_Popup.style.opacity = "1";
 }
 // MESSAGE USER DETAILS CONTEXTMENU
 
@@ -6277,70 +6280,120 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
     // CALL CODE
 
     if (activeCall.status) {
-      if (call) {
-        call.close();
-      }
-
-      activeVcDetails = [];
-
-      clearVideoStreams();
-
-      screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
-
-      socket.emit("leave-vc", activeCall.room, audioStream.id, user.id);
-
-      clearAllStreams();
-
-      voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
-        if (el.getAttribute("data-id") === activeCall.room) {
-          const x = el.querySelector(".el-main");
-          x.innerHTML = "";
-          x.style.display = "none";
+      if (activeCall.type === "house") {
+        if (call) {
+          call.close();
         }
-      });
 
-      // vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+        activeVcDetails = [];
 
-      if (decline_btn.style.animation.includes("popup_btn")) {
-        vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
-        decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
-        call_btn.style.animation = "popdown_btn 0.3s forwards ease";
-      }
+        clearVideoStreams();
 
-      if (screenShareBtn.getAttribute("data-active") == "true") {
-        screenShareBtn.setAttribute("data-active", false);
-        screenShareBtn.style.color = "var(--primary-red)";
+        screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
 
-        const vid = videoStream.getTracks()[0];
-        vid.stop();
-        videoStream = "";
+        socket.emit("leave-vc", activeCall.room, audioStream.id, user.id);
 
-        socket.emit("stop-video-stream", activeCall.room, user.id);
+        clearAllStreams();
 
-        videoSharing_MainCont.innerHTML = "";
-        const html = `<span>${call_status_text.getAttribute(
-          "data-name"
-        )} VC</span>
+        voiceChannel_mainCont.querySelectorAll(".el").forEach((el) => {
+          if (el.getAttribute("data-id") === activeCall.room) {
+            const x = el.querySelector(".el-main");
+            x.innerHTML = "";
+            x.style.display = "none";
+          }
+        });
+
+        // vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+
+        if (decline_btn.style.animation.includes("popup_btn")) {
+          vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+          decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+          call_btn.style.animation = "popdown_btn 0.3s forwards ease";
+        }
+
+        if (screenShareBtn.getAttribute("data-active") == "true") {
+          screenShareBtn.setAttribute("data-active", false);
+          screenShareBtn.style.color = "var(--primary-red)";
+
+          const vid = videoStream.getTracks()[0];
+          vid.stop();
+          videoStream = "";
+
+          socket.emit("stop-video-stream", activeCall.room, user.id);
+
+          videoSharing_MainCont.innerHTML = "";
+          const html = `<span>${call_status_text.getAttribute(
+            "data-name"
+          )} VC</span>
     <video></video>`;
-        videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+          videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+        }
+
+        activeCall.with = undefined;
+        activeCall.room = undefined;
+        activeCall.status = false;
+        activeCall.type = undefined;
+
+        sound_callLeave.play();
+
+        voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
+          el.classList.remove("active");
+        });
+
+        call_status.style.animation = "popdown_btn 0.3s forwards ease";
+        leave_house_vc_cont.style.animation = "popdown_btn 0.3s forwards ease";
+
+        await wait(0.2);
+        vc_members_cont.innerHTML = "";
+        await wait(0.3);
+      } else if (activeCall.type === "dm") {
+        if (call) {
+          call.close();
+        }
+
+        clearVideoStreams();
+
+        call = undefined;
+
+        screenShareBtnCont.style.animation = "popdown_btn 0.3s forwards ease";
+
+        socket.emit("leave-call_dm", activeCall.room, audioStream.id, user.id);
+
+        clearAllStreams();
+
+        vc_members_cont.style.animation = "popdownMembers 0.2s forwards ease";
+
+        if (screenShareBtn.getAttribute("data-active") == "true") {
+          screenShareBtn.setAttribute("data-active", false);
+          screenShareBtn.style.color = "var(--primary-red)";
+
+          const vid = videoStream.getTracks()[0];
+          vid.stop();
+          videoStream = "";
+
+          socket.emit("stop-video-stream", activeCall.room, user.id);
+
+          videoSharing_MainCont.innerHTML = "";
+          const html = `<span>${call_status_text.getAttribute(
+            "data-name"
+          )} VC</span>
+      <video></video>`;
+          videoSharing_MainCont.insertAdjacentHTML("afterbegin", html);
+        }
+
+        activeCall.with = undefined;
+        activeCall.room = undefined;
+        activeCall.status = false;
+        activeCall.type = undefined;
+
+        sound_callLeave.play();
+
+        decline_btn.style.animation = "popdown_btn 0.3s forwards ease";
+        call_status.style.animation = "popdown_btn 0.3s forwards ease";
+
+        await wait(0.2);
+        vc_members_cont.innerHTML = "";
       }
-
-      activeCall.with = undefined;
-      activeCall.room = undefined;
-      activeCall.status = false;
-
-      sound_callLeave.play();
-
-      voiceChannel_mainCont.querySelectorAll("span").forEach((el) => {
-        el.classList.remove("active");
-      });
-
-      call_status.style.animation = "popdown_btn 0.3s forwards ease";
-      leave_house_vc_cont.style.animation = "popdown_btn 0.3s forwards ease";
-
-      await wait(0.2);
-      vc_members_cont.innerHTML = "";
-      await wait(0.3);
     }
 
     // BEFORE THIS : IF CALL, THEN CUT CALL
@@ -6355,6 +6408,7 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
 
     activeCall.status = true;
     activeCall.room = activeVC;
+    activeCall.type = "house";
 
     sound_callJoin.play();
     socket.emit("joined-vc", activeVC, user.id, user.name, user.image);
@@ -6412,6 +6466,70 @@ voiceChannel_mainCont.addEventListener("click", async (e) => {
     }
   }
 });
+
+const houseMembersMainCont = document.querySelector(
+  ".house-message-members-main-cont_all_members-main-cont"
+);
+
+houseMembersMainCont.addEventListener("click", showMembersContUserDetails);
+
+async function showMembersContUserDetails(e) {
+  await closeAllContextMenus();
+
+  const target = e.target.closest("p");
+  if (!target) return;
+
+  let x = e.pageX,
+    y = e.pageY,
+    winWidth = window.innerWidth,
+    cmwidth = userDetails_card_Popup.offsetWidth,
+    winHeight = window.innerHeight,
+    cmHeight = userDetails_card_Popup.offsetHeight;
+
+  x = x > winWidth - cmwidth ? winWidth - cmwidth : x;
+  y = y > winHeight - cmHeight ? winHeight - cmHeight : y;
+
+  userDetails_card_Popup.style.left = `${
+    x - userDetails_card_Popup.offsetWidth
+  }px`;
+  userDetails_card_Popup.style.top = `${y}px`;
+
+  const data = await getSomeOtherUserData(target.getAttribute("data-id"));
+
+  userDetails_userName.textContent = target.querySelector("span").textContent;
+  userDetails_userImage.src = target.querySelector("img").src;
+  userDetails_userId.textContent = target.getAttribute("data-id");
+
+  if (data.aboutMe !== "undefined") {
+    userDetails_aboutMe.textContent = data.aboutMe;
+  } else {
+    userDetails_aboutMe.textContent = "";
+  }
+
+  if (data.coverImage !== "undefined") {
+    userDetails_coverImage.style.display = "flex";
+    userDetails_coverImage.src = `./../img/${data.coverImage}`;
+  } else {
+    userDetails_coverImage.style.display = "none";
+  }
+
+  userDetails_card_Popup.style.visibility = "visible";
+  userDetails_card_Popup.style.opacity = "1";
+}
+
+async function loadMembersCont(house) {
+  houseMembersMainCont.innerHTML = "";
+  for (let el of house.members) {
+    const data = await getSomeOtherUserData(el);
+    let html = `
+    <p data-id="${el}">
+    <img src="./../img/${data.image}" alt="" />
+    <span>${data.name}</span>
+  </p>
+    `;
+    houseMembersMainCont.insertAdjacentHTML("afterbegin", html);
+  }
+}
 
 async function loadChannels(house) {
   textChannel_mainCont.innerHTML = "";
@@ -6484,7 +6602,7 @@ closeChannelsCont.addEventListener("click", async (e) => {
     closeChannelsCont.style.transform = "translate(-50%, -50%) rotate(180deg)";
     houseChannelModelCont.style.overflow = "hidden";
     houseChannelModelCont.style.width = "20%";
-    houseMainModelCont.style.width = "79%";
+    houseMainModelCont.style.width = "63%";
 
     textChannel_modelCont.style.display = "flex";
     voiceChannel_modelCont.style.display = "flex";
@@ -6501,7 +6619,8 @@ closeChannelsCont.addEventListener("click", async (e) => {
     await wait(0.1);
 
     houseChannelModelCont.style.width = "6rem";
-    houseMainModelCont.style.width = "100%";
+    // houseMainModelCont.style.width = "100%";
+    houseMainModelCont.style.width = "calc(83% - 6rem)";
 
     textChannel_modelCont.style.display = "none";
     voiceChannel_modelCont.style.display = "none";
@@ -6511,3 +6630,262 @@ closeChannelsCont.addEventListener("click", async (e) => {
 });
 
 // HOUSES ROOM SYSTEM
+
+//ACCOUNT SETTINGS
+const changeAccountNameTrigger = document.querySelector(
+  ".changeAccountNameTrigger"
+);
+const changeAccountNameInputField = document.querySelector(
+  ".changeAccountNameInputField"
+);
+
+const changeAboutMeTrigger = document.querySelector(".changeAboutMeTrigger");
+
+const changeAboutMeInputField = document.querySelector(
+  ".changeAboutMeInputField"
+);
+
+const userNameAccountDetails = document.querySelector(".user-name");
+const aboutMeAreaAccountDetails = document.querySelector(".aboutMeArea");
+const userIdAccountDetails = document.querySelector(".user-idCont");
+
+const saveAccDetails = document.querySelector(".submit_acc_changes");
+
+changeAccountNameTrigger.addEventListener("click", async (e) => {
+  changeAccountNameInputField.style.animation =
+    "overlayProf_UpPrompt 0.3s forwards ease";
+
+  const cancel = changeAccountNameInputField.querySelector("a");
+  const input = changeAccountNameInputField.querySelector("input");
+  const form = changeAccountNameInputField.querySelector("form");
+  const userName = document.querySelector(".user-name");
+
+  cancel.addEventListener("click", () => {
+    input.value = "";
+    changeAccountNameInputField.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (input.value !== undefined) {
+      userName.textContent = input.value;
+      input.value = "";
+      changeAccountNameInputField.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
+    }
+  });
+});
+
+changeAboutMeTrigger.addEventListener("click", async (e) => {
+  changeAboutMeInputField.style.animation =
+    "overlayProf_UpPrompt 0.3s forwards ease";
+
+  const cancel = changeAboutMeInputField.querySelector("a");
+  const input = changeAboutMeInputField.querySelector("textarea");
+  const form = changeAboutMeInputField.querySelector("form");
+  const aboutMeArea = document.querySelector(".aboutMeArea");
+
+  cancel.addEventListener("click", () => {
+    input.value = "";
+    changeAboutMeInputField.style.animation =
+      "overlayProf_DownPrompt 0.3s forwards ease";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (input.value !== undefined) {
+      aboutMeArea.textContent = input.value;
+      input.value = "";
+      changeAboutMeInputField.style.animation =
+        "overlayProf_DownPrompt 0.3s forwards ease";
+    }
+  });
+});
+
+const accountCoverImage = document.querySelector(
+  "#accountSettingsUserCoverImage"
+);
+
+const accountCoverImageCont = document.querySelector(
+  "#accountSettingsUserCoverImageCont"
+);
+
+const accountMainImage = document.querySelector("#accountSettingsUserImage");
+
+const accountMainImageCont = document.querySelector(
+  "#accountSettingsUserImageCont"
+);
+
+accountCoverImage.addEventListener("change", () => {
+  const fileReader = new FileReader();
+  fileReader.readAsDataURL(accountCoverImage.files[0]);
+  fileReader.onload = () => {
+    accountCoverImageCont.style.display = "flex";
+    accountCoverImageCont.src = fileReader.result;
+  };
+});
+
+accountMainImage.addEventListener("change", () => {
+  const fileReader = new FileReader();
+  fileReader.readAsDataURL(accountMainImage.files[0]);
+  fileReader.onload = () => {
+    accountMainImageCont.src = fileReader.result;
+  };
+});
+
+saveAccDetails.addEventListener("click", async (e) => {
+  let isNameChanged = true;
+  let isAboutMeChanged = true;
+
+  if (userNameAccountDetails.textContent === userNameAccountDetails.name)
+    isNameChanged = false;
+  if (aboutMeAreaAccountDetails.textContent === user.aboutMe)
+    isAboutMeChanged = false;
+
+  let newCoverImage = accountCoverImage.files[0];
+  let newMainImage = accountMainImage.files[0];
+
+  if (newCoverImage) {
+    if (
+      !["image/jpeg", "image/gif", "image/png"].includes(newCoverImage.type)
+    ) {
+      if (!ongoingError) {
+        await popupError("Only images are allowed as a Cover Image");
+      }
+      return;
+    }
+    // check file size (< 10MB)
+    if (newCoverImage.size > 5 * 1024 * 1024) {
+      if (!ongoingError) {
+        await popupError("Cover Image must be less than 5MB");
+      }
+      return;
+    }
+  }
+
+  if (newMainImage) {
+    if (!["image/jpeg", "image/gif", "image/png"].includes(newMainImage.type)) {
+      if (!ongoingError) {
+        await popupError("Only images are allowed as a Main Image");
+      }
+      return;
+    }
+    // check file size (< 10MB)
+    if (newMainImage.size > 5 * 1024 * 1024) {
+      if (!ongoingError) {
+        await popupError("Main Image must be less than 5MB");
+      }
+      return;
+    }
+  }
+
+  if (!isNameChanged && !isAboutMeChanged && !newCoverImage && !newMainImage)
+    return;
+
+  const fd = new FormData();
+  const fd2 = new FormData();
+
+  let result;
+  let result2;
+
+  if (isNameChanged || newMainImage) {
+    if (isNameChanged) {
+      fd.append("newName", userNameAccountDetails.textContent);
+    } else {
+      fd.append("newName", "undefined");
+    }
+    fd.append("image", newMainImage);
+
+    result = await (
+      await fetch("/api/changeData", {
+        method: "POST",
+        body: fd,
+      })
+    ).json();
+  }
+
+  if (isAboutMeChanged || newCoverImage) {
+    if (isAboutMeChanged) {
+      fd2.append("aboutMe", aboutMeAreaAccountDetails.textContent);
+    } else {
+      fd2.append("aboutMe", "undefined");
+    }
+    fd2.append("image", newCoverImage);
+
+    result2 = await (
+      await fetch("/api/changeSecondaryData", {
+        method: "POST",
+        body: fd2,
+      })
+    ).json();
+  }
+
+  if (result.status === "ok" || result2.status === "ok") {
+    getBasicData();
+    socket.emit("user-data-update", user.id);
+  } else {
+    if (!ongoingError) {
+      await popupError("Something went wrong");
+    }
+  }
+});
+//ACCOUNT SETTINGS
+
+// USER DETAILS POPUP
+const userDetails_card_Popup = document.querySelector(
+  ".userDetails_user-card_popup"
+);
+
+userDetails_card_Popup.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+  e.preventDefault();
+});
+
+const userDetails_userName =
+  userDetails_card_Popup.querySelector(".user-name_Popup");
+const userDetails_userImage = userDetails_card_Popup.querySelector(
+  "#accountSettingsUserImageCont"
+);
+const userDetails_coverImage = userDetails_card_Popup.querySelector(
+  "#accountSettingsUserCoverImageCont"
+);
+const userDetails_userId =
+  userDetails_card_Popup.querySelector(".user-idCont_Popup");
+const userDetails_aboutMe =
+  userDetails_card_Popup.querySelector(".aboutMeArea_Popup");
+
+userData_image.addEventListener("click", async (e) => {
+  e.stopImmediatePropagation();
+
+  userDetails_userName.textContent = user.name;
+  userDetails_userImage.src = `./../img/${user.image}`;
+  userDetails_userId.textContent = user.id;
+
+  if (user.aboutMe !== "undefined") {
+    userDetails_aboutMe.textContent = user.aboutMe;
+  } else {
+    userDetails_aboutMe.textContent = "";
+  }
+
+  if (user.coverImage !== "undefined") {
+    userDetails_coverImage.style.display = "flex";
+    userDetails_coverImage.src = `./../img/${user.coverImage}`;
+  } else {
+    userDetails_coverImage.style.display = "none";
+  }
+
+  await closeAllContextMenus();
+
+  let { x, y } = userData_image.getBoundingClientRect();
+
+  userDetails_card_Popup.style.left = `${x - 10}px`;
+  userDetails_card_Popup.style.top = `${
+    y - userDetails_card_Popup.clientHeight - 20
+  }px`;
+
+  userDetails_card_Popup.style.visibility = "visible";
+  userDetails_card_Popup.style.opacity = "1";
+});

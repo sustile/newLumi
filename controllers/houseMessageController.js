@@ -120,7 +120,7 @@ exports.lazyLoadHouseMessages = async (req, res) => {
       return;
     }
 
-    const limit = 15;
+    const limit = 30;
     const page = (body.page - 1) * limit;
 
     const result = await message

@@ -134,13 +134,14 @@ router
   .route("/api/createVoiceChannel")
   .post(verify, houseController.createVoiceChannel);
 
-// CHANGE THE COVER IMAHGE OF AN USER
+// CHANGE USER COVER IMAGE AND ABOUT ME
+
 router
-  .route("/api/changeCoverImage")
+  .route("/api/changeSecondaryData")
   .post(
     verify,
     uploadImage.single("image"),
-    accountController.changeCoverImage
+    accountController.changeSecondaryData
   );
 
 module.exports = router;

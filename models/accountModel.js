@@ -43,12 +43,8 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, "An Account Must Have a Image"],
   },
-  coverImage: {
-    type: String,
-  },
-  aboutMe: {
-    type: String,
-  },
+  coverImage: String,
+  aboutMe: String,
   house: [String],
   dms: [String],
   friends: [String],

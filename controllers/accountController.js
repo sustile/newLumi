@@ -13,23 +13,18 @@ const fs = require("fs");
 
 exports.createAccount = async (req, res) => {
   try {
-    // const reqBody = req.file;
-    // console.log(reqBody);
-
-    // if (!reqBody) {
-    //   res.status(400).json({
-    //     status: "fail",
-    //     message: "No data Provided",
-    //   });
-    // }
-
     const body = Object.assign(req.body, {
       creation: Date.now(),
       image: "default.png",
     });
 
     if (body.password === body.confirmPassword) {
-      const newAcc = await account.create(body);
+      const newAcc = await account.create(
+        Object.assign(body, {
+          aboutMe: "undefined",
+          coverImage: "undefined",
+        })
+      );
 
       const token = jwt.generate(newAcc.id);
 
@@ -196,6 +191,8 @@ exports.getBasicData = async (req, res) => {
           email: user.email,
           id: user._id,
           image: user.image,
+          aboutMe: user.aboutMe,
+          coverImage: user.coverImage,
         },
       });
     }
@@ -222,6 +219,8 @@ exports.getUserBasicData = async (req, res) => {
         user: {
           name: user.name,
           image: user.image,
+          coverImage: user.coverImage,
+          aboutMe: user.aboutMe,
         },
       });
     }
@@ -569,10 +568,11 @@ exports.acceptRequest = async (req, res) => {
   }
 };
 
-exports.changeCoverImage = async (req, res) => {
+exports.changeSecondaryData = async (req, res) => {
   try {
     const user = req.user;
     const file = req.file;
+    const body = req.body;
 
     if (!user) {
       res.status(404).json({
@@ -581,11 +581,19 @@ exports.changeCoverImage = async (req, res) => {
       });
     } else {
       if (file) {
-        if (user.coverImage === undefined) {
-          await account.findOneAndUpdate(
-            { _id: user.id },
-            { coverImage: file.filename }
-          );
+        if (user.coverImage === "undefined") {
+          if (body.aboutMe !== "undefined") {
+            await account.findOneAndUpdate(
+              { _id: user.id },
+              { coverImage: file.filename, aboutMe: body.aboutMe }
+            );
+          } else {
+            await account.findOneAndUpdate(
+              { _id: user.id },
+              { coverImage: file.filename }
+            );
+          }
+
           res.status(200).json({
             status: "ok",
           });
@@ -597,16 +605,41 @@ exports.changeCoverImage = async (req, res) => {
           try {
             fs.unlinkSync(imgPath);
 
-            await account.findOneAndUpdate(
-              { _id: user.id },
-              { coverImage: file.filename }
-            );
+            if (body.aboutMe !== "undefined") {
+              await account.findOneAndUpdate(
+                { _id: user.id },
+                { coverImage: file.filename, aboutMe: body.aboutMe }
+              );
+            } else {
+              await account.findOneAndUpdate(
+                { _id: user.id },
+                { coverImage: file.filename }
+              );
+            }
+
             res.status(200).json({
               status: "ok",
             });
           } catch (err) {
             console.log(err);
           }
+        }
+      } else {
+        if (body.aboutMe !== "undefined") {
+          console.log(body.aboutMe);
+          await account.findOneAndUpdate(
+            { _id: user.id },
+            { aboutMe: body.aboutMe }
+          );
+
+          res.status(200).json({
+            status: "ok",
+          });
+        } else {
+          res.status(200).json({
+            status: "fail",
+            message: "Something went wrong",
+          });
         }
       }
     }
